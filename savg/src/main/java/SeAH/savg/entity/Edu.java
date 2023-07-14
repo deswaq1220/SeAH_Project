@@ -14,33 +14,33 @@ public class Edu {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long eduID;
+    private Long eduId;                 // id
 
     @Column(nullable = false)
-    private edustate eduCategory;
+    private edustate eduCategory;       // 교육분류
 
     @Column(nullable = false)
-    private String instructor;
+    private String eduInstructor;       // 강사
 
     @Column(nullable = false)
-    private String eduPlace;
+    private String eduPlace;            // 장소
 
     @Column(nullable = false)
-    private LocalDateTime eduStartTime;
+    private LocalDateTime eduStartTime;     // 교육시작시간
 
     @Column(nullable = false)
-    private LocalDateTime eduEndTime;
+    private LocalDateTime eduEndTime;       // 교육종료시간
 
     @Column(nullable = false)
-    private Integer eduSumTime;
+    private Integer eduSumTime;             // 교육시간(분)
 
     @Column(nullable = false)
-    private edustate eduTarget;
+    private edustate eduTarget;             // 교육대상
 
     @Column(nullable = false)
-    private String eduContent;
+    private String eduContent;              // 교육내용 
 
     @Column(nullable = false)
-    private String eduWriter;
+    private String eduWriter;               // 작성자
 
 }
