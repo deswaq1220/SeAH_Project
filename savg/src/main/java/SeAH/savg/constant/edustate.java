@@ -3,9 +3,10 @@ package SeAH.savg.constant;
 public enum edustate {
 
     //교육 분류
-    A, //집체교육
-    B, //안전조회
-    C, //관리감독
+    CREW, //크루미팅
+    MANAGE, //관리감독자
+    DM, //DM미팅
+    ETC, //기타
 
 
     //교육대상 분류
