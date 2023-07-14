@@ -10,7 +10,8 @@ import javax.persistence.*;
 @Getter @Setter
 public class Attendance {
     @Id
-    private Long attendance_id;           // id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long atten_id;           // id
     private String employee_number;       // 사원번호
     private String name;                  // 이름
     private String department;            // 부서
