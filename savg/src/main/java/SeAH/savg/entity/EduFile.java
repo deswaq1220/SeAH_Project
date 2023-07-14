@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Getter @Setter
 public class EduFile {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eduFileId;           // id
     private String eduFileName;       // 파일명
     private String eduFileOriName;    // 원본 파일명
