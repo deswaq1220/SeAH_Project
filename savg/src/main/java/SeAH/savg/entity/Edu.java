@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @Getter @Setter
 @Entity
@@ -31,8 +33,8 @@ public class Edu {
     @Column(nullable = false)
     private LocalDateTime eduEndTime;       //교육종료시각
 
-    @Column(nullable = false)
-    private Integer eduSumTime;             //교육시간(분)
+//    @Column(nullable = false)
+    private LocalDateTime eduSumTime;             //교육시간(분)
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -43,6 +45,13 @@ public class Edu {
 
     @Column(nullable = false)
     private String eduWriter;               //작성자
+
+
+
+
+
+
+
 
 
 }

@@ -12,6 +12,10 @@ public enum edustate {
     //교육대상 분류
     T,  //total 전체
     F, //filed 현장
-    O //office 사무직
+    O; //office 사무직
+
+    public boolean isEmpty() {
+        return this == null || this == T;
+    }
 
 }
