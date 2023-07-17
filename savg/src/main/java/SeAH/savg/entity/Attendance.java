@@ -11,7 +11,6 @@ import javax.persistence.*;
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long atten_id;                      // id
     private String atten_employee_number;       // 사원번호
     private String atten_name;                  // 이름
