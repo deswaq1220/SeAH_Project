@@ -20,4 +20,10 @@ public class EduFile {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "edu_id")
     private Edu edu;
+
+    public void updateEduFile(String eduFileName, String eduFileOriName, String eduFileUrl){
+        this.eduFileName = eduFileName;
+        this.eduFileOriName = eduFileOriName;
+        this.eduFileUrl = eduFileUrl;
+    }
 }
