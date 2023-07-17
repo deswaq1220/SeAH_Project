@@ -20,9 +20,11 @@ public class AttendanceDTO {
 
     //Attendance엔티티를 AttendanceDTO로 변환하는 메소드
     public static AttendanceDTO of(Attendance attendance){
-        return modelMapper.map(attendance, AttendanceDTO.class);}
+        return modelMapper.map(attendance, AttendanceDTO.class);
+    }
 
     //AttendanceDTO를 Attendance 엔티티로 변환해주는 메소드
-    public Attendance toEntity(AttendanceDTO attendanceDTO){
-        return modelMapper.map(attendanceDTO, Attendance.class);}
+    public Attendance toEntity(){
+        return modelMapper.map(this, Attendance.class);
+    }
 }

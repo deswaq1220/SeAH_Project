@@ -25,7 +25,8 @@ public class AttendanceService {
         attendanceDTO.setName(attend_employee_name);
         attendanceDTO.setEmployee_number(attend_employee_number);
 
-        Attendance attendance = attendanceDTO.toEntity(attendanceDTO);
+        Attendance attendance = attendanceDTO.toEntity();
+        System.out.println(attendance);
         attendanceRepository.save(attendance);
     }
 
