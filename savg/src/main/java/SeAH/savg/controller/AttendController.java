@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
@@ -14,18 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "http://localhost:3000")
 public class AttendController {
 
-   // private final AttendanceService attendService;
+    private final AttendanceService attendanceService;
 
     //교육생 출석등록하기
-    /*@PostMapping("/usereduatten")
+    @PostMapping("/usereduatten")
     public String registerAttendEdu(Model model
-                                   ,String attend_employee_department
-                                   ,String attend_employee_name
-                                   ,String attend_employee_number){
+                                   ,@RequestParam("employee_department") String attend_employee_department
+                                   ,@RequestParam("employee_name") String attend_employee_name
+                                   ,@RequestParam("employee_number") String attend_employee_number) throws Exception {
 
-        attendService.attendEdu(attend_employee_department, attend_employee_name, attend_employee_number);
+        attendanceService.attendEdu(attend_employee_department, attend_employee_name, attend_employee_number);
+
+        //model.addAttribute("employee_department", attend_employee_department);
+        //model.addAttribute("employee_name", attend_employee_name);
+        //model.addAttribute("employee_number", attend_employee_number);
 
         return "/usereduatten";
     }
-   */
+
 }

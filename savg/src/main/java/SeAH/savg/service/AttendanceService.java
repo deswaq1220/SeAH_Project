@@ -21,9 +21,9 @@ public class AttendanceService {
                                       , String attend_employee_number){
 
         AttendanceDTO attendanceDTO = new AttendanceDTO();
-        attendanceDTO.setDepartment(attend_employee_department);
-        attendanceDTO.setName(attend_employee_name);
-        attendanceDTO.setEmployee_number(attend_employee_number);
+        attendanceDTO.setAtten_department(attend_employee_department);
+        attendanceDTO.setAtten_name(attend_employee_name);
+        attendanceDTO.setAtten_employee_number(attend_employee_number);
 
         Attendance attendance = attendanceDTO.toEntity();
         System.out.println(attendance);

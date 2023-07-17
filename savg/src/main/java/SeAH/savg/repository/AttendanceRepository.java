@@ -18,10 +18,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     //                     ,@Param("employee_name") String attend_employee_name
     //                     ,@Param("employee_number") String attend_employee_number);
 
-    //@Modifying
-    //@Transactional
-    //AttendanceDTO attend(String attend_employee_department
-    //                    ,String attend_employee_name
-    //                    ,String attend_employee_number);
 
 }
