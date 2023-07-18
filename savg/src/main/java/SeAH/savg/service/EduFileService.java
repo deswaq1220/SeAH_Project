@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -44,10 +45,16 @@ public class EduFileService {
         }
     }
 
-    //파일명
+    //파일명설정
     private String generateUniqueFileName(String originalFilename) {
         UUID uuid = UUID.randomUUID();
         String extension = StringUtils.getFilenameExtension(originalFilename);
         return uuid.toString() + "." + extension;
+    }
+
+    // 파일 경로 반환
+    private String getFilePath(String fileName) {
+        String eduFileLocation = "C:\\seah\\edu"; // 파일 업로드 위치
+        return Paths.get(eduFileLocation, fileName).toString();
     }
 }
