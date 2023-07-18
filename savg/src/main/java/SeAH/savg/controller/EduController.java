@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+
 public class EduController {
 
     private final EduRepository eduRepository;
@@ -72,6 +72,44 @@ public class EduController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+//    @PostMapping("/edureg")
+//    public ResponseEntity<?> handleEduReg(@RequestBody EduDTO eduDTO) {
+//        try {
+//            // 데이터 처리 로직: 유효성 검사
+//            if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
+//                return ResponseEntity.badRequest().body("Edu Content is required.");
+//            }
+//            if (eduDTO.getEduInstructor() == null || eduDTO.getEduInstructor().isEmpty()) {
+//                return ResponseEntity.badRequest().body("Edu Instructor is required.");
+//            }
+//
+//            // 데이터 처리 로직: 데이터 저장
+//            Edu edu = eduDTO.toEntity();
+//            eduRepository.save(edu); // 데이터베이스에 저장
+//            return ResponseEntity.ok().build();
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+
+    //안전교육 파일 업로드
+//    @PostMapping("/edureg/file")
+//    public ResponseEntity<?> handleEduRegWithFile(@RequestParam("file") MultipartFile file) {
+//        try {
+//            // 파일 업로드 처리 로직
+//            String fileName = eduFileService.uploadFile(file);
+//
+//            // 파일명을 리액트로 반환
+//            return ResponseEntity.ok(fileName);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
 
 
 
