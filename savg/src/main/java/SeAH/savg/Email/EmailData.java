@@ -5,6 +5,7 @@ public class EmailData {
     private String recipient;
     private String subject;
     private String content;
+    private String fixedContent;
 
     public String getRecipient() {
         return recipient;
@@ -29,4 +30,14 @@ public class EmailData {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public String getFixedContent() {
+        return fixedContent;
+    }
+
+    public void setFixedContent(String fixedContent) {
+        this.fixedContent = fixedContent;
+    }
+
+
 }
