@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>기준정보</title>
+</head>
+<body>
+<h1>기준정보 등록</h1>
+<form action="/master" method="post">
+    <label for="masterdataPart">영역:</label>
+    <select id="masterdataPart" name="masterdataPart" required>
+        <option value="주조">주조</option>
+        <option value="압출">압출</option>
+        <option value="가공">가공</option>
+        <option value="품질">품질</option>
+        <option value="생산기술">생산기술</option>
+        <option value="금형">금형</option>
+    </select><br><br>
+
+    <label for="masterdataFacility">설비:</label>
+    <input type="text" id="masterdataFacility" name="masterdataFacility" required><br><br>
+    <input type="submit" value="등록">
+
+</form>
+
+    <h2>영역별 설비</h2>
+    <div class="table-container" style="height: 800px">
+        <table>
+            <thead>
+            <tr>
+                <th></th>
+                <th>영역</th>
+                <th>설비</th>
+<!--                <th>거래처</th>-->
+<!--                <th>수량(box)</th>-->
+<!--                <th>수주일</th>-->
+<!--                <th>예상 납품일</th>-->
+<!--                <th>수주상태</th>-->
+<!--                <th>확정</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="masterData, status: ${masterDataList}">
+                <td>  </td>
+                <td th:text="${masterData.masterdataPart}"></td>
+                <td th:text="${masterData.masterdataFacility}"></td>
+<!--                <td>-->
+<!--                    <span th:if="${orderDTO.vendorId == 'ven-11'}">11번가</span>-->
+<!--                    <span th:if="${orderDTO.vendorId == 'ven-cou'}">쿠팡</span>-->
+<!--                    <span th:if="${orderDTO.vendorId == 'ven-a'}">에이농장</span>-->
+<!--                    <span th:if="${orderDTO.vendorId == 'ven-nh'}">○○농협</span>-->
+<!--                    <span th:if="${orderDTO.vendorId == 'ven-po'}">○○포장</span>-->
+<!--                </td>-->
+<!--                <td th:text="${orderDTO.salesQty}"></td>-->
+<!--    -->
+<!--                <td th:text="${#temporals.format(orderDTO.salesDate, 'yy/MM/dd　kk:mm')}"></td>-->
+<!--                <td th:text="${#temporals.format(orderDTO.estDelivery, 'yy/MM/dd')}"></td>-->
+<!--    -->
+<!--    -->
+<!--    -->
+<!--                <td >-->
+<!--                    <span th:if="${orderDTO.salesStatus.name() == 'A'}" style="color: #04ba71">대기</span>-->
+<!--                    <span th:if="${orderDTO.salesStatus.name() == 'B'}" style="color: #3196e2">확정</span>-->
+<!--                    <span th:if="${orderDTO.salesStatus.name() == 'C'}" style="color: #ff6b6c">취소</span>-->
+<!--                </td>-->
+<!--    -->
+<!--                <td>-->
+<!--                    <button th:if="${orderDTO.salesStatus.name() == 'A'}" class="bg-blue btnConfirm" th:id="${orderDTO.salesOrderId}" >확정</button>-->
+<!--                    <button th:unless="${orderDTO.salesStatus.name() == 'A'}" class="bg-blue btnConfirm" th:id="${orderDTO.salesOrderId}" disabled >확정</button>-->
+<!--                </td>-->
+
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+
+</body>
+</html>
