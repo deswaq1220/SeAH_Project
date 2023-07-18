@@ -11,10 +11,10 @@ import org.modelmapper.ModelMapper;
 @NoArgsConstructor
 public class AttendanceDTO {
 
-    private Long atten_id;           // id
-    private String atten_employee_number;       // 사원번호
-    private String atten_name;                  // 이름
-    private String atten_department;            // 부서
+    private Long attenId;           // id
+    private String attenEmployeeNumber;       // 사원번호
+    private String attenName;                  // 이름
+    private String attenDepartment;            // 부서
 
     private static ModelMapper modelMapper = new ModelMapper(); //엔티티랑 dto의 동일 필드명 맵핑
 
