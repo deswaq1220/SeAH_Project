@@ -7,6 +7,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import SeAH.savg.entity.EduFile;
 
 
 @Getter @Setter
@@ -46,12 +50,11 @@ public class Edu {
     @Column(nullable = false)
     private String eduWriter;               //작성자
 
+    //eduFile 엔티티 매핑
+    @OneToMany(mappedBy = "edu")
+    private List<EduFile> eduFiles = new ArrayList<>();
 
 
-
-
-
-
-
-
+    public void setEduFileName(String fileName) {
+    }
 }
