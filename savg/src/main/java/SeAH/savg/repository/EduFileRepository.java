@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface EduFileRepository extends JpaRepository<EduFile, Long> {
 
-    List<EduFile> findByEduEduIdOrderByEduFileId(Long eduId);
+
 }

@@ -16,24 +16,26 @@ public class EduFileService {
     @Value("${eduFileLocation}")
     private String eduFileLocation;
 
-    //파일등록
+    //파일 등록
     public String uploadFile(MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
         String savedFileName = generateUniqueFileName(originalFilename);
-        String fileUploadFullUrl = eduFileLocation + "/" + savedFileName;
+        String fileUploadFullUrl = eduFileLocation +"\\" + savedFileName;
+
+        System.out.println("파일경로" + fileUploadFullUrl);
         FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
         fos.write(file.getBytes());
         fos.close();
         return savedFileName;
     }
 
-    //파일 업데이트
+    //파일업뎃
     public void updateFile(String fileName, MultipartFile file) throws Exception {
         deleteFile(fileName);
         uploadFile(file);
     }
 
-    //삭제
+    //파일삭제
     public void deleteFile(String fileName) {
         String filePath = eduFileLocation + "/" + fileName;
         File deleteFile = new File(filePath);
@@ -42,7 +44,7 @@ public class EduFileService {
         }
     }
 
-    //파일명생성
+    //파일명
     private String generateUniqueFileName(String originalFilename) {
         UUID uuid = UUID.randomUUID();
         String extension = StringUtils.getFilenameExtension(originalFilename);
