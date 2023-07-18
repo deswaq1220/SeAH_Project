@@ -26,13 +26,17 @@ public class EduFormDTO {
 
     private List<EduDTO> eduDTOList = new ArrayList<>();
 
+    private List<EduFileDTO> eduFileDTOList = new ArrayList<>(); //이미지 저장 리스트
+
     private static ModelMapper modelMapper = new ModelMapper();
 
     public Edu createEdu(){
+
         return modelMapper.map(this, Edu.class);
     }
 
     public static EduFormDTO of(Edu edu){
+
         return modelMapper.map(edu, EduFormDTO.class);
     }
 }

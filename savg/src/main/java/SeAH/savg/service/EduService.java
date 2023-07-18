@@ -18,12 +18,11 @@ public class EduService {
     }
 
     //교육등록
-    public Long createEdu(EduDTO eduDTO) throws Exception{
+/*    public Long createEdu(EduDTO eduDTO) throws Exception{
         Edu edu = eduDTO.createEdu();
         eduRepository.save(edu);
 
         return edu.getEduId();
-
-    }
+    }*/
 
 }
