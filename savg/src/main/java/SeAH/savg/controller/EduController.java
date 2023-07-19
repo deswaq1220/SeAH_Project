@@ -47,7 +47,7 @@ public class EduController {
 
 
     @PostMapping("/edureg")
-    public ResponseEntity<?> handleEduReg(@RequestBody EduDTO eduDTO, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> handleEduReg(@ModelAttribute  EduDTO eduDTO, @RequestParam("file") MultipartFile file) {
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
