@@ -28,11 +28,9 @@ public class EmailController {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
             helper.setTo(emailData.getRecipient());
             helper.setSubject(emailData.getSubject());
             helper.setText(emailData.getContent());
-            helper.setText(emailData.getContent() + " \n\n 발신전용 메일입니다");
 
             mailSender.send(message);
             return ResponseEntity.ok().body(new ResponseMessage("Email sent successfully."));
