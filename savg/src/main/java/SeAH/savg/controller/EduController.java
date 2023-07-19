@@ -23,7 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -51,7 +52,7 @@ public class EduController {
 
     //안전교육 일지 등록
     @PostMapping("/edureg")
-    public ResponseEntity<?> handleEduReg(@RequestBody EduDTO eduDTO) {
+    public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO, @RequestParam("file") MultipartFile file) {
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
@@ -61,9 +62,14 @@ public class EduController {
                 return ResponseEntity.badRequest().body("Edu Instructor is required.");
             }
 
+            // 데이터 처리 로직: 파일 업로드 및 파일 정보 저장
+            EduFile eduFile = eduFileService.uploadFile(file);
+
             // 데이터 처리 로직: 데이터 저장
             Edu edu = eduDTO.toEntity();
+            edu.getEduFiles().add(eduFile); // Edu와 EduFile 연관성 설정
             eduRepository.save(edu); // 데이터베이스에 저장
+
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -72,29 +78,6 @@ public class EduController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-    //안전교육 파일 업로드
-    @PostMapping("/edureg/file")
-    public ResponseEntity<?> handleEduRegWithFile(@RequestParam("file") MultipartFile file) {
-        try {
-            // 파일 업로드 처리 로직
-            String fileName = eduFileService.uploadFile(file);
-
-            // 데이터베이스에 파일 정보 저장
-            EduFile eduFile = new EduFile();
-            eduFile.setEduFileName(fileName); // 저장된 파일명 설정
-            eduFile.setEduFileOriName(file.getOriginalFilename()); // 원본 파일명 설정
-            eduFile.setEduFileUrl("C:\\seah\\edu" + File.separator + fileName); // 파일 조회 경로 설정
-            eduFileRepository.save(eduFile); // 데이터베이스에 저장
-
-            // 파일명을 리액트로 반환
-            return ResponseEntity.ok(fileName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
 
 
 

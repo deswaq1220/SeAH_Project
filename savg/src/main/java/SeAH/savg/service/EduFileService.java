@@ -1,6 +1,8 @@
 package SeAH.savg.service;
 
 
+import SeAH.savg.entity.EduFile;
+import SeAH.savg.repository.EduFileRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,11 +16,17 @@ import java.util.UUID;
 @Service
 public class EduFileService {
 
+    private final EduFileRepository eduFileRepository;
+    public EduFileService(EduFileRepository eduFileRepository) {
+        this.eduFileRepository = eduFileRepository;
+    }
+
     @Value("${eduFileLocation}")
     private String eduFileLocation;
 
+
     //파일 등록
-    public String uploadFile(MultipartFile file) throws Exception {
+/*    public String uploadFile(MultipartFile file) throws Exception {
         String originalFilename = file.getOriginalFilename();
         String savedFileName = generateUniqueFileName(originalFilename);
         String fileUploadFullUrl = eduFileLocation +"\\" + savedFileName;
@@ -28,6 +36,25 @@ public class EduFileService {
         fos.write(file.getBytes());
         fos.close();
         return savedFileName;
+    }*/
+    public EduFile uploadFile(MultipartFile file) throws Exception {
+        String originalFilename = file.getOriginalFilename();
+        String savedFileName = generateUniqueFileName(originalFilename);
+        String fileUploadFullUrl = eduFileLocation + File.separator + savedFileName;
+
+        System.out.println("파일경로: " + fileUploadFullUrl);
+        FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+        fos.write(file.getBytes());
+        fos.close();
+
+        // 파일 정보 생성 및 저장
+        EduFile eduFile = new EduFile();
+        eduFile.setEduFileName(savedFileName);
+        eduFile.setEduFileOriName(originalFilename);
+        eduFile.setEduFileUrl(fileUploadFullUrl);
+        eduFileRepository.save(eduFile); // 데이터베이스에 저장
+
+        return eduFile;
     }
 
     //파일업뎃
