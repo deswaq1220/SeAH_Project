@@ -1,24 +1,28 @@
 package SeAH.savg.service;
 
+import SeAH.savg.entity.EduFile;
+import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.service.EduFileService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@DataJpaTest
 public class EduFileServiceTest {
 
     @Autowired
     private EduFileService eduFileService;
-
 
     @Test
     public void testUploadFile() throws Exception {
@@ -30,7 +34,7 @@ public class EduFileServiceTest {
         String fileName = eduFileService.uploadFile(file);
 
         // 파일이 존재하는지 확인
-        String filePath = getFilePath(fileName);
+        String filePath = "C:\\seah\\edu" + File.separator + fileName;
         assertTrue(Files.exists(Path.of(filePath)));
 
         // 업로드한 파일 삭제
@@ -40,14 +44,14 @@ public class EduFileServiceTest {
     @Test
     public void testUpdateFile() throws Exception {
         // 가짜 파일 생성
-        byte[] fileContent = "Test file content".getBytes();
+        byte[] fileContent = "Test 파일".getBytes();
         MockMultipartFile initialFile = new MockMultipartFile("file", "initial.txt", "text/plain", fileContent);
 
         // 파일 업로드
         String fileName = eduFileService.uploadFile(initialFile);
 
         // 새로운 가짜 파일 생성
-        byte[] updatedFileContent = "Updated file content".getBytes();
+        byte[] updatedFileContent = "Test 파일 2".getBytes();
         MockMultipartFile updatedFile = new MockMultipartFile("file", "updated.txt", "text/plain", updatedFileContent);
 
         // 파일 업데이트
@@ -93,4 +97,12 @@ public class EduFileServiceTest {
             file.delete();
         }
     }
+
+
+    @Autowired
+    private EduFileRepository eduFileRepository;
+
+
+
+
 }
