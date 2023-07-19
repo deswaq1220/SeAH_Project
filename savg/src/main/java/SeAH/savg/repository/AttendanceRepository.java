@@ -11,12 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
-    //@Modifying
-    //@Transactional
-    //@Query("update Attendance a set a.atten_department = :employee_department, a.atten_name = :employee_name, a.atten_employee_number = :employee_number")
-    //AttendanceDTO attend(@Param("employee_department") String attend_employee_department
-    //                     ,@Param("employee_name") String attend_employee_name
-    //                     ,@Param("employee_number") String attend_employee_number);
 
+    //(관리자) 출석리스트 조회
+    List<Attendance> findAllByEduId(Long eduId);
 
 }

@@ -14,8 +14,8 @@ public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
 
-    //교육생 출석등록하기
-    //@Transactional
+    //(교육생) 출석등록하기
+    @Transactional
     public void attendEdu(String attendEmployeeDepartment
                                       , String attendEmployeeName
                                       , String attendEmployeeNumber
@@ -33,5 +33,7 @@ public class AttendanceService {
         System.out.println(attendance);
         attendanceRepository.save(attendance);
     }
+
+
 
 }

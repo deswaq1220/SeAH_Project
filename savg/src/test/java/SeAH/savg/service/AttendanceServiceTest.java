@@ -1,4 +1,4 @@
-package SeAH.savg;
+package SeAH.savg.service;
 
 import SeAH.savg.repository.AttendanceRepository;
 import SeAH.savg.service.AttendanceService;
@@ -18,8 +18,6 @@ public class AttendanceServiceTest {
     @Test
     @Rollback(false)
     public void testAttend(){
-    attendanceService.attendEdu("소형압연팀", "김홍돌", "12345");
-    
-    System.out.println("얏호");
+    attendanceService.attendEdu("소형압연팀", "김홍홍", "111115", 1L);
     }
 }
