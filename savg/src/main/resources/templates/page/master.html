@@ -18,8 +18,34 @@
 
     <label for="masterdataFacility">설비:</label>
     <input type="text" id="masterdataFacility" name="masterdataFacility" required><br><br>
-    <input type="submit" value="등록">
+    <input type="submit" value="기준정보 등록">
+</form>
 
+<h1>이메일정보 등록</h1>
+<form action="/master/email" method="post">
+    <label for="masterdata">영역:</label>
+    <select id="masterdata" name="masterdata" required>
+        <option value="1">주조</option>
+        <option value="2">압출</option>
+        <option value="3">가공</option>
+        <option value="4">품질</option>
+        <option value="5">생산기술</option>
+        <option value="6">금형</option>
+    </select><br><br>
+
+    <label for="emailName">이름:</label>
+    <input type="text" id="emailName" name="emailName" required><br><br>
+
+    <label for="emailAdd">이메일:</label>
+    <input type="text" id="emailAdd" name="emailAdd" required><br><br>
+
+    <label for="masterStatus">고정 수신 여부:</label>
+    <select id="masterStatus" name="masterStatus" required>
+        <option value="Y">Y</option>
+        <option value="N">N</option>
+    </select><br><br>
+
+    <input type="submit" value="이메일 등록">
 </form>
 
     <h2>영역별 설비</h2>
@@ -30,12 +56,6 @@
                 <th></th>
                 <th>영역</th>
                 <th>설비</th>
-<!--                <th>거래처</th>-->
-<!--                <th>수량(box)</th>-->
-<!--                <th>수주일</th>-->
-<!--                <th>예상 납품일</th>-->
-<!--                <th>수주상태</th>-->
-<!--                <th>확정</th>-->
             </tr>
             </thead>
             <tbody>
@@ -43,36 +63,34 @@
                 <td>  </td>
                 <td th:text="${masterData.masterdataPart}"></td>
                 <td th:text="${masterData.masterdataFacility}"></td>
-<!--                <td>-->
-<!--                    <span th:if="${orderDTO.vendorId == 'ven-11'}">11번가</span>-->
-<!--                    <span th:if="${orderDTO.vendorId == 'ven-cou'}">쿠팡</span>-->
-<!--                    <span th:if="${orderDTO.vendorId == 'ven-a'}">에이농장</span>-->
-<!--                    <span th:if="${orderDTO.vendorId == 'ven-nh'}">○○농협</span>-->
-<!--                    <span th:if="${orderDTO.vendorId == 'ven-po'}">○○포장</span>-->
-<!--                </td>-->
-<!--                <td th:text="${orderDTO.salesQty}"></td>-->
-<!--    -->
-<!--                <td th:text="${#temporals.format(orderDTO.salesDate, 'yy/MM/dd　kk:mm')}"></td>-->
-<!--                <td th:text="${#temporals.format(orderDTO.estDelivery, 'yy/MM/dd')}"></td>-->
-<!--    -->
-<!--    -->
-<!--    -->
-<!--                <td >-->
-<!--                    <span th:if="${orderDTO.salesStatus.name() == 'A'}" style="color: #04ba71">대기</span>-->
-<!--                    <span th:if="${orderDTO.salesStatus.name() == 'B'}" style="color: #3196e2">확정</span>-->
-<!--                    <span th:if="${orderDTO.salesStatus.name() == 'C'}" style="color: #ff6b6c">취소</span>-->
-<!--                </td>-->
-<!--    -->
-<!--                <td>-->
-<!--                    <button th:if="${orderDTO.salesStatus.name() == 'A'}" class="bg-blue btnConfirm" th:id="${orderDTO.salesOrderId}" >확정</button>-->
-<!--                    <button th:unless="${orderDTO.salesStatus.name() == 'A'}" class="bg-blue btnConfirm" th:id="${orderDTO.salesOrderId}" disabled >확정</button>-->
-<!--                </td>-->
-
             </tr>
             </tbody>
-
         </table>
     </div>
+
+    <h2>이메일 목록 조회</h2>
+    <table>
+        <thead>
+        <tr>
+<!--            <th>이메일 ID</th>-->
+            <th>영역</th>
+            <th>이름</th>
+            <th>이메일 주소</th>
+            <th>이메일 고정수신 여부</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+<!--            <td>1</td> &lt;!&ndash; 등록된 이메일의 ID &ndash;&gt;-->
+            <td>영역_주조</td> <!-- 해당 이메일이 속한 기준정보의 설비 -->
+            <td>이름</td>   <!-- 이름-->
+            <td>example1@example.com</td> <!-- 등록된 이메일 주소 -->
+            <td>고정수신여부</td> <!-- 이메일 고정수신여부 -->
+        </tr>
+        <!-- 추가로 등록된 이메일들에 대한 행들을 반복해서 생성 -->
+        </tbody>
+    </table>
+
 
 
 </body>

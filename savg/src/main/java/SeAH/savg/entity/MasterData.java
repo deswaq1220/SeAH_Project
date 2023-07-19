@@ -14,6 +14,7 @@ public class MasterData {
     private int masterdataId;                // id
     private String masterdataPart;           // 영역
     private String masterdataFacility;       // 설비
+
     /*
     private String qrName;                   // qr 파일명
     private String qrOriName;                // qr 원본파일명

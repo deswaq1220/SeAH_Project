@@ -1,8 +1,12 @@
 package SeAH.savg.controller;
 
+import SeAH.savg.dto.EmailFormDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
+import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
+import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.MasterDataRepository;
+import SeAH.savg.service.EmailService;
 import SeAH.savg.service.MasterDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,8 @@ import java.util.List;
 public class MasterDataController {
     private final MasterDataService masterDataService;
     private final MasterDataRepository masterDataRepository;
+    private final EmailRepository emailRepository;
+    private final EmailService emailService;
 
     // 설비목록
     @GetMapping(value = "/master")
@@ -42,4 +48,24 @@ public class MasterDataController {
         return "redirect:/master";
     }
 
+    // 이메일목록
+    @GetMapping(value = "/master/email")
+    public String emailForm(Model model){
+        List<Email> emailList = emailRepository.findAll();
+        model.addAttribute("emailList", emailList);
+        return "page/master";
+    }
+
+    // 이메일등록
+    @PostMapping(value = "/master/email")
+    public String emailNew(@Valid EmailFormDTO emailFormDTO, BindingResult bindingResult){
+        if(bindingResult.hasErrors())
+            return "page/master";
+        try{
+            emailService.saveEmail(emailFormDTO);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return "redirect:/master";
+    }
 }
