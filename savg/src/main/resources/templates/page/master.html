@@ -23,14 +23,14 @@
 
 <h1>이메일정보 등록</h1>
 <form action="/master/email" method="post">
-    <label for="masterdata">영역:</label>
-    <select id="masterdata" name="masterdata" required>
-        <option value="1">주조</option>
-        <option value="2">압출</option>
-        <option value="3">가공</option>
-        <option value="4">품질</option>
-        <option value="5">생산기술</option>
-        <option value="6">금형</option>
+    <label for="emailPart">영역:</label>
+    <select id="emailPart" name="emailPart" required>
+        <option value="주조">주조</option>
+        <option value="압출">압출</option>
+        <option value="가공">가공</option>
+        <option value="품질">품질</option>
+        <option value="생산기술">생산기술</option>
+        <option value="금형">금형</option>
     </select><br><br>
 
     <label for="emailName">이름:</label>
@@ -80,12 +80,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
+        <tr th:each="email, status: ${emailList}">
 <!--            <td>1</td> &lt;!&ndash; 등록된 이메일의 ID &ndash;&gt;-->
-            <td>영역_주조</td> <!-- 해당 이메일이 속한 기준정보의 설비 -->
-            <td>이름</td>   <!-- 이름-->
-            <td>example1@example.com</td> <!-- 등록된 이메일 주소 -->
-            <td>고정수신여부</td> <!-- 이메일 고정수신여부 -->
+            <td th:text="${email.emailPart}"></td> <!-- 해당 이메일이 속한 기준정보의 설비 -->
+            <td th:text="${email.emailName}"></td>   <!-- 이름-->
+            <td th:text="${email.emailAdd}"></td> <!-- 등록된 이메일 주소 -->
+            <td th:text="${email.masterStatus}">고정수신여부</td> <!-- 이메일 고정수신여부 -->
         </tr>
         <!-- 추가로 등록된 이메일들에 대한 행들을 반복해서 생성 -->
         </tbody>

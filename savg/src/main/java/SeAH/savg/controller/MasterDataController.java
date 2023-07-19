@@ -26,11 +26,16 @@ public class MasterDataController {
     private final EmailRepository emailRepository;
     private final EmailService emailService;
 
-    // 설비목록
+    // 기준정보 조회
     @GetMapping(value = "/master")
     public String masterForm(Model model){
+        // 설비목록
         List<MasterData> masterDataList = masterDataRepository.findAll();
         model.addAttribute("masterDataList", masterDataList);
+
+        // 이메일목록
+        List<Email> emailList = emailRepository.findAll();
+        model.addAttribute("emailList", emailList);
         return "page/master";
     }
 
@@ -48,13 +53,6 @@ public class MasterDataController {
         return "redirect:/master";
     }
 
-    // 이메일목록
-    @GetMapping(value = "/master/email")
-    public String emailForm(Model model){
-        List<Email> emailList = emailRepository.findAll();
-        model.addAttribute("emailList", emailList);
-        return "page/master";
-    }
 
     // 이메일등록
     @PostMapping(value = "/master/email")

@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Email {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long emailId;          // 이메일아이디
     private String emailPart;      // 영역
     private String emailName;      // 이름
