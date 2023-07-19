@@ -18,12 +18,16 @@ public class AttendanceService {
     //@Transactional
     public void attendEdu(String attendEmployeeDepartment
                                       , String attendEmployeeName
-                                      , String attendEmployeeNumber){
+                                      , String attendEmployeeNumber
+                                      , Long eduId
+    ){
 
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setAttenDepartment(attendEmployeeDepartment);
         attendanceDTO.setAttenName(attendEmployeeName);
         attendanceDTO.setAttenEmployeeNumber(attendEmployeeNumber);
+        attendanceDTO.setEduId(eduId);
+
 
         Attendance attendance = attendanceDTO.toEntity();
         System.out.println(attendance);

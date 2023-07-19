@@ -27,12 +27,12 @@ public class AttendanceController {
 
     //교육생 출석등록하기
     @PostMapping("/register")
-    public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, String> requestData) {
-        String attenDepartment = requestData.get("attenDepartment");
-        String attenName = requestData.get("attenName");
-        String attenEmployeeNumber = requestData.get("attenEmployeeNumber");
-
-        attendanceService.attendEdu(attenDepartment, attenName, attenEmployeeNumber);
+    public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, Object> requestData) {
+        String attenDepartment = (String) requestData.get("attenDepartment");
+        String attenName = (String) requestData.get("attenName");
+        String attenEmployeeNumber = (String) requestData.get("attenEmployeeNumber");
+        Long eduId = (Long) requestData.get("eduId");
+        attendanceService.attendEdu(attenDepartment, attenName, attenEmployeeNumber, eduId);
 
         return ResponseEntity.ok().build();
     }
