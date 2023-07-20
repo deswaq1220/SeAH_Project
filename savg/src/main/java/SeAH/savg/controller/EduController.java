@@ -11,6 +11,7 @@ import SeAH.savg.service.EduFileService;
 import SeAH.savg.service.EduService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import java.util.List;
 @Controller
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@Log4j2
 public class EduController {
 
     private final EduRepository eduRepository;
@@ -51,8 +53,15 @@ public class EduController {
     }
 
     //안전교육 일지 등록
+//    @PostMapping("/edureg")
+//    public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO, @RequestParam("file") MultipartFile file) {
+//        if(file.isEmpty()) {
+//            log.info("여기 비어 있어요");
+//        }
+//       return eduService.handleEduReg(eduDTO, file);
+//    }
     @PostMapping("/edureg")
-    public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO) {
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
@@ -62,13 +71,20 @@ public class EduController {
                 return ResponseEntity.badRequest().body("Edu Instructor is required.");
             }
 
-            // 데이터 처리 로직: 파일 업로드 및 파일 정보 저장
-            EduFile eduFile = eduFileService.uploadFile(file);
-
             // 데이터 처리 로직: 데이터 저장
             Edu edu = eduDTO.toEntity();
-            edu.getEduFiles().add(eduFile); // Edu와 EduFile 연관성 설정
-            eduRepository.save(edu); // 데이터베이스에 저장
+
+            if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
+                log.info("파일 없음");
+            } else {
+                // 데이터 처리 로직: 파일 업로드 및 파일 정보 저장
+                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO.getFiles());
+                for (EduFile eduFile : uploadedFiles) {
+                    eduFile.setEdu(edu); // EduFile 엔티티와 연결
+                }
+            }
+
+            eduRepository.save(edu); // Edu 엔티티 저장
 
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
@@ -81,11 +97,13 @@ public class EduController {
 
 
 
-    @GetMapping("/edureg")
+
+
+/*    @GetMapping("/edureg")
     public String showEduForm(Model model) {
         model.addAttribute("eduFormDTO", new EduFormDTO());
         return "redirect:/edudetails";
-    }
+    }*/
 
 
 

@@ -16,7 +16,7 @@ public class Attendance {
     private String atten_name;                  // 이름
     private String atten_department;            // 부서
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "edu_id")
     private Edu edu;
 }

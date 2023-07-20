@@ -11,6 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -26,41 +30,37 @@ public class EduFileService {
 
 
     //파일 등록
-/*    public String uploadFile(MultipartFile file) throws Exception {
-        String originalFilename = file.getOriginalFilename();
-        String savedFileName = generateUniqueFileName(originalFilename);
-        String fileUploadFullUrl = eduFileLocation +"\\" + savedFileName;
+    public List<EduFile> uploadFile(List<MultipartFile> files) throws Exception {
+        List<EduFile> uploadedFiles = new ArrayList<>();
+        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
-        System.out.println("파일경로" + fileUploadFullUrl);
-        FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-        fos.write(file.getBytes());
-        fos.close();
-        return savedFileName;
-    }*/
-    public EduFile uploadFile(MultipartFile file) throws Exception {
-        String originalFilename = file.getOriginalFilename();
-        String savedFileName = generateUniqueFileName(originalFilename);
-        String fileUploadFullUrl = eduFileLocation + File.separator + savedFileName;
+        for (MultipartFile file : files) {
+            String originalFilename = file.getOriginalFilename();
+            String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;
 
-        System.out.println("파일경로: " + fileUploadFullUrl);
-        FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-        fos.write(file.getBytes());
-        fos.close();
+            System.out.println("파일경로: " + fileUploadFullUrl);
+            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+            fos.write(file.getBytes());
+            fos.close();
 
-        // 파일 정보 생성 및 저장
-        EduFile eduFile = new EduFile();
-        eduFile.setEduFileName(savedFileName);
-        eduFile.setEduFileOriName(originalFilename);
-        eduFile.setEduFileUrl(fileUploadFullUrl);
-        eduFileRepository.save(eduFile); // 데이터베이스에 저장
+            // 파일 정보 생성 및 저장
+            EduFile eduFile = new EduFile();
+            eduFile.setEduFileName(todayDate + "_" + originalFilename);
+            eduFile.setEduFileOriName(originalFilename);
+            eduFile.setEduFileUrl(fileUploadFullUrl);
+            eduFileRepository.save(eduFile); // 데이터베이스에 저장
 
-        return eduFile;
+            uploadedFiles.add(eduFile);
+        }
+
+        return uploadedFiles;
     }
 
+
     //파일업뎃
-    public void updateFile(String fileName, MultipartFile file) throws Exception {
+    public void updateFile(String fileName, List<MultipartFile> files) throws Exception {
         deleteFile(fileName);
-        uploadFile(file);
+        uploadFile(files);
     }
 
     //파일삭제
@@ -72,12 +72,12 @@ public class EduFileService {
         }
     }
 
-    //파일명설정
+    //파일명설정 : 오늘날짜_원본파일명 조합
     private String generateUniqueFileName(String originalFilename) {
-        UUID uuid = UUID.randomUUID();
-        String extension = StringUtils.getFilenameExtension(originalFilename);
-        return uuid.toString() + "." + extension;
+        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        return todayDate + "_" + originalFilename;
     }
+
 
     // 파일 경로 반환
     private String getFilePath(String fileName) {
