@@ -2,23 +2,23 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.EmailFormDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
-import SeAH.savg.entity.Email;
-import SeAH.savg.entity.MasterData;
 import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.MasterDataRepository;
 import SeAH.savg.service.EmailService;
 import SeAH.savg.service.MasterDataService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
-@Controller
+@RestController
+//@Controller
 @RequiredArgsConstructor
 public class MasterDataController {
     private final MasterDataService masterDataService;
@@ -27,17 +27,28 @@ public class MasterDataController {
     private final EmailService emailService;
 
     // 기준정보 조회
-    @GetMapping(value = "/master")
-    public String masterForm(Model model){
-        // 설비목록
-        List<MasterData> masterDataList = masterDataRepository.findAll();
-        model.addAttribute("masterDataList", masterDataList);
-
+    @GetMapping("/master")
+    public ResponseEntity<?> masterForm(){
         // 이메일목록
-        List<Email> emailList = emailRepository.findAll();
-        model.addAttribute("emailList", emailList);
-        return "page/master";
+//        List<Email> emailList = emailRepository.findAll();
+//        model.addAttribute("emailList", emailList);
+        return new ResponseEntity<>(masterDataService.findAll(), HttpStatus.OK);
     }
+
+
+//    // 기준정보 조회
+//    @GetMapping(value = "/master")
+//    public String masterForm(Model model){
+//        // 설비목록
+//        List<MasterData> masterDataList = masterDataRepository.findAll();
+//        model.addAttribute("masterDataList", masterDataList);
+//
+//        // 이메일목록
+//        List<Email> emailList = emailRepository.findAll();
+//        model.addAttribute("emailList", emailList);
+//        return "page/master";
+//    }
+
 
     // 설비등록
     @PostMapping(value = "/master")
@@ -66,4 +77,7 @@ public class MasterDataController {
         }
         return "redirect:/master";
     }
+
+    // 이메일수정
+
 }
