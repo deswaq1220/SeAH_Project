@@ -25,10 +25,10 @@ public class AttendanceController {
 
   ////사용자 관련(1~2)
     //1. (사용자) 출석 등록 페이지보기
-    //@GetMapping("")
-    //public String showUserEduAtten() {
-    //    return "page/attendance";
-    //}
+    @GetMapping("")
+    public String showUserEduAtten() {
+        return "page/attendance";
+    }
 
     //2. (사용자) 출석 등록하기
     @PostMapping("/register")
@@ -50,7 +50,7 @@ public class AttendanceController {
         Long eduId = requestData.get("eduId");
         attendanceRepository.findAllByEduId(eduId);
 
-        return "page/attendance"; //(임시, 출석리스트 페이지 만들어지면 변경필요 ★)
+        return "page/attendance2"; //(임시, 출석리스트 페이지 만들어지면 변경필요 ★)
     }
 
 
