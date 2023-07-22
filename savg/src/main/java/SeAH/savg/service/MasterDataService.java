@@ -14,6 +14,7 @@ import java.util.List;
 public class MasterDataService {
     private final MasterDataRepository masterDataRepository;
 
+    // 기준정보 조회
     @Transactional(readOnly = true)
     public List<MasterData> findAll() {
         List<MasterData> masterDataList = masterDataRepository.findAll();
@@ -21,14 +22,20 @@ public class MasterDataService {
     }
 
 
-
-
-    public int saveMaster(MasterDataFormDTO masterDataFormDTO){
-        // 기준정보 등록
+    // 기준정보 등록
+    public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO){
         MasterData masterData = masterDataFormDTO.createMaster();
         masterDataRepository.save(masterData);
 
-        return  masterData.getMasterdataId();
+        return masterData;
     }
+
+//    public int saveMaster(MasterDataFormDTO masterDataFormDTO){
+//        // 기준정보 등록
+//        MasterData masterData = masterDataFormDTO.createMaster();
+//        masterDataRepository.save(masterData);
+//
+//        return  masterData.getMasterdataId();
+//    }
 
 }

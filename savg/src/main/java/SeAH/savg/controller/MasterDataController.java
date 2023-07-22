@@ -2,6 +2,8 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.EmailFormDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
+import SeAH.savg.entity.Email;
+import SeAH.savg.entity.MasterData;
 import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.MasterDataRepository;
 import SeAH.savg.service.EmailService;
@@ -13,9 +15,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 //@Controller
@@ -26,57 +32,84 @@ public class MasterDataController {
     private final EmailRepository emailRepository;
     private final EmailService emailService;
 
-    // 기준정보 조회
-    @GetMapping("/master")
-    public ResponseEntity<?> masterForm(){
-        // 이메일목록
-//        List<Email> emailList = emailRepository.findAll();
-//        model.addAttribute("emailList", emailList);
-        return new ResponseEntity<>(masterDataService.findAll(), HttpStatus.OK);
-    }
-
-
 //    // 기준정보 조회
-//    @GetMapping(value = "/master")
-//    public String masterForm(Model model){
-//        // 설비목록
-//        List<MasterData> masterDataList = masterDataRepository.findAll();
-//        model.addAttribute("masterDataList", masterDataList);
-//
-//        // 이메일목록
-//        List<Email> emailList = emailRepository.findAll();
-//        model.addAttribute("emailList", emailList);
-//        return "page/master";
+//    @GetMapping("/master")
+//    public ResponseEntity<?> masterForm(){
+//        return new ResponseEntity<>(masterDataService.findAll(), HttpStatus.OK);
 //    }
+//
+//    // 이메일 목록 조회
+//    @GetMapping("/master/email")
+//    public ResponseEntity<?> emailForm(){
+//        return new ResponseEntity<>(emailService.findAll(), HttpStatus.OK);
+//    }
+
+    // 기준정보 조회 + 이메일목록 조회
+    @GetMapping("/master")
+    public ResponseEntity<?> masterAndEmailForm(){
+        Map<String, Object> responseData = new HashMap<>();
+
+        List<MasterData> masterDataList = masterDataService.findAll();
+        List<Email> emailList = emailService.findAll();
+
+        responseData.put("masterData", masterDataList);
+        responseData.put("email", emailList);
+
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
 
 
     // 설비등록
-    @PostMapping(value = "/master")
-    public String masterNew(@Valid MasterDataFormDTO masterDataFormDTO, BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors())
-            return "page/master";
-
-        try{
-            masterDataService.saveMaster(masterDataFormDTO);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return "redirect:/master";
+    @PostMapping( "/master")
+    public ResponseEntity<?> masterNew(@RequestBody MasterDataFormDTO masterDataFormDTO){
+        return new ResponseEntity<>(masterDataService.saveMaster(masterDataFormDTO), HttpStatus.CREATED);
     }
 
 
-    // 이메일등록
-    @PostMapping(value = "/master/email")
-    public String emailNew(@Valid EmailFormDTO emailFormDTO, BindingResult bindingResult){
-        if(bindingResult.hasErrors())
-            return "page/master";
-        try{
-            emailService.saveEmail(emailFormDTO);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return "redirect:/master";
-    }
+//    // 이메일등록
+//    @PostMapping(value = "/master/email")
+//    public String emailNew(@Valid EmailFormDTO emailFormDTO, BindingResult bindingResult){
+//        if(bindingResult.hasErrors())
+//            return "page/master";
+//        try{
+//            emailService.saveEmail(emailFormDTO);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return "redirect:/master";
+//    }
+
+
+
+
+//
+//    // 설비등록
+//    @PostMapping(value = "/master")
+//    public String masterNew(@Valid MasterDataFormDTO masterDataFormDTO, BindingResult bindingResult, Model model){
+//        if(bindingResult.hasErrors())
+//            return "page/master";
+//
+//        try{
+//            masterDataService.saveMaster(masterDataFormDTO);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return "redirect:/master";
+//    }
+//
+//
+//    // 이메일등록
+//    @PostMapping(value = "/master/email")
+//    public String emailNew(@Valid EmailFormDTO emailFormDTO, BindingResult bindingResult){
+//        if(bindingResult.hasErrors())
+//            return "page/master";
+//        try{
+//            emailService.saveEmail(emailFormDTO);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return "redirect:/master";
+//    }
 
     // 이메일수정
 
