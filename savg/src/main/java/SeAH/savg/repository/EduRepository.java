@@ -11,4 +11,6 @@ import java.util.List;
 public interface EduRepository extends JpaRepository<Edu, String> {
 
     List<Edu> findAll(Sort sort);
+
+    List<Edu> findByEduId(Long eduId);
 }

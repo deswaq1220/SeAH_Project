@@ -53,13 +53,6 @@ public class EduController {
     }
 
     //안전교육 일지 등록
-//    @PostMapping("/edureg")
-//    public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO, @RequestParam("file") MultipartFile file) {
-//        if(file.isEmpty()) {
-//            log.info("여기 비어 있어요");
-//        }
-//       return eduService.handleEduReg(eduDTO, file);
-//    }
     @PostMapping("/edureg")
     public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO) {
         try {
@@ -95,15 +88,8 @@ public class EduController {
         }
     }
 
+    //교육일지 리스트 조회
 
-
-
-
-/*    @GetMapping("/edureg")
-    public String showEduForm(Model model) {
-        model.addAttribute("eduFormDTO", new EduFormDTO());
-        return "redirect:/edudetails";
-    }*/
 
 
 
