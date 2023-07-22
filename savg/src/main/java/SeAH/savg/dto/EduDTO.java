@@ -6,8 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter @Setter
 public class EduDTO {
@@ -27,6 +29,8 @@ public class EduDTO {
     private edustate eduTarget; //교육대상 : 현장/사무/전체
     private String eduContent; //교육내용
     private String eduWriter; //작성자
+
+    private List<MultipartFile> files; // 파일
 
     private static ModelMapper modelMapper = new ModelMapper();
 
