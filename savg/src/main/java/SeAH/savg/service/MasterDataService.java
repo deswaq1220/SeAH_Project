@@ -22,6 +22,7 @@ public class MasterDataService {
     }
 
 
+    @Transactional
     // 기준정보 등록
     public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO){
         MasterData masterData = masterDataFormDTO.createMaster();

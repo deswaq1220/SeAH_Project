@@ -20,12 +20,23 @@ public class EmailService {
         return emailList;
     }
 
-    public Long saveEmail(EmailFormDTO emailFormDTO){
+    @Transactional
+    public Email saveEmail(EmailFormDTO emailFormDTO){
         // 이메일정보 등록
          Email email = emailFormDTO.createEmail();
          emailRepository.save(email);
 
-         return email.getEmailId();
+         return email;
+    }
+
+    @Transactional
+    public Email updateEmail(EmailFormDTO emailFormDTO, Long id){
+        // 이메일 정보 가져오기
+        Email email = emailRepository.findById(id).get();
+        email.setEmailAdd(emailFormDTO.getEmailAdd());
+        email.setEmailPart(email.getEmailPart());
+        email.setMasterStatus(email.getMasterStatus());
+        return email;
     }
 
 }

@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -66,19 +63,17 @@ public class MasterDataController {
     }
 
 
-//    // 이메일등록
-//    @PostMapping(value = "/master/email")
-//    public String emailNew(@Valid EmailFormDTO emailFormDTO, BindingResult bindingResult){
-//        if(bindingResult.hasErrors())
-//            return "page/master";
-//        try{
-//            emailService.saveEmail(emailFormDTO);
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return "redirect:/master";
-//    }
+    // 이메일등록
+    @PostMapping("/master/email")
+    public ResponseEntity<?> emailNew(@RequestBody EmailFormDTO emailFormDTO){
+        return new ResponseEntity<>(emailService.saveEmail(emailFormDTO), HttpStatus.CREATED);
+    }
 
+    // 이메일수정
+    @PutMapping("/master/email/update/{emailId}")
+    public ResponseEntity<?> emailUpdate(@RequestBody EmailFormDTO emailFormDTO, @PathVariable Long id){
+        return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, id), HttpStatus.CREATED);
+    }
 
 
 
