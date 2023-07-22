@@ -32,6 +32,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @Log4j2
+
 public class EduController {
 
     private final EduRepository eduRepository;
@@ -55,6 +56,7 @@ public class EduController {
     //안전교육 일지 등록
     @PostMapping("/edureg")
     public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO) {
+
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
@@ -89,6 +91,7 @@ public class EduController {
     }
 
     //교육일지 리스트 조회
+
 
 
 

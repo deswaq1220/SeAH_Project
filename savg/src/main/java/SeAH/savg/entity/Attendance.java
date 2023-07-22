@@ -11,10 +11,16 @@ import javax.persistence.*;
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long atten_id;                      // id
-    private String atten_employee_number;       // 사원번호
-    private String atten_name;                  // 이름
-    private String atten_department;            // 부서
+    private Long attenId;                      // id
+
+    @Column(nullable = false)
+    private String attenEmployeeNumber;       // 사원번호
+
+    @Column(nullable = false)
+    private String attenName;                  // 이름
+
+    @Column(nullable = false)
+    private String attenDepartment;            // 부서
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "edu_id")

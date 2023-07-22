@@ -28,7 +28,8 @@ public class EmailController {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setTo(emailData.getRecipient());
+//            helper.setTo(emailData.getRecipient());
+            helper.setTo(emailData.getRecipients().toArray(new String[0]));
             helper.setSubject(emailData.getSubject());
             helper.setText(emailData.getContent());
 

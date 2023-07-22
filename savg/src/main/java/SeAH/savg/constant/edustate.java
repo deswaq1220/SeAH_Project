@@ -18,4 +18,5 @@ public enum edustate {
         return this == null || this == T;
     }
 
+
 }
