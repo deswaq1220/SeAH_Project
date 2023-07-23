@@ -62,6 +62,12 @@ public class MasterDataController {
         return new ResponseEntity<>(masterDataService.saveMaster(masterDataFormDTO), HttpStatus.CREATED);
     }
 
+    // 설비삭제
+    @DeleteMapping("/master/delete/{masterdataId}")
+    public ResponseEntity<String> masterDelete(@PathVariable Integer masterdataId){
+        masterDataService.deleteMaster(masterdataId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     // 이메일등록
     @PostMapping("/master/email")
@@ -71,8 +77,8 @@ public class MasterDataController {
 
     // 이메일수정
     @PutMapping("/master/email/update/{emailId}")
-    public ResponseEntity<?> emailUpdate(@RequestBody EmailFormDTO emailFormDTO, @PathVariable Long id){
-        return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, id), HttpStatus.CREATED);
+    public ResponseEntity<?> emailUpdate(@RequestBody EmailFormDTO emailFormDTO, @PathVariable Long emailId){
+        return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, emailId), HttpStatus.CREATED);
     }
 
 

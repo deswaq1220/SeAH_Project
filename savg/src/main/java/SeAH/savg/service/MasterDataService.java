@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +22,8 @@ public class MasterDataService {
         return masterDataList;
     }
 
-
-    @Transactional
     // 기준정보 등록
+    @Transactional
     public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO){
         MasterData masterData = masterDataFormDTO.createMaster();
         masterDataRepository.save(masterData);
@@ -31,12 +31,11 @@ public class MasterDataService {
         return masterData;
     }
 
-//    public int saveMaster(MasterDataFormDTO masterDataFormDTO){
-//        // 기준정보 등록
-//        MasterData masterData = masterDataFormDTO.createMaster();
-//        masterDataRepository.save(masterData);
-//
-//        return  masterData.getMasterdataId();
-//    }
+    // 기준정보 삭제
+    @Transactional
+    public void deleteMaster(Integer masterdataId){
+        masterDataRepository.deleteById(masterdataId);
+    }
+
 
 }
