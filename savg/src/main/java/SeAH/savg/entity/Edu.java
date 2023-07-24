@@ -1,7 +1,9 @@
 package SeAH.savg.entity;
 
 import SeAH.savg.constant.edustate;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -14,6 +16,8 @@ import SeAH.savg.entity.EduFile;
 
 @Getter @Setter
 @Entity
+@NoArgsConstructor // 기본 생성자 추가
+@AllArgsConstructor
 public class Edu {
 
     @Id
@@ -52,11 +56,9 @@ public class Edu {
     @Column(nullable = false)
     private String eduWriter;               //작성자
 
-    //eduFile 엔티티 매핑
-/*    @OneToMany(mappedBy = "edu")
-    private List<EduFile> eduFiles = new ArrayList<>();*/
 
 
     public void setEduFileName(String fileName) {
     }
+
 }
