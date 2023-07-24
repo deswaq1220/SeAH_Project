@@ -14,6 +14,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests()//인증이 필요한 url 설정
                 .antMatchers("/edureg").authenticated()
+                .antMatchers("/manager").authenticated()
                 .anyRequest().permitAll()   //나머지는 다 접속 가능
                 .and()
                 .formLogin()

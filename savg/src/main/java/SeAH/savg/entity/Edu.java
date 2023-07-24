@@ -44,7 +44,7 @@ public class Edu {
     private LocalDateTime eduEndTime;       //교육종료시각
 
 //    @Column(nullable = false)
-    private Integer eduSumTime;             //교육시간(분)
+    private String eduSumTime;             //교육시간(분)
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
