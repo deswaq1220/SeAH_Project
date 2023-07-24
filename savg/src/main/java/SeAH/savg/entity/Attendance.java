@@ -23,4 +23,5 @@ public class Attendance {
     private String attenDepartment;            // 부서
 
     private Long eduId; //교육일지 id
+
 }
