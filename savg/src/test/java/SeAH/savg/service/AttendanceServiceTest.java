@@ -18,6 +18,6 @@ public class AttendanceServiceTest {
     @Test
     @Rollback(false)
     public void testAttend(){
-    attendanceService.attendEdu("소형압연팀", "김홍홍", "111115", 1L);
+    attendanceService.attendEdu("소형팀", "김홍홍", "11232", 1L);
     }
 }
