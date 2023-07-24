@@ -83,5 +83,9 @@ public class EduController {
     }
 
 
+    //(관리자) 월별 교육 통계 조회하기
+
+    //@PostMapping()
+
 
 }

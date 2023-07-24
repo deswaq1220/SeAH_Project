@@ -7,7 +7,6 @@ import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
 @Data
-@ToString
 @NoArgsConstructor
 public class AttendanceDTO {
 
