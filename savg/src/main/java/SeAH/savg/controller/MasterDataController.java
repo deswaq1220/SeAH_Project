@@ -11,11 +11,8 @@ import SeAH.savg.service.MasterDataService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,17 +26,6 @@ public class MasterDataController {
     private final EmailRepository emailRepository;
     private final EmailService emailService;
 
-//    // 기준정보 조회
-//    @GetMapping("/master")
-//    public ResponseEntity<?> masterForm(){
-//        return new ResponseEntity<>(masterDataService.findAll(), HttpStatus.OK);
-//    }
-//
-//    // 이메일 목록 조회
-//    @GetMapping("/master/email")
-//    public ResponseEntity<?> emailForm(){
-//        return new ResponseEntity<>(emailService.findAll(), HttpStatus.OK);
-//    }
 
     // 기준정보 조회 + 이메일목록 조회
     @GetMapping("/master")
@@ -81,6 +67,17 @@ public class MasterDataController {
         return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, emailId), HttpStatus.CREATED);
     }
 
+//    // 기준정보 조회
+//    @GetMapping("/master")
+//    public ResponseEntity<?> masterForm(){
+//        return new ResponseEntity<>(masterDataService.findAll(), HttpStatus.OK);
+//    }
+//
+//    // 이메일 목록 조회
+//    @GetMapping("/master/email")
+//    public ResponseEntity<?> emailForm(){
+//        return new ResponseEntity<>(emailService.findAll(), HttpStatus.OK);
+//    }
 
 
 //
