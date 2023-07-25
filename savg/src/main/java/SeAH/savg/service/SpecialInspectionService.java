@@ -3,6 +3,7 @@ package SeAH.savg.service;
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.entity.Email;
+import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.entity.SpecialInspection;
 import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
@@ -20,6 +21,8 @@ import static SeAH.savg.constant.MasterStatus.Y;
 public class SpecialInspectionService {
     private final SpecialInspectionRepository specialInspectionRepository;
     private final EmailRepository emailRepository;
+    private final SpecialFileService specialFileService;
+
 
     // 수시점검 등록화면 조회 : 프론트연결용
 //    @Transactional
@@ -46,7 +49,7 @@ public class SpecialInspectionService {
 
     // 수시점검 저장
     @Transactional
-    public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO){
+    public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
         // 점검일 세팅
         speInsFormDTO.setSpeDate(LocalDateTime.now());
 
@@ -56,6 +59,20 @@ public class SpecialInspectionService {
         // 수시점검 저장
         SpecialInspection special = speInsFormDTO.createSpeIns();
         specialInspectionRepository.save(special);
+
+
+        System.out.println("222222222222: " + speInsFormDTO.getFiles());
+
+        // 파일 저장
+        if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
+            System.out.println("여기111111111111111111");
+            // 파일 업로드 및 파일 정보 저장
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO.getFiles());
+            for(SpecialFile specialFile : uploadedFiles)
+                specialFile.setSpecialInspection(special);
+        }
+
+
         return special;
     }
 }

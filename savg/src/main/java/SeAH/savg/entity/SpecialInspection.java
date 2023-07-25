@@ -45,16 +45,16 @@ public class SpecialInspection {
     @Enumerated(EnumType.STRING)
     private SpeStatus speRiskAssess;        // 위험성평가
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String speContent;              // 점검내용
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private String speActContent;           // 개선대책
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     private LocalDateTime speDeadline;      // 완료요청기한
 
-    @Column(nullable = false)
+//    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private SpeStatus speCompelete = SpeStatus.NO;              // 완료여부 : 기본값 NO
 

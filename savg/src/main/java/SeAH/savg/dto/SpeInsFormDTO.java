@@ -1,14 +1,13 @@
 package SeAH.savg.dto;
 
 import SeAH.savg.constant.SpeStatus;
-import SeAH.savg.entity.Email;
 import SeAH.savg.entity.SpecialInspection;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
@@ -28,7 +27,9 @@ public class SpeInsFormDTO {
     private String speActContent;           // 개선대책
     private LocalDateTime speDeadline;      // 완료요청기한
     private SpeStatus speCompelete;         // 완료여부 : 기본값 NO
-    private List<Email> email = new ArrayList<>();              // 이메일
+
+
+    private List<MultipartFile> files;      // 파일
 
     public static ModelMapper modelMapper = new ModelMapper();
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
