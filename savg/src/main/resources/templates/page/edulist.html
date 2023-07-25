@@ -1,0 +1,28 @@
+<!-- edulist.html -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edu List</title>
+</head>
+<body>
+<h1>Edu List</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Edu ID</th>
+        <th>Edu Category</th>
+        <th>Edu Start Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="edu : ${eduList}">
+        <td th:text="${edu.eduId}"></td>
+        <td th:text="${edu.eduCategory}"></td>
+        <td th:text="${edu.eduStartTime}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

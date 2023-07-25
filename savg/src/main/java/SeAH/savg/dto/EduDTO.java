@@ -13,8 +13,9 @@ import java.util.List;
 
 @Getter @Setter
 public class EduDTO {
-    private Long eduId;
-    private edustate eduCategory;
+    private String eduId;
+    private edustate eduCategory; //분류
+    private String eduTitle;
     private String eduInstructor; //강사
     private String eduPlace; //장소
 
@@ -34,14 +35,12 @@ public class EduDTO {
 
     private static ModelMapper modelMapper = new ModelMapper();
 
-    public Edu createEdu(){
-        return modelMapper.map(this, Edu.class);
-    }
 
     public Edu toEntity() {
         Edu edu = new Edu();
         edu.setEduId(this.eduId);
         edu.setEduCategory(this.eduCategory);
+        edu.setEduTitle(this.eduTitle);
         edu.setEduInstructor(this.eduInstructor);
         edu.setEduPlace(this.eduPlace);
         edu.setEduStartTime(this.eduStartTime);
@@ -52,6 +51,24 @@ public class EduDTO {
         return edu;
     }
 
+
+    // 생성자 추가
+    public EduDTO() {}
+
+    // Edu 엔티티를 EduDTO로 변환하는 생성자
+    public EduDTO(Edu edu) {
+        this.eduId = edu.getEduId();
+        this.eduCategory = edu.getEduCategory();
+        this.eduTitle = edu.getEduTitle();
+        this.eduInstructor = edu.getEduInstructor();
+        this.eduPlace = edu.getEduPlace();
+        this.eduStartTime = edu.getEduStartTime();
+        this.eduEndTime = edu.getEduEndTime();
+        this.eduSumTime = edu.getEduSumTime().toString(); // LocalDateTime을 문자열로 변환하여 저장
+        this.eduTarget = edu.getEduTarget();
+        this.eduContent = edu.getEduContent();
+        this.eduWriter = edu.getEduWriter();
+    }
 
 
 
