@@ -10,16 +10,21 @@ import javax.persistence.*;
 @Getter @Setter
 public class Email {
     @Id
-    @Column(name = "email_id")
+    @Column(name = "email_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long emailId;          // 이메일아이디
+
+    @Column(nullable = false)
     private String emailPart;      // 영역
+
+    @Column(nullable = false)
     private String emailName;      // 이름
+
+    @Column(nullable = false)
     private String emailAdd;       // 이메일주소
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MasterStatus masterStatus = MasterStatus.N;        // 고정수신여부 : Y / N
 
-    @ManyToOne
-    @JoinColumn(name = "spe_id")
-    private SpecialInspection speIn;
 }

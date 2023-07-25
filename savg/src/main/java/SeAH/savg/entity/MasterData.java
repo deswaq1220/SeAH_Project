@@ -12,7 +12,11 @@ public class MasterData {
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int masterdataId;                // id
+
+    @Column(nullable = false)
     private String masterdataPart;           // 영역
+
+    @Column(nullable = false)
     private String masterdataFacility;       // 설비
 
     /*
@@ -24,3 +28,4 @@ public class MasterData {
 
 
 }
+

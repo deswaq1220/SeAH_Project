@@ -1,5 +1,6 @@
 package SeAH.savg.service;
 
+import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.SpecialInspection;
@@ -9,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static SeAH.savg.constant.MasterStatus.Y;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +30,7 @@ public class SpecialInspectionService {
 //
 //
 //
-//        List<Email> emailList = emailRepository.findByEmailPart(speIns.getSpePart());
+//        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(speIns.getSpePart(), Y);
 //        return emailList;
 //    }
 
@@ -34,16 +38,22 @@ public class SpecialInspectionService {
     @Transactional
     public List<Email> findEmail(){
         SpecialInspection speIns = new SpecialInspection();
-        speIns.setSpePart("압출");          // 영역 세팅
-        speIns.setSpeFacility("압출1");  // 설비 세팅
-
-        List<Email> emailList = emailRepository.findByEmailPart(speIns.getSpePart());
+        speIns.setSpePart("금형");          // 영역 세팅
+        speIns.setSpeFacility("금");    // 설비 세팅
+        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(speIns.getSpePart(), Y);
         return emailList;
     }
 
     // 수시점검 저장
     @Transactional
     public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO){
+        // 점검일 세팅
+        speInsFormDTO.setSpeDate(LocalDateTime.now());
+
+        // 위험도에 따른 완료요청기한 세팅
+        SpeStatus.deadLineCal(speInsFormDTO);
+
+        // 수시점검 저장
         SpecialInspection special = speInsFormDTO.createSpeIns();
         specialInspectionRepository.save(special);
         return special;

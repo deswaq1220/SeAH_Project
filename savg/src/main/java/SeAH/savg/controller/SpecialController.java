@@ -30,7 +30,6 @@ public class SpecialController {
     // 저장
     @PostMapping("/special")
     public ResponseEntity<?> speNew(@RequestBody SpeInsFormDTO speInsFormDTO){
-
         return new ResponseEntity<>(specialInspectionService.speCreate(speInsFormDTO), HttpStatus.CREATED);
     }
 
