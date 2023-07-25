@@ -56,7 +56,6 @@ public class EduController {
     //안전교육 일지 등록
     @PostMapping("/edureg")
     public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO) {
-
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {

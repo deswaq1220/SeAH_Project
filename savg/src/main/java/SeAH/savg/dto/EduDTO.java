@@ -15,6 +15,7 @@ import java.util.List;
 public class EduDTO {
     private Long eduId;
     private edustate eduCategory;
+    private String eduTitle;
     private String eduInstructor; //강사
     private String eduPlace; //장소
 
@@ -35,11 +36,20 @@ public class EduDTO {
     private static ModelMapper modelMapper = new ModelMapper();
 
     public EduDTO(Edu edu) {
+        this.eduId = edu.getEduId();
+        this.eduCategory = edu.getEduCategory();
+        this.eduTitle = edu.getEduTitle();
+        this.eduInstructor = edu.getEduInstructor();
+        this.eduPlace = edu.getEduPlace();
+        this.eduStartTime = edu.getEduStartTime();
+        this.eduTarget = edu.getEduTarget();
+        this.eduContent = edu.getEduContent();
+        this.eduWriter = edu.getEduWriter();
     }
 
-    public Edu createEdu(){
-        return modelMapper.map(this, Edu.class);
-    }
+//    public Edu createEdu(){
+//        return modelMapper.map(this, Edu.class);
+//    }
 
     public Edu toEntity() {
         Edu edu = new Edu();
