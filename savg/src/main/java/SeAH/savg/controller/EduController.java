@@ -13,7 +13,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -113,7 +112,7 @@ public class EduController {
 
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
-    public ResponseEntity<EduDTO> getEduDetail(@PathVariable Long eduId) {
+    public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
         Edu edu = eduService.getEduById(eduId);
         if (edu == null) {
             return ResponseEntity.notFound().build();
@@ -122,5 +121,6 @@ public class EduController {
         EduDTO eduDTO = new EduDTO(edu);
         return ResponseEntity.ok(eduDTO);
     }
+
 
 }

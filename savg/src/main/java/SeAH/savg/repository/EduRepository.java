@@ -12,5 +12,5 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
     List<Edu> findAll(Sort sort);
 
-    Edu findByEduId(Long eduId);
+    Edu findByEduId(String eduId);
 }

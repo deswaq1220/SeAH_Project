@@ -13,8 +13,9 @@ import java.util.List;
 
 @Getter @Setter
 public class EduDTO {
-    private Long eduId;
-    private edustate eduCategory;
+    private String eduId;
+    private edustate eduCategory; //분류
+    private String eduTitle;
     private String eduInstructor; //강사
     private String eduPlace; //장소
 
@@ -39,6 +40,7 @@ public class EduDTO {
         Edu edu = new Edu();
         edu.setEduId(this.eduId);
         edu.setEduCategory(this.eduCategory);
+        edu.setEduTitle(this.eduTitle);
         edu.setEduInstructor(this.eduInstructor);
         edu.setEduPlace(this.eduPlace);
         edu.setEduStartTime(this.eduStartTime);
@@ -57,6 +59,7 @@ public class EduDTO {
     public EduDTO(Edu edu) {
         this.eduId = edu.getEduId();
         this.eduCategory = edu.getEduCategory();
+        this.eduTitle = edu.getEduTitle();
         this.eduInstructor = edu.getEduInstructor();
         this.eduPlace = edu.getEduPlace();
         this.eduStartTime = edu.getEduStartTime();
