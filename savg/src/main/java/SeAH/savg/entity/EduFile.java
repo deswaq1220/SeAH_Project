@@ -17,7 +17,13 @@ public class EduFile {
     private String eduFileOriName;    // 원본 파일명
     private String eduFileUrl;        // 파일 조회 경로
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "edu_id")
     private Edu edu;
+
+    public void updateEduFile(String eduFileName, String eduFileOriName, String eduFileUrl){
+        this.eduFileName = eduFileName;
+        this.eduFileOriName = eduFileOriName;
+        this.eduFileUrl = eduFileUrl;
+    }
 }

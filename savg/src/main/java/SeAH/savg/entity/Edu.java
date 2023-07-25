@@ -1,16 +1,23 @@
 package SeAH.savg.entity;
 
 import SeAH.savg.constant.edustate;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import SeAH.savg.entity.EduFile;
 
 
 @Getter @Setter
 @Entity
+@NoArgsConstructor // 기본 생성자 추가
+@AllArgsConstructor
 public class Edu {
 
     @Id
@@ -20,6 +27,9 @@ public class Edu {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private edustate eduCategory;           //교육분류:집체,관리감독,안전조회 등
+
+    @Column
+    private String eduTitle;    // 제목
 
     @Column(nullable = false)
     private String eduInstructor;           //강사
@@ -34,7 +44,7 @@ public class Edu {
     private LocalDateTime eduEndTime;       //교육종료시각
 
 //    @Column(nullable = false)
-    private LocalDateTime eduSumTime;             //교육시간(분)
+    private String eduSumTime;             //교육시간(분)
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -48,10 +58,7 @@ public class Edu {
 
 
 
-
-
-
-
-
+    public void setEduFileName(String fileName) {
+    }
 
 }

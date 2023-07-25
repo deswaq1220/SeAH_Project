@@ -6,8 +6,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter @Setter
 public class EduDTO {
@@ -28,11 +30,10 @@ public class EduDTO {
     private String eduContent; //교육내용
     private String eduWriter; //작성자
 
+    private List<MultipartFile> files; // 파일
+
     private static ModelMapper modelMapper = new ModelMapper();
 
-    public Edu createEdu(){
-        return modelMapper.map(this, Edu.class);
-    }
 
     public Edu toEntity() {
         Edu edu = new Edu();
@@ -48,6 +49,23 @@ public class EduDTO {
         return edu;
     }
 
+
+    // 생성자 추가
+    public EduDTO() {}
+
+    // Edu 엔티티를 EduDTO로 변환하는 생성자
+    public EduDTO(Edu edu) {
+        this.eduId = edu.getEduId();
+        this.eduCategory = edu.getEduCategory();
+        this.eduInstructor = edu.getEduInstructor();
+        this.eduPlace = edu.getEduPlace();
+        this.eduStartTime = edu.getEduStartTime();
+        this.eduEndTime = edu.getEduEndTime();
+        this.eduSumTime = edu.getEduSumTime().toString(); // LocalDateTime을 문자열로 변환하여 저장
+        this.eduTarget = edu.getEduTarget();
+        this.eduContent = edu.getEduContent();
+        this.eduWriter = edu.getEduWriter();
+    }
 
 
 

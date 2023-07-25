@@ -1,17 +1,19 @@
 package SeAH.savg.Email;
 
+import java.util.List;
+
 public class EmailData {
 
-    private String recipient;
+    private List<String> recipients;
     private String subject;
     private String content;
 
-    public String getRecipient() {
-        return recipient;
+    public List<String> getRecipients() {
+        return recipients;
     }
 
-    public void setRecipient(String recipient) {
-        this.recipient = recipient;
+    public void setRecipients(List<String> recipients) {
+        this.recipients = recipients;
     }
 
     public String getSubject() {
