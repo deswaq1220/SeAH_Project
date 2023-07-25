@@ -45,7 +45,7 @@ public class EduDTO {
         edu.setEduInstructor(this.eduInstructor);
         edu.setEduPlace(this.eduPlace);
         edu.setEduStartTime(this.eduStartTime);
-//        edu.setEduEndTime(this.eduEndTime);
+        edu.setEduEndTime(this.eduEndTime);
         edu.setEduTarget(this.eduTarget);
         edu.setEduContent(this.eduContent);
         edu.setEduWriter(this.eduWriter);
