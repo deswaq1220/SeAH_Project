@@ -26,7 +26,7 @@ public class EduDTO {
     private LocalDateTime eduEndTime; // 교육종료시각
 
 
-    private String eduSumTime; // 교육시간
+    private Integer eduSumTime; // 교육시간
     private edustate eduTarget; //교육대상 : 현장/사무/전체
     private String eduContent; //교육내용
     private String eduWriter; //작성자
@@ -36,15 +36,18 @@ public class EduDTO {
     private static ModelMapper modelMapper = new ModelMapper();
 
     public EduDTO(Edu edu) {
-        this.eduId = edu.getEduId();
-        this.eduCategory = edu.getEduCategory();
-        this.eduTitle = edu.getEduTitle();
-        this.eduInstructor = edu.getEduInstructor();
-        this.eduPlace = edu.getEduPlace();
-        this.eduStartTime = edu.getEduStartTime();
-        this.eduTarget = edu.getEduTarget();
-        this.eduContent = edu.getEduContent();
-        this.eduWriter = edu.getEduWriter();
+        if (edu != null) {
+            this.eduId = edu.getEduId();
+            this.eduCategory = edu.getEduCategory();
+            this.eduTitle = edu.getEduTitle();
+            this.eduInstructor = edu.getEduInstructor();
+            this.eduPlace = edu.getEduPlace();
+            this.eduStartTime = edu.getEduStartTime();
+            this.eduSumTime = edu.getEduSumTime(); // eduSumTime 추가
+            this.eduTarget = edu.getEduTarget();
+            this.eduContent = edu.getEduContent();
+            this.eduWriter = edu.getEduWriter();
+        }
     }
 
 //    public Edu createEdu(){
@@ -55,9 +58,11 @@ public class EduDTO {
         Edu edu = new Edu();
         edu.setEduId(this.eduId);
         edu.setEduCategory(this.eduCategory);
+        edu.setEduTitle(this.eduTitle);
         edu.setEduInstructor(this.eduInstructor);
         edu.setEduPlace(this.eduPlace);
         edu.setEduStartTime(this.eduStartTime);
+        edu.setEduSumTime(this.eduSumTime);
 //        edu.setEduEndTime(this.eduEndTime);
         edu.setEduTarget(this.eduTarget);
         edu.setEduContent(this.eduContent);

@@ -104,6 +104,19 @@ public class EduController {
     }
 
 
+    //상세 페이지
+    @GetMapping("/edudetails/{eduId}")
+    public ResponseEntity<EduDTO> getEduDetail(@PathVariable Long eduId) {
+        Edu edu = eduService.getEduById(eduId);
+        if (edu == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        EduDTO eduDTO = new EduDTO(edu);
+        return ResponseEntity.ok(eduDTO);
+    }
+
+
 
 
 
