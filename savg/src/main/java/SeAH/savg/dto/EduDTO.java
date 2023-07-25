@@ -63,8 +63,8 @@ public class EduDTO {
         this.eduInstructor = edu.getEduInstructor();
         this.eduPlace = edu.getEduPlace();
         this.eduStartTime = edu.getEduStartTime();
-        this.eduEndTime = edu.getEduEndTime();
-        this.eduSumTime = edu.getEduSumTime().toString(); // LocalDateTime을 문자열로 변환하여 저장
+//        this.eduEndTime = edu.getEduEndTime();
+        this.eduSumTime = edu.getEduSumTime(); // LocalDateTime을 문자열로 변환하여 저장
         this.eduTarget = edu.getEduTarget();
         this.eduContent = edu.getEduContent();
         this.eduWriter = edu.getEduWriter();

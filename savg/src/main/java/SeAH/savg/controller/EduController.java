@@ -86,7 +86,7 @@ public class EduController {
     }
 
     //교육일지 목록 조회
-    @GetMapping("/eduMain")
+    @GetMapping("/edumain")
     public ResponseEntity<List<EduDTO>> getEduList() {
         List<Edu> eduList = eduService.getEdu(); // Edu 엔티티 리스트를 가져옴
 
