@@ -18,20 +18,20 @@ public class EduRepositoryTest {
     private EduRepository eduRepository;
 
     @Test
-    public void testShowEduStatis(){
-        List<Object[]> results = eduRepository.selectMonthEduStatis(edustate.CREW,7);
+    public void testShowEduStatis() {
+        List<Object[]> results = eduRepository.selectMonthEduStatis(edustate.CREW, 7);
         List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
 
         for (Object[] result : results) {
-            EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
-            eduStatisticsDTO.setEduCategory((edustate) result[0]);
-            eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
-            eduStatisticsDTO.setEduSumTime((LocalDateTime) result[2]);
-            eduStatisticsDTO.setAttenName((String) result[3]);
-            eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
-            eduStatisticsDTO.setAttenDepartment((String) result[5]);
+        EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
+        eduStatisticsDTO.setEduCategory((edustate) result[0]);
+        eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
+        eduStatisticsDTO.setEduSumTime((LocalDateTime) result[2]);
+        eduStatisticsDTO.setAttenName((String) result[3]);
+        eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
+        eduStatisticsDTO.setAttenDepartment((String) result[5]);
 
-            eduStatisticsDTOList.add(eduStatisticsDTO);
+        eduStatisticsDTOList.add(eduStatisticsDTO);
         }
         System.out.println(eduStatisticsDTOList);
     }
