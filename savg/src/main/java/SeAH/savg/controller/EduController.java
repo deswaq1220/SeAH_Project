@@ -2,7 +2,6 @@ package SeAH.savg.controller;
 
 
 import SeAH.savg.dto.EduDTO;
-import SeAH.savg.dto.EduFormDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
 import SeAH.savg.repository.EduFileRepository;
@@ -10,7 +9,6 @@ import SeAH.savg.repository.EduRepository;
 import SeAH.savg.service.EduFileService;
 import SeAH.savg.service.EduService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,10 +86,41 @@ public class EduController {
         }
     }
 
-    //교육일지 리스트 조회
+    //교육일지 목록 조회
+    @GetMapping("/eduMain")
+    public ResponseEntity<List<EduDTO>> getEduList() {
+        List<Edu> eduList = eduService.getEdu(); // Edu 엔티티 리스트를 가져옴
 
+        List<EduDTO> eduDTOList = new ArrayList<>();
+        for (Edu edu : eduList) {
+            eduDTOList.add(new EduDTO(edu));
+        }
 
+        return ResponseEntity.ok(eduDTOList);
+    }
+/*   
+    테스트한거
+    @GetMapping("/eduMain")
+    public String getEduList(Model model) {
+        List<Edu> eduList = eduService.getEdu();
+        List<EduDTO> eduDTOList = new ArrayList<>();
+        for (Edu edu : eduList) {
+            eduDTOList.add(new EduDTO(edu));
+        }
+        model.addAttribute("eduList", eduList);
+        return "page/edulist";
+    }*/
 
+    //상세 페이지
+    @GetMapping("/edudetails/{eduId}")
+    public ResponseEntity<EduDTO> getEduDetail(@PathVariable Long eduId) {
+        Edu edu = eduService.getEduById(eduId);
+        if (edu == null) {
+            return ResponseEntity.notFound().build();
+        }
 
+        EduDTO eduDTO = new EduDTO(edu);
+        return ResponseEntity.ok(eduDTO);
+    }
 
 }
