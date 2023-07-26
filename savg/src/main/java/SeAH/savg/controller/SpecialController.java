@@ -43,7 +43,7 @@ public class SpecialController {
     @GetMapping("/special/list/{masterdataFacility}")
     public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility){
         specialInspectionService.findListOfFac(masterdataFacility);
-
+        System.out.println("수시점검 컨트롤러 out 111111111111111111111111");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

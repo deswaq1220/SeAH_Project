@@ -9,6 +9,7 @@ import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.mapping.IdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,8 +61,10 @@ public class SpecialInspectionService {
     // 수시점검 저장
     @Transactional
     public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
-        // pk(speId) 설정
+        // pk(speId) 설정 ---------------
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));
+        // ------------------------------------------------
+
         // 점검일 세팅
         speInsFormDTO.setSpeDate(LocalDateTime.now());
         // 위험도에 따른 완료요청기한 세팅
@@ -96,7 +99,30 @@ public class SpecialInspectionService {
     // 수시점검 설비별 조회
     @Transactional(readOnly = true)
     public List<SpecialInspection> findListOfFac(String masterdataFacility){
-        List<SpecialInspection> listOfFac = specialInspectionRepository.findSpecialInspectionByMasterdataFacility(masterdataFacility);
+        System.out.println("수시점검 서비스 in 111111111111111111111111");
+        System.out.println(masterdataFacility);
+
+        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacility(masterdataFacility);
+        for(SpecialInspection list : listOfFac){
+            System.out.println("id: " + list.getSpeId());
+            System.out.println("조치내용: " + list.getSpeActContent());
+            System.out.println("조치자이메일: "+list.getSpeActEmail());
+            System.out.println("이유:"+list.getSpeCause());
+            System.out.println("완료여부: " +list.getSpeCompelete());
+            System.out.println("내용: " +list.getSpeContent());
+            System.out.println("위험요소:" +list.getSpeDanger());
+            System.out.println("등록일:"+list.getSpeDate());
+            System.out.println("데드라인:"+list.getSpeDeadline());
+            System.out.println("이메일:"+list.getSpeEmail());
+            System.out.println("설비: "+list.getSpeFacility());
+            System.out.println("부상부위: "+list.getSpeInjure());
+            System.out.println("영역: "+list.getSpePart());
+            System.out.println("점검자: "+list.getSpePerson());
+            System.out.println("위험성평가: "+list.getSpeRiskAssess());
+            System.out.println("실수함정: "+list.getSpeTrap());
+        }
+
+        System.out.println("수시점검 서비스 out 111111111111111111111111");
         return listOfFac;
     }
 }

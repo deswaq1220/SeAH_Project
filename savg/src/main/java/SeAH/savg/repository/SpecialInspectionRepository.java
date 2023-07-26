@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface SpecialInspectionRepository extends JpaRepository<SpecialInspection, Long> {
-    List<SpecialInspection> findSpecialInspectionByMasterdataFacility(String masterdataFacility);
+    List<SpecialInspection> findAllBySpeFacility(String masterdataFacility);
+    List<String> findBySpeId();
 }
