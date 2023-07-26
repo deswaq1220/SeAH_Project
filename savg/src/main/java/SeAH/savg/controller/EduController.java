@@ -3,8 +3,6 @@ package SeAH.savg.controller;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
-import SeAH.savg.dto.EduFormDTO;
-import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
 import SeAH.savg.repository.EduFileRepository;
@@ -12,19 +10,15 @@ import SeAH.savg.repository.EduRepository;
 import SeAH.savg.service.EduFileService;
 import SeAH.savg.service.EduService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.File;
@@ -38,6 +32,7 @@ import java.util.List;
 @Controller
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.10.5:3000")
 @Log4j2
 
 public class EduController {
@@ -62,7 +57,8 @@ public class EduController {
 
     //안전교육 일지 등록
     @PostMapping("/edureg")
-    public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO) {
+    public ResponseEntity<?> handleEduReg(EduDTO eduDTO) {
+        log.info("여기 되나?");
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
@@ -71,13 +67,13 @@ public class EduController {
             if (eduDTO.getEduInstructor() == null || eduDTO.getEduInstructor().isEmpty()) {
                 return ResponseEntity.badRequest().body("Edu Instructor is required.");
             }
-
+//        log.info(eduDTO.getFiles());
             // 데이터 처리 로직: 데이터 저장
             Edu edu = eduDTO.toEntity();
-
             if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
                 log.info("파일 없음");
             } else {
+                log.info("파일 있음: ");
                 // 데이터 처리 로직: 파일 업로드 및 파일 정보 저장
                 List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO.getFiles());
                 for (EduFile eduFile : uploadedFiles) {
@@ -96,7 +92,7 @@ public class EduController {
         }
     }
 
-    //교육일지 리스트 조회
+    
     //교육일지 목록 조회
     @GetMapping("/edumain")
     public ResponseEntity<List<EduDTO>> getEduList() {
@@ -122,6 +118,7 @@ public class EduController {
         EduDTO eduDTO = new EduDTO(edu);
         return ResponseEntity.ok(eduDTO);
     }
+
 
 
     //(관리자) 월별 교육 통계 조회하기(★프론트 연결되는지 확인요청(경원님))
@@ -151,10 +148,6 @@ public class EduController {
     }
     */
 
-
-
-
-
-
-
 }
+
+
