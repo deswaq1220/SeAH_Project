@@ -25,5 +25,5 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "WHERE e.eduCategory = :eduCategory " +
             "AND MONTH(e.eduStartTime) = :month")
     List<Object[]> selectMonthEduStatis(@Param("eduCategory") edustate eduCategory , @Param("month") int month);
-    
+
 }
