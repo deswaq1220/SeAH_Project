@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class EduService {
     public List<Edu> getEdu() {
         return eduRepository.findAll();
     }
+
 
     //상세조회
     public Edu getEduById(Long eduId) {
