@@ -22,8 +22,7 @@ public class Attendance {
     @Column(nullable = false)
     private String attenDepartment;            // 부서
 
-    //@ManyToOne(fetch = FetchType.LAZY)
-    //@JoinColumn(name = "edu_id")
     @Column(nullable = false)
     private Long eduId; //교육일지 id
+
 }
