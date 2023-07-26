@@ -46,7 +46,7 @@ public class EduService {
             EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
             eduStatisticsDTO.setEduCategory((edustate)result[0]);
             eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
-            eduStatisticsDTO.setEduSumTime((LocalDateTime) result[2]);
+            eduStatisticsDTO.setEduSumTime((String) result[2]);
             eduStatisticsDTO.setAttenName((String) result[3]);
             eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
             eduStatisticsDTO.setAttenDepartment((String) result[5]);

@@ -25,8 +25,8 @@ public class Attendance {
     @Column(nullable = false)
     private Long eduId; //교육일지 id
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "edu_id")
-    private Edu edu;
+    //@ManyToOne(fetch = FetchType.EAGER)
+    //@JoinColumn(name = "edu_id")
+    //private Edu edu;
 
 }

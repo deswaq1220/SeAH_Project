@@ -1,12 +1,10 @@
 package SeAH.savg.dto;
 
 import SeAH.savg.constant.edustate;
-import SeAH.savg.entity.Attendance;
 import SeAH.savg.entity.Edu;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 @Data
@@ -15,7 +13,7 @@ public class EduStatisticsDTO {
 
     private edustate eduCategory;
     private LocalDateTime eduStartTime;
-    private LocalDateTime eduSumTime;
+    private String eduSumTime;
     private String attenName;
     private String attenEmployeeNumber;
     private String attenDepartment;
