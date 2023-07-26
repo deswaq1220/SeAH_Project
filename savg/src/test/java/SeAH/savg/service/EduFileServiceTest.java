@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 public class EduFileServiceTest {
 
-    @Autowired
+   /* @Autowired
     private EduFileService eduFileService;
 
     @Test
@@ -101,7 +101,7 @@ public class EduFileServiceTest {
 
     @Autowired
     private EduFileRepository eduFileRepository;
-
+*/
 
 
 

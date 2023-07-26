@@ -24,6 +24,9 @@ public class Edu {
     @Enumerated(EnumType.STRING)
     private edustate eduCategory;           //교육분류: 크루미팅, 관리감독자미팅, DM미팅, 기타
 
+    @Column
+    private String eduTitle;    // 제목
+
     @Column(nullable = false)
     private String eduInstructor;           //강사
 
@@ -33,11 +36,11 @@ public class Edu {
     @Column(nullable = false)
     private LocalDateTime eduStartTime;     //교육시작시각
 
-    @Column(nullable = false)
-    private LocalDateTime eduEndTime;       //교육종료시각
+//    @Column(nullable = false)
+//    private LocalDateTime eduEndTime;       //교육종료시각
 
 //    @Column(nullable = false)
-    private LocalDateTime eduSumTime;             //교육시간(분)
+    private Integer eduSumTime;             //교육시간(분)
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -50,8 +53,8 @@ public class Edu {
     private String eduWriter;               //작성자
 
     //eduFile 엔티티 매핑
-    @OneToMany(mappedBy = "edu")
-    private List<EduFile> eduFiles = new ArrayList<>();
+/*    @OneToMany(mappedBy = "edu")
+    private List<EduFile> eduFiles = new ArrayList<>();*/
 
 
     public void setEduFileName(String fileName) {

@@ -13,9 +13,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EduRepository extends JpaRepository<Edu, String> {
+public interface EduRepository extends JpaRepository<Edu, Long> {
 
     List<Edu> findAll(Sort sort);
+
 
    ////관리자
     //1. 월별 교육통계 조회하기
@@ -26,4 +27,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "AND MONTH(e.eduStartTime) = :month")
     List<Object[]> selectMonthEduStatis(@Param("eduCategory") edustate eduCategory , @Param("month") int month);
     
+
+    Edu findByEduId(Long eduId);
+
 }
