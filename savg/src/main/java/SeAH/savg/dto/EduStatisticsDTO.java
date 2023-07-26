@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class EduStatisticsDTO {
 
     private edustate eduCategory;
+    private String eduTitle;
     private LocalDateTime eduStartTime;
     private String eduSumTime;
     private String attenName;

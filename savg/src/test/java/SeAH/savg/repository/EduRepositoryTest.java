@@ -25,11 +25,12 @@ public class EduRepositoryTest {
         for (Object[] result : results) {
         EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
         eduStatisticsDTO.setEduCategory((edustate) result[0]);
-        eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
-        eduStatisticsDTO.setEduSumTime((String) result[2]);
-        eduStatisticsDTO.setAttenName((String) result[3]);
-        eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
-        eduStatisticsDTO.setAttenDepartment((String) result[5]);
+        eduStatisticsDTO.setEduTitle((String) result[1]);
+        eduStatisticsDTO.setEduStartTime((LocalDateTime) result[2]);
+        eduStatisticsDTO.setEduSumTime((String) result[3]);
+        eduStatisticsDTO.setAttenName((String) result[4]);
+        eduStatisticsDTO.setAttenEmployeeNumber((String) result[5]);
+        eduStatisticsDTO.setAttenDepartment((String) result[6]);
 
         eduStatisticsDTOList.add(eduStatisticsDTO);
         }

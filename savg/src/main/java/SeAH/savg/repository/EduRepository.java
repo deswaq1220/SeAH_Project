@@ -20,7 +20,7 @@ public interface EduRepository extends JpaRepository<Edu, Long> {
 
    ////관리자
     //1. 월별 교육통계 조회하기
-    @Query("SELECT e.eduCategory, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+    @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a ON e.eduId = a.eduId " +
             "WHERE e.eduCategory = :eduCategory " +
