@@ -17,9 +17,9 @@ public class AttendanceService {
     //(교육생) 출석등록하기
     @Transactional
     public void attendEdu(String attendEmployeeDepartment
-                                      , String attendEmployeeName
-                                      , String attendEmployeeNumber
-                                      , Long eduId
+                                      ,String attendEmployeeName
+                                      ,String attendEmployeeNumber
+                                      ,Long eduId
     ){
 
         AttendanceDTO attendanceDTO = new AttendanceDTO();

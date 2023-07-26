@@ -13,17 +13,28 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EduRepository extends JpaRepository<Edu, String> {
+public interface EduRepository extends JpaRepository<Edu, Long> {
 
     List<Edu> findAll(Sort sort);
 
+
    ////관리자
-    //1. 월별 교육통계 조회하기
-    @Query("SELECT e.eduCategory, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+    //1. 월별 교육통계 조회하기(교육별 참석자 명단 출력)
+    @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a ON e.eduId = a.eduId " +
             "WHERE e.eduCategory = :eduCategory " +
             "AND MONTH(e.eduStartTime) = :month")
-    List<Object[]> selectMonthEduStatis(@Param("eduCategory") edustate eduCategory , @Param("month") int month);
+    List<Object[]> selectMonthEduTraineeStatis(@Param("eduCategory") edustate eduCategory , @Param("month") int month);
+
+    //2. 월별 교육통계 조회하기(월별 교육실시시간 총계)
+    @Query("SELECT e.eduSumTime " +
+            "FROM Edu e " +
+            "WHERE e.eduCategory = :eduCategory " +
+            "AND MONTH(e.eduStartTime) = :month ")
+    List<Object[]> selectMonthEduTimeList(@Param("eduCategory") edustate eduCategory, @Param("month") int month);
+
+    Edu findByEduId(Long eduId);
+
 
 }
