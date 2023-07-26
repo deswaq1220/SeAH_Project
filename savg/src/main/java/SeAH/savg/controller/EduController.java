@@ -112,7 +112,7 @@ public class EduController {
 
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
-    public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
+    public ResponseEntity<EduDTO> getEduDetail(@PathVariable Long eduId) {
         Edu edu = eduService.getEduById(eduId);
         if (edu == null) {
             return ResponseEntity.notFound().build();

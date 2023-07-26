@@ -33,7 +33,7 @@ public class EduService {
     }
 
     //상세조회
-    public Edu getEduById(String eduId) {
+    public Edu getEduById(Long eduId) {
         return eduRepository.findByEduId(eduId);
     }
 

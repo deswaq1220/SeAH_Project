@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter @Setter
 public class EduDTO {
-    private String eduId;
+    private Long eduId;
     private edustate eduCategory; //분류
     private String eduTitle;
     private String eduInstructor; //강사
