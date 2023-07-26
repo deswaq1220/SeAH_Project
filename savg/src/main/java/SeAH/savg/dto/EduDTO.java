@@ -26,7 +26,7 @@ public class EduDTO {
     private LocalDateTime eduEndTime; // 교육종료시각
 
 
-    private Integer eduSumTime; // 교육시간
+    private String eduSumTime; // 교육시간
     private edustate eduTarget; //교육대상 : 현장/사무/전체
     private String eduContent; //교육내용
     private String eduWriter; //작성자
