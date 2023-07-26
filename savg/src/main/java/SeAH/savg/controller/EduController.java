@@ -129,7 +129,7 @@ public class EduController {
     public ResponseEntity<?> viewMonthEduStatis(@RequestBody Map<String, Object> requestData){
         edustate eduCategory = (edustate)requestData.get("eduCategory");
         int month = (int)requestData.get("month");
-        eduService.showMonthEduStatis(eduCategory, month);
+        eduService.showMonthEduTraineeStatis(eduCategory, month);
 
         return ResponseEntity.ok().build();
     }

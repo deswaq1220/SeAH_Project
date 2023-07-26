@@ -1,6 +1,7 @@
 package SeAH.savg.repository;
 
 import SeAH.savg.constant.edustate;
+import SeAH.savg.dto.EduDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class EduRepositoryTest {
 
     @Test
     public void testShowEduStatis() {
-        List<Object[]> results = eduRepository.selectMonthEduStatis(edustate.CREW, 7);
+        List<Object[]> results = eduRepository.selectMonthEduTraineeStatis(edustate.CREW, 7);
         List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
 
         for (Object[] result : results) {
@@ -34,10 +35,26 @@ public class EduRepositoryTest {
 
         eduStatisticsDTOList.add(eduStatisticsDTO);
         }
-        //if(!eduStatisticsDTOList.isEmpty()) {
+        if(!eduStatisticsDTOList.isEmpty()) {
             System.out.println(eduStatisticsDTOList);
-        //} else {
-        //    System.out.println("조횟값이 없습니다");
-        //}
+        } else {
+            System.out.println("조횟값이 없습니다");
+        }
+    }
+
+
+    @Test
+    public void testShhowEduTimeStatis(){
+        List<Object[]> results = eduRepository.selectMonthEduTimeList(edustate.CREW, 7); //실행한 교육의 리스트를 들고옴
+        List<EduStatisticsDTO> timeList = new ArrayList<>();
+
+        for(Object[] result : results){
+            EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
+            eduStatisticsDTO.setEduSumTime((String) result[0]);
+
+            timeList.add(eduStatisticsDTO);
+        }
+        System.out.println(timeList);
+
     }
 }

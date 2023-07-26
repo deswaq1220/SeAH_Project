@@ -1,19 +1,12 @@
 package SeAH.savg.service;
 
 import SeAH.savg.constant.edustate;
-import SeAH.savg.dto.EduDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
-import SeAH.savg.entity.EduFile;
 import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -36,9 +29,10 @@ public class EduService {
     }
 
 
-    //(관리자) 월별교육통계 조회하기
-    public List<EduStatisticsDTO> showMonthEduStatis(edustate eduCategory, int month){
-        List<Object[]> results = eduRepository.selectMonthEduStatis(eduCategory, month);
+    //(관리자)
+    // 1. 월별교육통계 조회하기(카테고리에 따른 교육참가자 조회)
+    public List<EduStatisticsDTO> showMonthEduTraineeStatis(edustate eduCategory, int month){
+        List<Object[]> results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month);
 
         List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
 
@@ -56,10 +50,36 @@ public class EduService {
         return eduStatisticsDTOList;
     }
 
+    // 2. 월별교육통계 조회하기(월별 교육 실행시간 조회)
+    public Long showMonthEduTimeStatis(edustate eduCategory, int month){
+
+        List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
+        List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
+        Long eduSumTime = 0L;
+
+        for(Object[] result : results){
+           String time = (String)result[0];
+
+            try {
+                Long timeValue = Long.parseLong(time);
+                eduSumTime += timeValue;
+            } catch (NumberFormatException e) {
+                System.out.println("월별 교육 실행시간 조회: 합산할 수 없습니다(Long타입 아님)");
+            }
+
+        }
+
+        return eduSumTime;
+    }
+
+
+
 
     //상세조회
     public Edu getEduById(Long eduId) {
         return eduRepository.findByEduId(eduId);
     }
+
+
 
 }
