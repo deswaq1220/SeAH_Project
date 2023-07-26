@@ -22,8 +22,8 @@ import SeAH.savg.entity.EduFile;
 public class Edu {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private String eduId;                      //pk        id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long eduId;                      //pk        id
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -62,13 +62,13 @@ public class Edu {
     public void setEduFileName(String fileName) {
     }
 
-    //pk생성 양식
+/*    //pk생성 양식
     public void createId(int sequence){
         LocalDate currentDate = LocalDate.now();
         int year = currentDate.getYear();
         int month = currentDate.getMonthValue();
 
         this.eduId = String.format("E%02d%02d_%02d", year % 100, month, sequence);
-    }
+    }*/
 
 }
