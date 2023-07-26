@@ -16,8 +16,8 @@ public class AttendanceServiceTest {
     private AttendanceService attendanceService;
 
     @Test
-    @Rollback(false)
+    //@Rollback(false)
     public void testAttend(){
-    attendanceService.attendEdu("소형압연팀", "김홍홍", "111115", 1L);
+    attendanceService.attendEdu("소형압연팀", "김홍홍", "1111222", 1L);
     }
 }
