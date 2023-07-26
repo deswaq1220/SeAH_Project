@@ -19,7 +19,7 @@ public class EduRepositoryTest {
 
     @Test
     public void testShowEduStatis() {
-        List<Object[]> results = eduRepository.selectMonthEduStatis(edustate.CREW, 7);
+        List<Object[]> results = eduRepository.selectMonthEduStatis(edustate.CREW, 4);
         List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
 
         for (Object[] result : results) {
@@ -33,6 +33,10 @@ public class EduRepositoryTest {
 
         eduStatisticsDTOList.add(eduStatisticsDTO);
         }
-        System.out.println(eduStatisticsDTOList);
+        if(!eduStatisticsDTOList.isEmpty()) {
+            System.out.println(eduStatisticsDTOList);
+        } else {
+            System.out.println("조횟값이 없습니다");
+        }
     }
 }
