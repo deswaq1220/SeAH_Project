@@ -70,9 +70,10 @@ public class EduDTO {
         return edu;
     }
 
-
+ /*
     // 생성자 추가
     public EduDTO() {}
+
 
     // Edu 엔티티를 EduDTO로 변환하는 생성자
     public EduDTO(Edu edu) {
@@ -88,7 +89,7 @@ public class EduDTO {
         this.eduContent = edu.getEduContent();
         this.eduWriter = edu.getEduWriter();
     }
-
+  */
 
 
 }
