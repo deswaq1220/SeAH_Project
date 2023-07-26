@@ -41,11 +41,11 @@ public class Edu {
     @Column(nullable = false)
     private LocalDateTime eduStartTime;     //교육시작시각
 
-//    @Column(nullable = true)
+//    @Column(nullable = false)
 //    private LocalDateTime eduEndTime;       //교육종료시각
 
 //    @Column(nullable = false)
-    private String eduSumTime;             //교육시간(분)
+    private Integer eduSumTime;             //교육시간(분)
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

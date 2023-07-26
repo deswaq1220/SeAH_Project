@@ -13,8 +13,8 @@ import java.util.List;
 
 @Getter @Setter
 public class EduDTO {
-    private String eduId;
-    private edustate eduCategory; //분류
+    private Long eduId;
+    private edustate eduCategory;
     private String eduTitle;
     private String eduInstructor; //강사
     private String eduPlace; //장소
@@ -26,15 +26,33 @@ public class EduDTO {
     private LocalDateTime eduEndTime; // 교육종료시각
 
 
-    private String eduSumTime; // 교육시간
+    private Integer eduSumTime; // 교육시간
     private edustate eduTarget; //교육대상 : 현장/사무/전체
     private String eduContent; //교육내용
     private String eduWriter; //작성자
 
     private List<MultipartFile> files; // 파일
-
+//    private MultipartFile[] files;
     private static ModelMapper modelMapper = new ModelMapper();
 
+    public EduDTO(Edu edu) {
+        if (edu != null) {
+            this.eduId = edu.getEduId();
+            this.eduCategory = edu.getEduCategory();
+            this.eduTitle = edu.getEduTitle();
+            this.eduInstructor = edu.getEduInstructor();
+            this.eduPlace = edu.getEduPlace();
+            this.eduStartTime = edu.getEduStartTime();
+            this.eduSumTime = edu.getEduSumTime(); // eduSumTime 추가
+            this.eduTarget = edu.getEduTarget();
+            this.eduContent = edu.getEduContent();
+            this.eduWriter = edu.getEduWriter();
+        }
+    }
+
+//    public Edu createEdu(){
+//        return modelMapper.map(this, Edu.class);
+//    }
 
     public Edu toEntity() {
         Edu edu = new Edu();
@@ -44,6 +62,7 @@ public class EduDTO {
         edu.setEduInstructor(this.eduInstructor);
         edu.setEduPlace(this.eduPlace);
         edu.setEduStartTime(this.eduStartTime);
+        edu.setEduSumTime(this.eduSumTime);
 //        edu.setEduEndTime(this.eduEndTime);
         edu.setEduTarget(this.eduTarget);
         edu.setEduContent(this.eduContent);
