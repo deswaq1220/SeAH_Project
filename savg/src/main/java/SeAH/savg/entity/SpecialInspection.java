@@ -48,18 +48,24 @@ public class SpecialInspection {
     @Enumerated(EnumType.STRING)
     private SpeStatus speRiskAssess;        // 위험성평가
 
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String speContent;              // 점검내용
 
-//    @Column(nullable = false)
+    @Column(nullable = false)
     private String speActContent;           // 개선대책
 
-//    @Column(nullable = false)
+    @Column(nullable = false)
+    private String speActEmail;             // 점검자 이메일
+
+    @Column(nullable = false)
     private LocalDateTime speDeadline;      // 완료요청기한
 
 //    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private SpeStatus speCompelete = SpeStatus.NO;              // 완료여부 : 기본값 NO
+
+//    @Column(nullable = false)
+//    private int speMasterdataId;            // qr로 넘어오는 설비id
 
 
 }

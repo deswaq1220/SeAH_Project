@@ -7,12 +7,15 @@ import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.entity.SpecialInspection;
 import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
+import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
 
@@ -23,6 +26,7 @@ public class SpecialInspectionService {
     private final EmailRepository emailRepository;
     private final SpecialFileService specialFileService;
     private final MakeIdService makeIdService;
+    private final SpeicalFileRepository specialFileRepository;
 
 
     // 수시점검 등록화면 조회 : 프론트연결용
@@ -42,8 +46,10 @@ public class SpecialInspectionService {
     @Transactional
     public List<Email> findEmail(){
         SpecialInspection speIns = new SpecialInspection();
-        speIns.setSpePart("압출");          // 영역 세팅
-        speIns.setSpeFacility("압출#1");    // 설비 세팅
+        speIns.setSpePart("주조");          // 영역 세팅
+        speIns.setSpeFacility("주조1");    // 설비 세팅
+
+        // 고정수신자, 파트관리자 이메일리스트
         List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(speIns.getSpePart(), Y);
         return emailList;
     }
@@ -74,21 +80,23 @@ public class SpecialInspectionService {
         return special;
     }
 
-//    private String makingId = "";   // id 저장할 변수
-//    private String previousYearAndMonth = "";      // 이전 todayYearAndMonth 저장할 변수
-//    private int seqNumber = 0;
-//    public String makeId(){
-//        String todayYearAndMonth = new SimpleDateFormat("yyMM").format(new Date());
-//        // 이전 todayYearAndMonth 현재 비교해서 바뀌었을 경우 sequenceNumber를 0으로 초기화
-//        if(!(todayYearAndMonth.equals(previousYearAndMonth))) { seqNumber = 0; }
-//
-//        // seqNumber가 10 이하이면 00, 01 .... : 앞에 0 붙여주기
-//        if(seqNumber<10) { makingId = "S" + todayYearAndMonth + "-0" + seqNumber;  }
-//        else { makingId = "S" + todayYearAndMonth + "-" + seqNumber; }
-//
-//        System.out.println("여기 todayYearAndMonth : " + todayYearAndMonth);
-//        seqNumber++;
-//        previousYearAndMonth = todayYearAndMonth;
-//        return makingId;
-//    }
+    // 수시점검 전체 조회
+    @Transactional(readOnly = true)
+    public Map<String, Object> findSpeAll(){
+        Map<String, Object> responseData = new HashMap<>();
+
+        List<SpecialInspection> specialInspectionList = specialInspectionRepository.findAll();
+        List<SpecialFile> specialFileList = specialFileRepository.findAll();
+
+        responseData.put("specialData", specialInspectionList);
+        responseData.put("specialFildData", specialFileList);
+        return responseData;
+    }
+
+    // 수시점검 설비별 조회
+    @Transactional(readOnly = true)
+    public List<SpecialInspection> findListOfFac(String masterdataFacility){
+        List<SpecialInspection> listOfFac = specialInspectionRepository.findSpecialInspectionByMasterdataFacility(masterdataFacility);
+        return listOfFac;
+    }
 }

@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -28,16 +28,26 @@ public class SpecialController {
     }
 
     // 등록화면 저장
-    @PostMapping("/special/new/{masterdataId}")
-    public ResponseEntity<?> speNew(@ModelAttribute SpeInsFormDTO speInsFormDTO) throws Exception {
+    @PostMapping("/special/new/{masterdataFacility}")
+    public ResponseEntity<?> speNew(SpeInsFormDTO speInsFormDTO) throws Exception {
         return new ResponseEntity<>(specialInspectionService.speCreate(speInsFormDTO), HttpStatus.CREATED);
     }
 
     // 전체 현황 조회
+    @GetMapping("/special/list")
+    public ResponseEntity<?> speList(){
+        return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
+    }
+
+    // 설비별 현황 조회
+    @GetMapping("/special/list/{masterdataFacility}")
+    public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility){
+        specialInspectionService.findListOfFac(masterdataFacility);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
-
-    //
 
 
 
