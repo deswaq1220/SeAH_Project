@@ -32,7 +32,7 @@ public class EduDTO {
     private String eduWriter; //작성자
 
     private List<MultipartFile> files; // 파일
-
+//    private MultipartFile[] files;
     private static ModelMapper modelMapper = new ModelMapper();
 
     public EduDTO(Edu edu) {

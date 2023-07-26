@@ -31,6 +31,7 @@ import java.util.List;
 @Controller
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.10.5:3000")
 @Log4j2
 
 public class EduController {
@@ -55,7 +56,8 @@ public class EduController {
 
     //안전교육 일지 등록
     @PostMapping("/edureg")
-    public ResponseEntity<?> handleEduReg(@ModelAttribute EduDTO eduDTO) {
+    public ResponseEntity<?> handleEduReg(EduDTO eduDTO) {
+        log.info("여기 되나?");
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
@@ -64,13 +66,13 @@ public class EduController {
             if (eduDTO.getEduInstructor() == null || eduDTO.getEduInstructor().isEmpty()) {
                 return ResponseEntity.badRequest().body("Edu Instructor is required.");
             }
-
+//        log.info(eduDTO.getFiles());
             // 데이터 처리 로직: 데이터 저장
             Edu edu = eduDTO.toEntity();
-
             if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
                 log.info("파일 없음");
             } else {
+                log.info("파일 있음: ");
                 // 데이터 처리 로직: 파일 업로드 및 파일 정보 저장
                 List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO.getFiles());
                 for (EduFile eduFile : uploadedFiles) {
