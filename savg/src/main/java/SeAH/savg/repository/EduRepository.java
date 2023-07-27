@@ -34,6 +34,13 @@ public interface EduRepository extends JpaRepository<Edu, Long> {
             "AND MONTH(e.eduStartTime) = :month ")
     List<Object[]> selectMonthEduTimeList(@Param("eduCategory") edustate eduCategory, @Param("month") int month);
 
+    @Query("SELECT e.eduCategory, e.eduSumTime " +
+            "FROM Edu e " +
+            "WHERE MONTH(e.eduStartTime) = :month")
+    List<Object[]> selectSumMonthEduTime(@Param("month") int month);
+
+
+
     Edu findByEduId(Long eduId);
 
 

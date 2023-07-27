@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.List;
+
 @SpringBootTest
 public class EduServiceTest {
 
@@ -16,6 +18,12 @@ public class EduServiceTest {
     @Test
     public void testShowEduTimeStatis(){
         Long result = eduService.showMonthEduTimeStatis(edustate.CREW, 7);
+        System.out.println(result);
+    }
+
+    @Test
+    public void testSumShowEduTime(){
+        List<Integer> result = eduService.showMonthEduTimeStatis2(7);
         System.out.println(result);
     }
 

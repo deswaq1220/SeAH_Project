@@ -3,6 +3,7 @@ package SeAH.savg.controller;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
+import SeAH.savg.dto.EduSumStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
 import SeAH.savg.repository.EduFileRepository;
@@ -30,7 +31,7 @@ import java.util.List;
 
 
 @Controller
-@RestController
+//@RestController
 @CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
 @Log4j2
@@ -121,7 +122,7 @@ public class EduController {
 
 
 
-    //(관리자) 월별 교육 통계 조회하기(★프론트 연결되는지 확인요청(경원님))
+    //(관리자) 월별, 카테고리별 교육참석자 통계 조회하기(★프론트 연결되는지 확인요청(경원님))
     @PostMapping("/edustatistics/getmonth")
     public ResponseEntity<?> viewMonthEduStatis(@RequestBody Map<String, Object> requestData){
         edustate eduCategory = (edustate)requestData.get("eduCategory");
@@ -147,6 +148,21 @@ public class EduController {
         return "page/getmonth";
     }
     */
+
+    //(관리자) 월별 교육실행 시간 통계 조회하기
+    @PostMapping("/edustatistics/getmonthlyruntime")
+    public List<Integer> viewMonthlyEduTimeStatis(@RequestParam("month") int month){
+
+       List<Integer> result = eduService.showMonthEduTimeStatis2(month);
+
+        System.out.println(result);
+        return result;
+    }
+
+    @GetMapping("/getmonthlyruntime")
+    public String showGetMonthForm() {
+        return "page/getmonthlyruntime";
+    }
 
 }
 

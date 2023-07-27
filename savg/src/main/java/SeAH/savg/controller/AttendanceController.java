@@ -31,7 +31,7 @@ public class AttendanceController {
     }
 
     //2. (사용자) 출석 등록하기
-    @PostMapping("/register")
+    @PostMapping("/register/{eduId}")
     public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, Object> requestData) {
         String attenDepartment = (String) requestData.get("attenDepartment");
         String attenName = (String) requestData.get("attenName");
