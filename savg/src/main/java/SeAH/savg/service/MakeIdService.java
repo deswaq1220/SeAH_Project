@@ -12,6 +12,8 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class MakeIdService {
     public final SpecialInspectionRepository specialInspectionRepository;
+//    public final EduRepository eduRepository;
+//    public final RegularInspectionRepository regularInspectionRepository;
 
     private String makingId = "";   // id 저장할 변수
     private String previousYearAndMonth = "";      // 이전 todayYearAndMonth 저장할 변수
@@ -23,17 +25,24 @@ public class MakeIdService {
         cateType = categoryType;
         String todayYearAndMonth = new SimpleDateFormat("yyMM").format(new Date());
 
-        // DB값 가져와서 비교 후 seqNumber 세팅
-        try {
-            seqNumber = specialInspectionRepository.findAllByMaxSeq(todayYearAndMonth);
+        int categoryRepository = 0;
+        try{
+            if(categoryType.equals("S")) {      // 수시점검
+                categoryRepository = specialInspectionRepository.findAllByMaxSeq(todayYearAndMonth);
+            }
+//            else if(categoryType.equals("R")){     // 정기점검
+//                categoryRepository = regularInspectionRepository.findAllByMaxSeq(todayYearAndMonth);
+//            } else if(categoryType.equals("E")){     // 안전교육
+//                categoryRepository = eduRepository.findAllByMaxSeq(todayYearAndMonth);
+//            }
+
+            seqNumber = categoryRepository;
             seqNumber++;
+
         } catch (AopInvocationException e){
             // 초기화
             seqNumber = 0;
         }
-
-        // 이전 todayYearAndMonth 현재 비교해서 바뀌었을 경우 sequenceNumber를 0으로 초기화
-//        if(!(todayYearAndMonth.equals(previousYearAndMonth))) { seqNumber = 0; }
 
         // seqNumber가 10 이하이면 00, 01 .... : 앞에 0 붙여주기
         if(seqNumber<10) { makingId = cateType + todayYearAndMonth + "-0" + seqNumber;  }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SpecialInspectionRepository extends JpaRepository<SpecialInspection, Long> {
+public interface SpecialInspectionRepository extends JpaRepository<SpecialInspection, String> {
     List<SpecialInspection> findAllBySpeFacility(String masterdataFacility);
 
 
