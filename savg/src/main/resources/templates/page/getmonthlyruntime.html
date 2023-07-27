@@ -6,11 +6,15 @@
 </head>
 <body>
 <h1>Edu Time Statistics</h1>
-<form action="/edustatistics/getmonthlyruntime" method="post" id="monthForm">
+<form id="monthForm">
     <label for="monthInput">월을 입력하세요:</label>
     <input type="number" id="monthInput" name="month" min="1" max="12">
     <button type="submit">전송</button>
 </form>
+
+<div id="resultContainer">
+    <!-- 서버 응답 결과를 출력할 컨테이너 -->
+</div>
 
 <script>
     function handleSubmit(event) {
@@ -19,11 +23,11 @@
 
         $.ajax({
             type: "POST",
-            url: "/getmonthlyruntime",
+            url: "/edustatistics/getmonthlyruntime",
             data: { month: monthValue },
             success: function(response) {
-                // 서버 응답을 콘솔에 출력
-                console.log(response);
+                const resultContainer = document.getElementById("resultContainer");
+                resultContainer.innerHTML = "서버 응답: 전체시간/CREW/MANAGE/DM/ETC" + JSON.stringify(response);
             },
             error: function(error) {
                 console.error("에러 발생:", error);

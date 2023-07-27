@@ -15,15 +15,15 @@ public class EduServiceTest {
     @Autowired
     private EduService eduService;
 
-    @Test
+    /*@Test
     public void testShowEduTimeStatis(){
-        Long result = eduService.showMonthEduTimeStatis(edustate.CREW, 7);
+        Long result = eduService.showMonthEduTimeStatis(edustate2.CREW, 7);
         System.out.println(result);
-    }
+    }*/
 
     @Test
     public void testSumShowEduTime(){
-        List<Integer> result = eduService.showMonthEduTimeStatis2(7);
+        List<Integer> result = eduService.showMonthEduTimeStatis(7);
         System.out.println(result);
     }
 

@@ -53,30 +53,10 @@ public class EduService {
         return eduStatisticsDTOList;
     }
 
+
     // 2. 월별교육통계 조회하기(월별 교육 실행시간 조회)
-    public Long showMonthEduTimeStatis(edustate eduCategory, int month){
-
-        List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
-        List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
-        Long eduSumTime = 0L;
-
-        for(Object[] result : results){
-           String time = (String)result[0];
-
-            try {
-                Long timeValue = Long.parseLong(time);
-                eduSumTime += timeValue;
-            } catch (NumberFormatException e) {
-                System.out.println("월별 교육 실행시간 조회: 합산할 수 없습니다(Long타입 아님)");
-            }
-
-        }
-        return eduSumTime;
-    }
-
-    // 2-2. 월별교육통계 조회하기(월별 교육 실행시간 조회)
     // sumMonthlyEduTimeList = [CREW시간총계, MANAGE시간총계, DM시간총계, ETC시간총계, 전체시간총계]
-    public List<Integer> showMonthEduTimeStatis2(int month){
+    public List<Integer> showMonthEduTimeStatis(int month){
 
         List<Object[]> results = eduRepository.selectSumMonthEduTime(month); //교육 시행 시간 리스트
         List<Integer> sumMonthlyEduTimeList = new ArrayList<>(Collections.nCopies(5, 0));
@@ -102,6 +82,28 @@ public class EduService {
                                     +sumMonthlyEduTimeList.get(3)+sumMonthlyEduTimeList.get(4));
         return sumMonthlyEduTimeList;
     }
+
+    // (현재 사용하지 않음. 나중에 필요없으면 삭제예정)월별교육통계 조회하기(월별 교육 실행시간 각 카테고리 조회)
+    /*public Long showMonthEduTimeStatis2(edustate eduCategory, int month){
+
+        List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
+        List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
+        Long eduSumTime = 0L;
+
+        for(Object[] result : results){
+            String time = (String)result[0];
+
+            try {
+                Long timeValue = Long.parseLong(time);
+                eduSumTime += timeValue;
+            } catch (NumberFormatException e) {
+                System.out.println("월별 교육 실행시간 조회: 합산할 수 없습니다(Long타입 아님)");
+            }
+
+        }
+        return eduSumTime;
+    }
+    */
 
     //상세조회
     public Edu getEduById(Long eduId) {

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 
 import java.io.File;
@@ -31,7 +32,7 @@ import java.util.List;
 
 
 @Controller
-//@RestController
+@RestController
 @CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
 @Log4j2
@@ -153,17 +154,20 @@ public class EduController {
     @PostMapping("/edustatistics/getmonthlyruntime")
     public List<Integer> viewMonthlyEduTimeStatis(@RequestParam("month") int month){
 
-       List<Integer> result = eduService.showMonthEduTimeStatis2(month);
+       List<Integer> result = eduService.showMonthEduTimeStatis(month);
 
         System.out.println(result);
         return result;
     }
 
+    /*(관리자) 월별 교육실행 시간 통계 조회하기 (html 임시 확인용)
     @GetMapping("/getmonthlyruntime")
-    public String showGetMonthForm() {
-        return "page/getmonthlyruntime";
-    }
+    public ModelAndView showGetMonthForm() {
+        ModelAndView modelAndView = new ModelAndView("page/getmonthlyruntime");
 
+        return modelAndView;
+    }
+    */
 }
 
 
