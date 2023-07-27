@@ -9,7 +9,6 @@ import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.mapping.IdGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,9 +60,10 @@ public class SpecialInspectionService {
     // 수시점검 저장
     @Transactional
     public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
-        // pk(speId) 설정 ---------------
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));
-        // ------------------------------------------------
+
+        // 영역이랑 설비도 선택해서 안넘어오면 파라미터로 받아서 세팅하던지, 아니면 requestData로 하던지
+        // 세팅해줘야함
 
         // 점검일 세팅
         speInsFormDTO.setSpeDate(LocalDateTime.now());
@@ -103,24 +103,24 @@ public class SpecialInspectionService {
         System.out.println(masterdataFacility);
 
         List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacility(masterdataFacility);
-        for(SpecialInspection list : listOfFac){
-            System.out.println("id: " + list.getSpeId());
-            System.out.println("조치내용: " + list.getSpeActContent());
-            System.out.println("조치자이메일: "+list.getSpeActEmail());
-            System.out.println("이유:"+list.getSpeCause());
-            System.out.println("완료여부: " +list.getSpeCompelete());
-            System.out.println("내용: " +list.getSpeContent());
-            System.out.println("위험요소:" +list.getSpeDanger());
-            System.out.println("등록일:"+list.getSpeDate());
-            System.out.println("데드라인:"+list.getSpeDeadline());
-            System.out.println("이메일:"+list.getSpeEmail());
-            System.out.println("설비: "+list.getSpeFacility());
-            System.out.println("부상부위: "+list.getSpeInjure());
-            System.out.println("영역: "+list.getSpePart());
-            System.out.println("점검자: "+list.getSpePerson());
-            System.out.println("위험성평가: "+list.getSpeRiskAssess());
-            System.out.println("실수함정: "+list.getSpeTrap());
-        }
+//        for(SpecialInspection list : listOfFac){
+//            System.out.println("id: " + list.getSpeId());
+//            System.out.println("조치내용: " + list.getSpeActContent());
+//            System.out.println("조치자이메일: "+list.getSpeActEmail());
+//            System.out.println("이유:"+list.getSpeCause());
+//            System.out.println("완료여부: " +list.getSpeCompelete());
+//            System.out.println("내용: " +list.getSpeContent());
+//            System.out.println("위험요소:" +list.getSpeDanger());
+//            System.out.println("등록일:"+list.getSpeDate());
+//            System.out.println("데드라인:"+list.getSpeDeadline());
+//            System.out.println("이메일:"+list.getSpeEmail());
+//            System.out.println("설비: "+list.getSpeFacility());
+//            System.out.println("부상부위: "+list.getSpeInjure());
+//            System.out.println("영역: "+list.getSpePart());
+//            System.out.println("점검자: "+list.getSpePerson());
+//            System.out.println("위험성평가: "+list.getSpeRiskAssess());
+//            System.out.println("실수함정: "+list.getSpeTrap());
+//        }
 
         System.out.println("수시점검 서비스 out 111111111111111111111111");
         return listOfFac;

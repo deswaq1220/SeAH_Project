@@ -22,8 +22,8 @@ public class SpecialController {
 //    }
 
     // 조회 : 테스트용
-    @GetMapping("/special/new/{masterdataId}")
-    public ResponseEntity<?> speForm(){
+    @GetMapping("/special/new/{masterdataFacility}")
+    public ResponseEntity<?> speForm(){    // @PathVariable String masterdataFacility로 파라미터 받아서 해도될것같은디
         return new ResponseEntity<>(specialInspectionService.findEmail(), HttpStatus.OK);
     }
 

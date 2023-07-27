@@ -3,12 +3,13 @@ package SeAH.savg.entity;
 import SeAH.savg.constant.SpeStatus;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity @Table(name = "special_inspection")
-@Getter @Setter
+@Getter @Setter @ToString
 public class SpecialInspection {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
