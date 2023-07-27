@@ -41,8 +41,8 @@ public class SpecialInspectionService {
     @Transactional
     public List<Email> findEmail(){
         SpecialInspection speIns = new SpecialInspection();
-        speIns.setSpePart("금형");          // 영역 세팅
-        speIns.setSpeFacility("금");    // 설비 세팅
+        speIns.setSpePart("압출");          // 영역 세팅
+        speIns.setSpeFacility("압출#1");    // 설비 세팅
         List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(speIns.getSpePart(), Y);
         return emailList;
     }
@@ -52,20 +52,14 @@ public class SpecialInspectionService {
     public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
         // 점검일 세팅
         speInsFormDTO.setSpeDate(LocalDateTime.now());
-
         // 위험도에 따른 완료요청기한 세팅
         SpeStatus.deadLineCal(speInsFormDTO);
-
         // 수시점검 저장
         SpecialInspection special = speInsFormDTO.createSpeIns();
         specialInspectionRepository.save(special);
 
-
-        System.out.println("222222222222: " + speInsFormDTO.getFiles());
-
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            System.out.println("여기111111111111111111");
             // 파일 업로드 및 파일 정보 저장
             List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO.getFiles());
             for(SpecialFile specialFile : uploadedFiles)
