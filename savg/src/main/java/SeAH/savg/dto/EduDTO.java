@@ -15,6 +15,7 @@ import java.util.List;
 public class EduDTO {
     private Long eduId;
     private edustate eduCategory;
+    private String eduTitle;
     private String eduInstructor; //강사
     private String eduPlace; //장소
 
@@ -31,18 +32,38 @@ public class EduDTO {
     private String eduWriter; //작성자
 
     private List<MultipartFile> files; // 파일
-
+//    private MultipartFile[] files;
     private static ModelMapper modelMapper = new ModelMapper();
 
+    public EduDTO(Edu edu) {
+        if (edu != null) {
+            this.eduId = edu.getEduId();
+            this.eduCategory = edu.getEduCategory();
+            this.eduTitle = edu.getEduTitle();
+            this.eduInstructor = edu.getEduInstructor();
+            this.eduPlace = edu.getEduPlace();
+            this.eduStartTime = edu.getEduStartTime();
+            this.eduSumTime = edu.getEduSumTime(); // eduSumTime 추가
+            this.eduTarget = edu.getEduTarget();
+            this.eduContent = edu.getEduContent();
+            this.eduWriter = edu.getEduWriter();
+        }
+    }
+
+//    public Edu createEdu(){
+//        return modelMapper.map(this, Edu.class);
+//    }
 
     public Edu toEntity() {
         Edu edu = new Edu();
         edu.setEduId(this.eduId);
         edu.setEduCategory(this.eduCategory);
+        edu.setEduTitle(this.eduTitle);
         edu.setEduInstructor(this.eduInstructor);
         edu.setEduPlace(this.eduPlace);
         edu.setEduStartTime(this.eduStartTime);
-        edu.setEduEndTime(this.eduEndTime);
+        edu.setEduSumTime(this.eduSumTime);
+//        edu.setEduEndTime(this.eduEndTime);
         edu.setEduTarget(this.eduTarget);
         edu.setEduContent(this.eduContent);
         edu.setEduWriter(this.eduWriter);
@@ -57,11 +78,12 @@ public class EduDTO {
     public EduDTO(Edu edu) {
         this.eduId = edu.getEduId();
         this.eduCategory = edu.getEduCategory();
+        this.eduTitle = edu.getEduTitle();
         this.eduInstructor = edu.getEduInstructor();
         this.eduPlace = edu.getEduPlace();
         this.eduStartTime = edu.getEduStartTime();
-        this.eduEndTime = edu.getEduEndTime();
-        this.eduSumTime = edu.getEduSumTime().toString(); // LocalDateTime을 문자열로 변환하여 저장
+//        this.eduEndTime = edu.getEduEndTime();
+        this.eduSumTime = edu.getEduSumTime(); // LocalDateTime을 문자열로 변환하여 저장
         this.eduTarget = edu.getEduTarget();
         this.eduContent = edu.getEduContent();
         this.eduWriter = edu.getEduWriter();

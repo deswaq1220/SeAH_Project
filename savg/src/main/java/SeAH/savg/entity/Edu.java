@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,8 @@ public class Edu {
     @Column(nullable = false)
     private LocalDateTime eduStartTime;     //교육시작시각
 
-    @Column(nullable = false)
-    private LocalDateTime eduEndTime;       //교육종료시각
+//    @Column(nullable = false)
+//    private LocalDateTime eduEndTime;       //교육종료시각
 
 //    @Column(nullable = false)
     private String eduSumTime;             //교육시간(분)
@@ -60,5 +61,14 @@ public class Edu {
 
     public void setEduFileName(String fileName) {
     }
+
+/*    //pk생성 양식
+    public void createId(int sequence){
+        LocalDate currentDate = LocalDate.now();
+        int year = currentDate.getYear();
+        int month = currentDate.getMonthValue();
+
+        this.eduId = String.format("E%02d%02d_%02d", year % 100, month, sequence);
+    }*/
 
 }

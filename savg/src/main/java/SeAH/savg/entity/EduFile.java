@@ -17,6 +17,7 @@ public class EduFile {
     private String eduFileOriName;    // 원본 파일명
     private String eduFileUrl;        // 파일 조회 경로
 
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "edu_id")
     private Edu edu;
