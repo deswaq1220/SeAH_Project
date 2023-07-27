@@ -1,6 +1,7 @@
 package SeAH.savg.controller;
 
 import SeAH.savg.dto.SpeInsFormDTO;
+import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,9 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
+    private final SpecialInspectionRepository specialInspectionRepository;
 
 //    // 등록화면 조회 : 프론트연결용
-//    @GetMapping(value = "/special")
+//    @GetMapping(value = "/special/new/{masterdataFacility}")
 //    public ResponseEntity<?> speForm(@RequestBody Map<String, Object> requestData){
 //        return new ResponseEntity<>(specialInspectionService.findEmail(requestData), HttpStatus.OK);
 //    }
@@ -46,6 +48,12 @@ public class SpecialController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // 상세조회
+    @GetMapping("/special/detail/{speId}")
+    public ResponseEntity<?> speDetail(@PathVariable String speId){
+        specialInspectionService.findSpeDetail(speId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 

@@ -92,18 +92,34 @@ public class SpecialInspectionService {
         List<SpecialFile> specialFileList = specialFileRepository.findAll();
 
         responseData.put("specialData", specialInspectionList);
-        responseData.put("specialFildData", specialFileList);
+        responseData.put("specialFileData", specialFileList);
         return responseData;
     }
 
     // 수시점검 설비별 조회
     @Transactional(readOnly = true)
     public List<SpecialInspection> findListOfFac(String masterdataFacility){
-        System.out.println("수시점검 서비스 in 111111111111111111111111");
-        System.out.println(masterdataFacility);
-
         List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacility(masterdataFacility);
 
         return listOfFac;
+    }
+
+    // 수시점검 상세조회
+    @Transactional
+    public Map<String, Object> findSpeDetail(String speId){
+        Map<String, Object> responseData = new HashMap<>();
+        SpecialInspection speDetailFindId = specialInspectionRepository.findAllBySpeId(speId);
+
+
+        // 파일 가져오는거 수정중 -----------------------------------------------------
+        List<SpecialFile> speFileFindSpeInsIds = specialFileRepository.findBySpeId(speDetailFindId.getSpeId());
+
+
+
+
+        responseData.put("speDetailFindData", speDetailFindId);
+        responseData.put("speFileFindSpeInsIdData", speFileFindSpeInsIds);
+
+        return responseData;
     }
 }
