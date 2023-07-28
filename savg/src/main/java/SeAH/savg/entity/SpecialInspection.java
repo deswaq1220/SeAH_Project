@@ -63,7 +63,7 @@ public class SpecialInspection {
     private SpeStatus speCompelete = SpeStatus.NO;              // 완료여부 : 기본값 NO
 
 //    @Column(nullable = false)
-//    private int speMasterdataId;            // qr로 넘어오는 설비id
+//    private int speMasterdataId;            // qr로 넘어오는 설비id : 필요없을것같음 확인후 삭제
 
 
 }

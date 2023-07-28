@@ -2,7 +2,6 @@ package SeAH.savg.service;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
-import SeAH.savg.entity.Email;
 import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.entity.SpecialInspection;
 import SeAH.savg.repository.EmailRepository;
@@ -18,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static SeAH.savg.constant.MasterStatus.Y;
-
 @Service
 @RequiredArgsConstructor
 public class SpecialInspectionService {
@@ -30,7 +27,7 @@ public class SpecialInspectionService {
     private final SpeicalFileRepository specialFileRepository;
 
 
-    // 수시점검 등록화면 조회 : 프론트연결용
+//    // 수시점검 등록화면 조회 : 프론트연결용
 //    @Transactional
 //    public List<Email> findEmail(Map<String, Object> requestData){
 //        SpecialInspection speIns = new SpecialInspection();
@@ -38,7 +35,7 @@ public class SpecialInspectionService {
 //        speIns.setSpeFacility((String) requestData.get("masterdataFacility"));  // 설비 세팅
 //
 //
-//
+//        // 고정수신자, 파트관리자 이메일리스트
 //        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(speIns.getSpePart(), Y);
 //        return emailList;
 //    }

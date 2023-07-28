@@ -16,11 +16,11 @@ public enum SpeStatus {
 
     // 위험도에 따른 완료요청기한 계산
     public static void deadLineCal(SpeInsFormDTO speInsFormDTO){
-        if(speInsFormDTO.getSpeRiskAssess() == SpeStatus.HIGH)
+        if(speInsFormDTO.getSpeRiskAssess() == SpeStatus.HIGH)           // 고위험 +10일
             speInsFormDTO.setSpeDeadline(speInsFormDTO.getSpeDate().plusDays(10));
-        else if(speInsFormDTO.getSpeRiskAssess() == SpeStatus.MEDIUM)
+        else if(speInsFormDTO.getSpeRiskAssess() == SpeStatus.MEDIUM)    // 중위험 +30일
             speInsFormDTO.setSpeDeadline(speInsFormDTO.getSpeDate().plusDays(30));
-        else if(speInsFormDTO.getSpeRiskAssess() == SpeStatus.LOW)
+        else if(speInsFormDTO.getSpeRiskAssess() == SpeStatus.LOW)       // 저위험 +60일
             speInsFormDTO.setSpeDeadline(speInsFormDTO.getSpeDate().plusDays(60));
 
     }
