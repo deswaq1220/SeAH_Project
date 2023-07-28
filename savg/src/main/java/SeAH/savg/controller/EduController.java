@@ -10,6 +10,7 @@ import SeAH.savg.service.EduFileService;
 import SeAH.savg.service.EduService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class EduController {
     private final EduService eduService;
     private final EduFileService eduFileService;
     private final EduFileRepository eduFileRepository;
+
 
 
     public EduController(EduRepository eduRepository, EduService eduService, EduFileService eduFileService,
@@ -86,7 +89,7 @@ public class EduController {
         }
     }
 
-    
+
     //교육일지 목록 조회
     @GetMapping("/edumain")
     public ResponseEntity<List<EduDTO>> getEduList() {
@@ -113,5 +116,45 @@ public class EduController {
         return ResponseEntity.ok(eduDTO);
     }
 
+    // 교육일지 수정
+    @PutMapping("/edumodify/{eduId}")
+    public ResponseEntity<?> handleEduModify(@PathVariable Long eduId, @Valid  EduDTO eduDTO) {
+        try {
+            Edu edu = eduService.getEduById(eduId);
+            if (edu == null) {
+                return ResponseEntity.notFound().build();
+            }
 
+            // 기존 파일 삭제 및 수정된 파일 업로드
+            if (eduDTO.getFiles() != null && !eduDTO.getFiles().isEmpty()) {
+                List<EduFile> existingFiles = eduFileRepository.findByEdu(edu);
+                if (existingFiles != null && !existingFiles.isEmpty()) {
+                    for (EduFile existingFile : existingFiles) {
+                        String fileName = existingFile.getEduFileName();
+                        eduFileService.deleteFile(fileName);
+                    }
+                }
+                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO.getFiles());
+                for (EduFile eduFile : uploadedFiles) {
+                    eduFile.setEdu(edu);
+                }
+            }
+            edu.setEduCategory(eduDTO.getEduCategory());
+            edu.setEduTitle(eduDTO.getEduTitle());
+            edu.setEduInstructor(eduDTO.getEduInstructor());
+            edu.setEduPlace(eduDTO.getEduPlace());
+            edu.setEduStartTime(eduDTO.getEduStartTime());
+            edu.setEduSumTime(eduDTO.getEduSumTime());
+            edu.setEduTarget(eduDTO.getEduTarget());
+            edu.setEduContent(eduDTO.getEduContent());
+            edu.setEduWriter(eduDTO.getEduWriter());
+
+            eduRepository.save(edu);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

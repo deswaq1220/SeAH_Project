@@ -1,12 +1,15 @@
 package SeAH.savg.controller;
 
+import SeAH.savg.dto.EduDTO;
 import SeAH.savg.service.AttendanceService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,4 +40,13 @@ public class AttendanceController {
         return ResponseEntity.ok().build();
     }
 
+    //특정 교육생이 들은 교육 목록
+    @GetMapping("/edulist/{attenName}")
+    public ResponseEntity<List<EduDTO>> getEduListByAttenName(@PathVariable String attenName) {
+        List<EduDTO> eduList = attendanceService.getEduListByAttenName(attenName);
+        return ResponseEntity.ok(eduList);
     }
+
+
+
+}

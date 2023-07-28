@@ -1,12 +1,15 @@
 package SeAH.savg.service;
 
 import SeAH.savg.dto.AttendanceDTO;
+import SeAH.savg.dto.EduDTO;
 import SeAH.savg.entity.Attendance;
+import SeAH.savg.entity.Edu;
 import SeAH.savg.repository.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,11 @@ public class AttendanceService {
         Attendance attendance = attendanceDTO.toEntity();
         System.out.println(attendance);
         attendanceRepository.save(attendance);
+    }
+
+    //교육자가 들은 교육 리스트
+    public List<EduDTO> getEduListByAttenName(String attenName) {
+        return attendanceRepository.getEduListByAttenName(attenName);
     }
 
 }
