@@ -39,7 +39,15 @@ public class MyJobTaskletOne {
                 .build();
     }
     @Bean
-    private Step myJobTaskletOne_Job1_Step2() {
-        return null;
+    public Step myJobTaskletOne_Job1_Step2() {
+        return stepBuilderFactory.get("myJobTaskletOne_Job1_Step2")
+                .tasklet(new Tasklet(){
+                    @Override
+                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception{
+                        System.out.println("Job2_StEP2");
+                        return RepeatStatus.FINISHED;
+                    }
+                })
+                .build();
     }
 }
