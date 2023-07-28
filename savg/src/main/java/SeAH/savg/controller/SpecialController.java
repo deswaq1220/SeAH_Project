@@ -44,15 +44,15 @@ public class SpecialController {
     // 설비별 현황 조회
     @GetMapping("/special/list/{masterdataFacility}")
     public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility){
-        specialInspectionService.findListOfFac(masterdataFacility);
-        return new ResponseEntity<>(HttpStatus.OK);
+//        specialInspectionService.findListOfFac(masterdataFacility);
+        return new ResponseEntity<>(specialInspectionService.findListOfFac(masterdataFacility), HttpStatus.OK);
     }
 
     // 상세조회
     @GetMapping("/special/detail/{speId}")
     public ResponseEntity<?> speDetail(@PathVariable String speId){
-        specialInspectionService.findSpeDetail(speId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(specialInspectionService.findSpeDetail(speId), HttpStatus.OK);
+
     }
 
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,12 +97,26 @@ public class SpecialInspectionService {
         return responseData;
     }
 
+
     // 수시점검 설비별 조회
     @Transactional(readOnly = true)
-    public List<SpecialInspection> findListOfFac(String masterdataFacility){
-        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacility(masterdataFacility);
+    public Map<String, Object> findListOfFac(String masterdataFacility){
+        Map<String, Object> responseData = new HashMap<>();
+        String findId;          // 해당 설비를 가진 id를 저장할 함수
 
-        return listOfFac;
+        // 설비에 해당하는 SpecialInspection 찾기
+        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacility(masterdataFacility);
+        responseData.put("listOfFac", listOfFac);
+
+        // 찾은 SpecialInspection의 id를 이용해 파일찾기
+        List<SpecialFile> speFileOfFac = new ArrayList<>();
+        for(SpecialInspection listOfFacId : listOfFac){
+            findId = listOfFacId.getSpeId();        // id세팅
+            List<SpecialFile> files= specialFileRepository.findBySpecialInspection_SpeId(findId);
+            speFileOfFac.addAll(files);
+        }
+        responseData.put("speFileOfFac", speFileOfFac);
+        return responseData;
     }
 
     // 수시점검 상세조회
@@ -109,17 +124,14 @@ public class SpecialInspectionService {
     public Map<String, Object> findSpeDetail(String speId){
         Map<String, Object> responseData = new HashMap<>();
         SpecialInspection speDetailFindId = specialInspectionRepository.findAllBySpeId(speId);
+        List<SpecialFile> speFileDetailFindIds = specialFileRepository.findBySpecialInspection_SpeId(speId);
 
-
-        // 파일 가져오는거 수정중 -----------------------------------------------------
-        List<SpecialFile> speFileFindSpeInsIds = specialFileRepository.findBySpeId(speDetailFindId.getSpeId());
-
-
-
-
-        responseData.put("speDetailFindData", speDetailFindId);
-        responseData.put("speFileFindSpeInsIdData", speFileFindSpeInsIds);
+        responseData.put("speDetailFindId", speDetailFindId);
+        responseData.put("speFileDetailFindIds", speFileDetailFindIds);
 
         return responseData;
     }
+
+
+
 }

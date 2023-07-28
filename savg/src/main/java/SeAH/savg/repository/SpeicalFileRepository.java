@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SpeicalFileRepository extends JpaRepository <SpecialFile, Long> {
-    List<SpecialFile> findBySpeId(String speId);
+    List<SpecialFile> findBySpecialInspection_SpeId(String speId);
 }

@@ -2,12 +2,13 @@ package SeAH.savg.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name="special_file")
-@Getter @Setter
+@Getter @Setter @ToString
 public class SpecialFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
