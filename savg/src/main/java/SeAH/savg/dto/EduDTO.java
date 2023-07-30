@@ -2,16 +2,19 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
+import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityListeners;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter @Setter
+@EntityListeners(EduEntityListener.class)
 public class EduDTO {
     private Long eduId;
     private edustate eduCategory;
