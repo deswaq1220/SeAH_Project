@@ -62,6 +62,7 @@ public class SpecialInspectionService {
     // 수시점검 저장
     @Transactional
     public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("서비스 저장임: "+speInsFormDTO);
         // id 세팅
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));
 
@@ -134,17 +135,17 @@ public class SpecialInspectionService {
         return responseData;
     }
 
-    // 완료처리:업데이트
+    // 완료처리:업데이트 ---------------------수정중
     @Transactional
-    public SpecialInspection speUpdate(String speId, MultipartFile files, SpeInsFormDTO speInsFormDTO) throws Exception {
+    public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
         System.out.println("special 1111111111 : " + special);
         System.out.println("specialFormDTO 1111111111 : " + speInsFormDTO);
 
         // 파일이 있으면 저장
-        if(!(files == null || files.isEmpty())){
+        if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             System.out.println("파일있다");
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(files);
+            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO.getFiles());
 
             for(SpecialFile specialFile : uploadFiles)
                 specialFile.setSpecialInspection(special);

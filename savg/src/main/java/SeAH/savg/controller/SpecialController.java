@@ -1,14 +1,18 @@
 package SeAH.savg.controller;
 
+import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,11 +57,11 @@ public class SpecialController {
     }
 
     // 완료처리(update)
-    @PatchMapping("/special/detail/update/{speId}")
+    @PatchMapping("/special/detail/{speId}")
     public ResponseEntity<?> speComplete(@PathVariable String speId,
-                                         @RequestParam("file") MultipartFile files,
-                                         @RequestBody SpeInsFormDTO speInsFormDTO) throws Exception {
-        return new ResponseEntity<>(specialInspectionService.speUpdate(speId, files, speInsFormDTO), HttpStatus.CREATED);
+                                         SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("컨트롤러임: "+speInsFormDTO);
+        return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
     }
 
 

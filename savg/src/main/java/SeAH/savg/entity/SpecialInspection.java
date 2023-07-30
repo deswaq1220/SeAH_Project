@@ -60,14 +60,14 @@ public class SpecialInspection {
 
 //    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private SpeStatus speCompelete = SpeStatus.NO;              // 완료여부 : 기본값 NO
+    private SpeStatus speComplete = SpeStatus.NO;              // 완료여부 : 기본값 NO
 
 //    @Column(nullable = false)
 //    private int speMasterdataId;            // qr로 넘어오는 설비id : 필요없을것같음 확인후 삭제
 
 
     public void updateSpe(SpeStatus speCompelete){
-        this.speCompelete = speCompelete;
+        this.speComplete = speCompelete;
     }
 
 }

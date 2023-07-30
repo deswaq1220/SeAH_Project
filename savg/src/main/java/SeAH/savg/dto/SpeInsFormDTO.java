@@ -1,6 +1,7 @@
 package SeAH.savg.dto;
 
 import SeAH.savg.constant.SpeStatus;
+import SeAH.savg.entity.Email;
 import SeAH.savg.entity.SpecialInspection;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +35,7 @@ public class SpeInsFormDTO {
     private List<MultipartFile> files;      // 파일
 
     public static ModelMapper modelMapper = new ModelMapper();
+
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
 
 
