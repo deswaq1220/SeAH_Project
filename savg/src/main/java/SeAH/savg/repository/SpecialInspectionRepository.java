@@ -20,4 +20,5 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     // 아이디로 찾기
     SpecialInspection findAllBySpeId(String speId);
 
+
 }

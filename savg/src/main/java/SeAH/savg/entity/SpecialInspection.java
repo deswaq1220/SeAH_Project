@@ -66,4 +66,8 @@ public class SpecialInspection {
 //    private int speMasterdataId;            // qr로 넘어오는 설비id : 필요없을것같음 확인후 삭제
 
 
+    public void updateSpe(SpeStatus speCompelete){
+        this.speCompelete = speCompelete;
+    }
+
 }

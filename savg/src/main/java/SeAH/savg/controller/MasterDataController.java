@@ -62,53 +62,11 @@ public class MasterDataController {
     }
 
     // 이메일수정
-    @PutMapping("/master/email/update/{emailId}")
+    @PatchMapping("/master/email/update/{emailId}")
     public ResponseEntity<?> emailUpdate(@RequestBody EmailFormDTO emailFormDTO, @PathVariable Long emailId){
         return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, emailId), HttpStatus.CREATED);
     }
 
-//    // 기준정보 조회
-//    @GetMapping("/master")
-//    public ResponseEntity<?> masterForm(){
-//        return new ResponseEntity<>(masterDataService.findAll(), HttpStatus.OK);
-//    }
-//
-//    // 이메일 목록 조회
-//    @GetMapping("/master/email")
-//    public ResponseEntity<?> emailForm(){
-//        return new ResponseEntity<>(emailService.findAll(), HttpStatus.OK);
-//    }
 
-
-//
-//    // 설비등록
-//    @PostMapping(value = "/master")
-//    public String masterNew(@Valid MasterDataFormDTO masterDataFormDTO, BindingResult bindingResult, Model model){
-//        if(bindingResult.hasErrors())
-//            return "page/master";
-//
-//        try{
-//            masterDataService.saveMaster(masterDataFormDTO);
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return "redirect:/master";
-//    }
-//
-//
-//    // 이메일등록
-//    @PostMapping(value = "/master/email")
-//    public String emailNew(@Valid EmailFormDTO emailFormDTO, BindingResult bindingResult){
-//        if(bindingResult.hasErrors())
-//            return "page/master";
-//        try{
-//            emailService.saveEmail(emailFormDTO);
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return "redirect:/master";
-//    }
-
-    // 이메일수정
 
 }

@@ -2,6 +2,7 @@ package SeAH.savg.service;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
+import SeAH.savg.entity.Email;
 import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.entity.SpecialInspection;
 import SeAH.savg.repository.EmailRepository;
@@ -10,12 +11,14 @@ import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static SeAH.savg.constant.MasterStatus.Y;
+import static SeAH.savg.constant.SpeStatus.NO;
+import static SeAH.savg.constant.SpeStatus.OK;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class SpecialInspectionService {
     private final SpecialFileService specialFileService;
     private final MakeIdService makeIdService;
     private final SpeicalFileRepository specialFileRepository;
+
 
 
 //    // 수시점검 등록화면 조회 : 프론트연결용
@@ -58,6 +62,7 @@ public class SpecialInspectionService {
     // 수시점검 저장
     @Transactional
     public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
+        // id 세팅
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));
 
         // 영역이랑 설비도 선택해서 안넘어오면 파라미터로 받아서 세팅하던지, 아니면 requestData로 하던지
@@ -129,6 +134,33 @@ public class SpecialInspectionService {
         return responseData;
     }
 
+    // 완료처리:업데이트
+    @Transactional
+    public SpecialInspection speUpdate(String speId, MultipartFile files, SpeInsFormDTO speInsFormDTO) throws Exception {
+        SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+        System.out.println("special 1111111111 : " + special);
+        System.out.println("specialFormDTO 1111111111 : " + speInsFormDTO);
+
+        // 파일이 있으면 저장
+        if(!(files == null || files.isEmpty())){
+            System.out.println("파일있다");
+            List<SpecialFile> uploadFiles = specialFileService.uploadFile(files);
+
+            for(SpecialFile specialFile : uploadFiles)
+                specialFile.setSpecialInspection(special);
+        }
+
+        // 완료세팅
+        if(speInsFormDTO.getSpeCompelete() == OK || speInsFormDTO.getSpeCompelete().equals(OK)) {
+            System.out.println("완료다");
+            special.updateSpe(speInsFormDTO.getSpeCompelete());
+        }
+        System.out.println("special 2222222222222 :  " + special);
+
+//        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();
+//        speIns
+        return special;
+    }
 
 
 }

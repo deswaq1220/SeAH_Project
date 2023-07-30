@@ -4,13 +4,14 @@ import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.entity.SpecialInspection;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class SpeInsFormDTO {
     private String speId;                     // id
     private LocalDateTime speDate;          // 점검일
