@@ -22,6 +22,9 @@ public class SpecialInspection {
     private String spePerson;               // 점검자
 
     @Column(nullable = false)
+    private  String speEmpNum;            // 사원번호
+
+    @Column(nullable = false)
     private String speEmail;                // 점검자 이메일(조치완료시 회신)
 
     @Column(nullable = false)
@@ -66,8 +69,8 @@ public class SpecialInspection {
 //    private int speMasterdataId;            // qr로 넘어오는 설비id : 필요없을것같음 확인후 삭제
 
 
-    public void updateSpe(SpeStatus speCompelete){
-        this.speComplete = speCompelete;
+    public void updateSpe(SpeStatus speComplete){
+        this.speComplete = speComplete;
     }
 
 }

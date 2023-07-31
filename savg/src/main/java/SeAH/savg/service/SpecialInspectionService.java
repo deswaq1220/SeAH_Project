@@ -71,6 +71,7 @@ public class SpecialInspectionService {
 
         // 점검일 세팅
         speInsFormDTO.setSpeDate(LocalDateTime.now());
+
         // 위험도에 따른 완료요청기한 세팅
         SpeStatus.deadLineCal(speInsFormDTO);
         // 수시점검 저장
@@ -80,7 +81,8 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO.getFiles());
+            String completeKey = "미완료";
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO.getFiles(), completeKey);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
@@ -139,18 +141,19 @@ public class SpecialInspectionService {
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
-
+        System.out.println("서비스임: "+speInsFormDTO);
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO.getFiles());
+            String completeKey = "완료";
+            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO.getFiles(), completeKey);
 
             for(SpecialFile specialFile : uploadFiles)
                 specialFile.setSpecialInspection(special);
         }
 
         // 완료세팅
-        if(!(speInsFormDTO.getSpeCompelete() == null)) {
-            special.updateSpe(speInsFormDTO.getSpeCompelete());
+        if(!(speInsFormDTO.getSpeComplete() == null)) {
+            special.updateSpe(speInsFormDTO.getSpeComplete());
         }
 
         return special;

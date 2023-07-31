@@ -24,13 +24,13 @@ public class SpecialFileService {
     private String speFileLocation;
 
     // 파일 등록
-    public List<SpecialFile> uploadFile(List<MultipartFile> files) throws Exception {
+    public List<SpecialFile> uploadFile(List<MultipartFile> files, String completeKey) throws Exception {
         List<SpecialFile> uploadedFiles = new ArrayList<>();
 //        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
 
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
-            String makeSpeFileName = generateUniqueFileName(originalFilename);
+            String makeSpeFileName = generateUniqueFileName(originalFilename, completeKey);
             String fileUploadFullUrl = speFileLocation + File.separator + makeSpeFileName;
 
             System.out.println("파일경로: " + fileUploadFullUrl);
@@ -52,17 +52,25 @@ public class SpecialFileService {
         return uploadedFiles;
     }
 
-    //파일명설정 : 오늘날짜_원본파일명 조합
-    private String previousDate = ""; // 이전날짜 저장하는 변수
+    //파일명설정 : 오늘날짜_seqenceNumber_미완료/완료_원본파일명 조합
+    private List<SpecialFile> previousDatelist = null; // 이전날짜 저장하는 변수
     private int sequenceNumber = 0;
-    private String generateUniqueFileName(String originalFilename) {
+    private String generateUniqueFileName(String originalFilename, String completeKey) {
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        // 이전날짜와 현재날짜 비교해서 바뀌었을 경우 sequenceNumber를 0으로 초기화
-        if(!todayDate.equals(previousDate)){ sequenceNumber = 0; }
+        previousDatelist = speicalFileRepository.findFilesByToday(todayDate);
 
-        String newName = todayDate + "_" + sequenceNumber + "_" + originalFilename;
-        sequenceNumber++;
-        previousDate = todayDate;
+        // DB에 저장된 오늘 날짜 구하기
+        if(previousDatelist.isEmpty() || previousDatelist.size() == 0){
+            // 오늘날짜 저장된게 없으면(다음날이면) : sequenceNumber 초기화
+            sequenceNumber = 0;
+        } else{
+            // 오늘날짜중 가장 높은 seq찾아서 sequenceNumber++ 세팅하기
+            sequenceNumber = speicalFileRepository.getMaxSeqNumberByToday(todayDate);
+            sequenceNumber++;
+        }
+
+        String newName = todayDate + "_" +  sequenceNumber + "_" + completeKey  +"_" + originalFilename;
+
         return newName;
     }
 

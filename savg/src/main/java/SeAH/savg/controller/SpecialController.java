@@ -53,6 +53,7 @@ public class SpecialController {
     // 완료처리(update)
     @PostMapping("/special/detail/{speId}")
     public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("컨트롤러임: " + speInsFormDTO);
         return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
     }
 
