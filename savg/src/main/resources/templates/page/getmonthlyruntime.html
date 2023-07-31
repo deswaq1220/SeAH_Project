@@ -16,18 +16,60 @@
     <!-- 서버 응답 결과를 출력할 컨테이너 -->
 </div>
 
+<h2>월별 교육실행 목록</h2>
+<div id="eduListContainer">
+
+    <label for="categoryDropdown">분류 선택:</label>
+    <select id="categoryDropdown" name="category">
+        <option value="CREW">CREW</option>
+        <option value="MANAGE">MANAGE</option>
+        <option value="ETC">ETC</option>
+    </select>
+
+    <table>
+        <thead>
+        <tr>
+            <th>분류</th>
+            <th>교육명</th>
+            <th>시작일</th>
+            <th>교육시간</th>
+        </tr>
+        </thead>
+        <tbody id="eduListBody">
+        <!-- 교육실행 리스트를 출력할 영역 -->
+        </tbody>
+    </table>
+    <!-- 이전 페이지로 이동하는 버튼 -->
+    <button id="previousButton" type="button">이전 페이지</button>
+    <!-- 다음 페이지로 이동하는 버튼 -->
+    <button id="nextButton" type="button">다음 페이지</button>
+
+</div>
+
 <script>
+    let currentPage = 0;
     function handleSubmit(event) {
         event.preventDefault();
         const monthValue = document.getElementById("monthInput").value;
 
+
+
         $.ajax({
             type: "POST",
             url: "/edustatistics/getmonthlyruntime",
-            data: { month: monthValue },
+            data: JSON.stringify({ month: parseInt(monthValue) }),
+            contentType: "application/json",
             success: function(response) {
-                const resultContainer = document.getElementById("resultContainer");
-                resultContainer.innerHTML = "서버 응답: 전체시간/CREW/MANAGE/DM/ETC" + JSON.stringify(response);
+                let resultContainer = document.getElementById("resultContainer");
+                if (!resultContainer) {
+                    resultContainer = document.createElement("div");
+                    resultContainer.id = "resultContainer";
+                    document.body.appendChild(resultContainer);
+                }
+                resultContainer.innerHTML = "서버 응답: " + JSON.stringify(response);
+
+                // 데이터를 받아오는데 성공하면 교육실행 리스트를 요청
+                loadEduList(monthValue, 0); // 첫 번째 페이지를 요청
             },
             error: function(error) {
                 console.error("에러 발생:", error);
@@ -35,7 +77,77 @@
         });
     }
 
+    // 교육실행 리스트를 요청하는 함수
+    function loadEduList(monthValue, pageNumber) {
+
+        // 선택한 드롭다운 값을 가져옴
+        const categoryValue = document.getElementById("categoryDropdown").value;
+
+        // 교육실행 리스트 요청
+        $.ajax({
+            type: "GET",
+            url: "/edustatistics/getmonthlyedulist/" + monthValue,
+            data: { pageNumber: pageNumber, eduCategory: categoryValue }, // 현재 페이지 번호를 요청 데이터로 추가
+
+            success: function(response) {
+                const eduListBody = document.getElementById("eduListBody");
+                if (!eduListBody) {
+                    console.error("eduListBody 요소를 찾을 수 없습니다.");
+                    return;
+                }
+                eduListBody.innerHTML = ""; // 이전 데이터 초기화
+
+                if (response && response.content && Array.isArray(response.content)) {
+                    const eduList = response.content;
+                    for (const edu of eduList) {
+                        const row = document.createElement("tr");
+                        const categoryCell = document.createElement("td");
+                        categoryCell.textContent = edu[0];
+                        const titleCell = document.createElement("td");
+                        titleCell.textContent = edu[1]
+                        const dayCell = document.createElement("td");
+                        dayCell.textContent = edu[2];
+                        const timeCell = document.createElement("td");
+                        timeCell.textContent = edu[3];
+                        row.appendChild(categoryCell);
+                        row.appendChild(titleCell);
+                        row.appendChild(dayCell);
+                        row.appendChild(timeCell);
+                        eduListBody.appendChild(row);
+                    }
+                } else {
+                    console.error("서버 응답 형식이 잘못되었습니다.");
+                }
+            },
+            error: function(error) {
+                console.error("에러 발생:", error);
+            }
+        });
+    }
+
+    // 이전 페이지로 이동하는 함수
+    function goToPreviousPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            loadEduList(document.getElementById("monthInput").value, currentPage);
+        }
+    }
+
+    // 다음 페이지로 이동하는 함수
+    function goToNextPage() {
+        currentPage++;
+        loadEduList(document.getElementById("monthInput").value, currentPage);
+    }
+
     document.getElementById("monthForm").addEventListener("submit", handleSubmit);
+    // 이전 페이지로 이동하는 버튼 클릭 이벤트 처리
+    document.getElementById("previousButton").addEventListener("click", goToPreviousPage);
+
+    // 다음 페이지로 이동하는 버튼 클릭 이벤트 처리
+    document.getElementById("nextButton").addEventListener("click", goToNextPage);
+
+    // 드롭다운 값이 변경되었을 때 handleSubmit 함수 호출
+    document.getElementById("categoryDropdown").addEventListener("change", loadEduList);
 </script>
 </body>
 </html>

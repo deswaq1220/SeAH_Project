@@ -12,6 +12,7 @@ import SeAH.savg.service.EduFileService;
 import SeAH.savg.service.EduService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -30,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-@Controller
+//@Controller
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
@@ -152,7 +152,7 @@ public class EduController {
 
 
 
-    //(관리자) 월별 교육실행 시간 통계 조회하기(★프론트 연결 필요)
+    //(관리자) 월별 교육실행시간 통계 조회하기(★프론트 연결 필요)
     @PostMapping("/edustatistics/getmonthlyruntime")
     public List<Integer> viewMonthlyEduTimeStatis(@RequestBody Map<String, Integer> requestData){
 
@@ -162,18 +162,27 @@ public class EduController {
         return result;
     }
 
-
-
-
-
-    /*(관리자) 월별 교육실행 시간 통계 조회하기 (html 임시 확인용)
+    //(관리자) 월별 교육실행 시간 통계 조회하기 (html 임시 확인용)
     @GetMapping("/getmonthlyruntime")
     public ModelAndView showGetMonthForm() {
         ModelAndView modelAndView = new ModelAndView("page/getmonthlyruntime");
 
         return modelAndView;
     }
-    */
+
+
+    //(관리자) 월별 교육실행리스트 통계 조회하기
+    @GetMapping("/edustatistics/getmonthlyedulist/{month}")
+    public Page<Object[]> getEduListByMonth(@PathVariable int month,
+                                            @RequestParam(defaultValue = "0") int pageNumber,
+                                            @RequestParam(defaultValue = "10") int pageSize,
+                                            @RequestParam(required = false) String eduCategory) {
+        if (eduCategory != null && !eduCategory.isEmpty()) {
+            return eduService.getRunEduListByMonthAndCategory(month, pageNumber, pageSize, eduCategory);
+        } else {
+            return eduService.getRunEduListByMonth(month, pageNumber, pageSize);
+        }
+    }
 }
 
 
