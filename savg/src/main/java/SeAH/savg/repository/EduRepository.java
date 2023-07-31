@@ -22,7 +22,8 @@ public interface EduRepository extends JpaRepository<Edu, Long> {
     //1. 월별 교육통계 조회하기(교육별 참석자 명단 출력)
     @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
-            "JOIN Attendance a ON e.eduId = a.eduId " +
+            "JOIN Attendance a " +
+            "ON e.eduId = a.eduId " +
             "WHERE e.eduCategory = :eduCategory " +
             "AND MONTH(e.eduStartTime) = :month")
     List<Object[]> selectMonthEduTraineeStatis(@Param("eduCategory") edustate eduCategory , @Param("month") int month);
@@ -38,6 +39,7 @@ public interface EduRepository extends JpaRepository<Edu, Long> {
             "FROM Edu e " +
             "WHERE MONTH(e.eduStartTime) = :month")
     List<Object[]> selectSumMonthEduTime(@Param("month") int month);
+
 
 
 

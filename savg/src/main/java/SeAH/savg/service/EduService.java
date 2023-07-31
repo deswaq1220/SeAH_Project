@@ -6,6 +6,7 @@ import SeAH.savg.entity.Edu;
 import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -33,7 +34,7 @@ public class EduService {
 
 
     //(관리자)
-    // 1. 월별교육통계 조회하기(카테고리에 따른 교육참가자 조회)
+    // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회
     public List<EduStatisticsDTO> showMonthEduTraineeStatis(edustate eduCategory, int month){
         List<Object[]> results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month);
 
@@ -54,7 +55,7 @@ public class EduService {
     }
 
 
-    // 2. 월별교육통계 조회하기(월별 교육 실행시간 조회)
+    // 2. 월별교육통계 조회하기 - 교육 실행시간 조회
     // sumMonthlyEduTimeList = [CREW시간총계, MANAGE시간총계, DM시간총계, ETC시간총계, 전체시간총계]
     public List<Integer> showMonthEduTimeStatis(int month){
 
@@ -83,8 +84,11 @@ public class EduService {
         return sumMonthlyEduTimeList;
     }
 
-    // (현재 사용하지 않음. 나중에 필요없으면 삭제예정)월별교육통계 조회하기(월별 교육 실행시간 각 카테고리 조회)
-    /*public Long showMonthEduTimeStatis2(edustate eduCategory, int month){
+    //Paging, Sort 메소드
+    //Sort eduTimeDepartmentSort =  Sort.by("department").descending();
+/*
+    // 3. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
+    public Long showMonthEduTimeStatis2(edustate eduCategory, int month){
 
         List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
         List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
@@ -103,7 +107,7 @@ public class EduService {
         }
         return eduSumTime;
     }
-    */
+*/
 
     //상세조회
     public Edu getEduById(Long eduId) {

@@ -123,7 +123,7 @@ public class EduController {
 
 
 
-    //(관리자) 월별, 카테고리별 교육참석자 통계 조회하기(★프론트 연결되는지 확인요청(경원님))
+    //(관리자) 월별, 카테고리별 교육참석자 통계 조회하기(★프론트 연결 필요)
     @PostMapping("/edustatistics/getmonth")
     public ResponseEntity<?> viewMonthEduStatis(@RequestBody Map<String, Object> requestData){
         edustate eduCategory = (edustate)requestData.get("eduCategory");
@@ -150,15 +150,21 @@ public class EduController {
     }
     */
 
-    //(관리자) 월별 교육실행 시간 통계 조회하기
+
+
+    //(관리자) 월별 교육실행 시간 통계 조회하기(★프론트 연결 필요)
     @PostMapping("/edustatistics/getmonthlyruntime")
-    public List<Integer> viewMonthlyEduTimeStatis(@RequestParam("month") int month){
+    public List<Integer> viewMonthlyEduTimeStatis(@RequestBody Map<String, Integer> requestData){
 
-       List<Integer> result = eduService.showMonthEduTimeStatis(month);
-
+        int month = requestData.get("month");
+        List<Integer> result = eduService.showMonthEduTimeStatis(month);
         System.out.println(result);
         return result;
     }
+
+
+
+
 
     /*(관리자) 월별 교육실행 시간 통계 조회하기 (html 임시 확인용)
     @GetMapping("/getmonthlyruntime")
