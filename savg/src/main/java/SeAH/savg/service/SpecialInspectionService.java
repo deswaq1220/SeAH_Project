@@ -11,14 +11,14 @@ import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
-import static SeAH.savg.constant.SpeStatus.NO;
-import static SeAH.savg.constant.SpeStatus.OK;
 
 @Service
 @RequiredArgsConstructor
@@ -135,16 +135,13 @@ public class SpecialInspectionService {
         return responseData;
     }
 
-    // 완료처리:업데이트 ---------------------수정중
+    // 완료처리:업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
-        System.out.println("special 1111111111 : " + special);
-        System.out.println("specialFormDTO 1111111111 : " + speInsFormDTO);
 
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            System.out.println("파일있다");
             List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO.getFiles());
 
             for(SpecialFile specialFile : uploadFiles)
@@ -152,14 +149,10 @@ public class SpecialInspectionService {
         }
 
         // 완료세팅
-        if(speInsFormDTO.getSpeCompelete() == OK || speInsFormDTO.getSpeCompelete().equals(OK)) {
-            System.out.println("완료다");
+        if(!(speInsFormDTO.getSpeCompelete() == null)) {
             special.updateSpe(speInsFormDTO.getSpeCompelete());
         }
-        System.out.println("special 2222222222222 :  " + special);
 
-//        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();
-//        speIns
         return special;
     }
 
