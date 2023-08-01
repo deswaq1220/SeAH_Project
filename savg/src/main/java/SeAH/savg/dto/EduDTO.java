@@ -5,6 +5,7 @@ import SeAH.savg.entity.Edu;
 import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,10 +14,10 @@ import javax.persistence.EntityListeners;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @ToString
 @EntityListeners(EduEntityListener.class)
 public class EduDTO {
-    private Long eduId;
+    private String eduId;
     private edustate eduCategory;
     private String eduTitle;
     private String eduInstructor; //강사
