@@ -3,6 +3,7 @@ package SeAH.savg.controller;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
+import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.dto.EduSumStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
@@ -31,7 +32,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
-
 
 
 //@Controller
@@ -136,14 +136,21 @@ public class EduController {
 
 
 
-    //(관리자) 월별, 카테고리별 교육참석자 통계 조회하기(★프론트 연결 필요)
-    @PostMapping("/edustatistics/getmonth")
-    public ResponseEntity<?> viewMonthEduStatis(@RequestBody Map<String, Object> requestData){
-        edustate eduCategory = (edustate)requestData.get("eduCategory");
-        int month = (int)requestData.get("month");
-        eduService.showMonthEduTraineeStatis(eduCategory, month);
 
-        return ResponseEntity.ok().build();
+    //(관리자) 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명 구분가능)
+    //department, name 값을 필요 시 프론트에서 넘겨줘야함
+    @GetMapping("/edustatistics/getmonth") //나중에 주소를 /edu/statistics/getmonth 등으로 바꿔야 할듯
+    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam("eduCategory") edustate eduCategory,
+                                                                     @RequestParam("month") int month,
+                                                                     @RequestParam(required = false) String department,
+                                                                     @RequestParam(required = false) String name) {
+
+        String filteredDepartment = (department != null && !department.isEmpty()) ? department : null;
+        String filteredName = (name != null && !name.isEmpty()) ? name : null;
+
+        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, month, filteredDepartment, filteredName);
+        return ResponseEntity.ok(statisticsList);
+
     }
 
 
@@ -163,6 +170,8 @@ public class EduController {
         return "page/getmonth";
     }
     */
+
+    //(관리자) 월별 교육참석자 조회하기(카테고리별/ 카테고리+이름 구분가능)
 
 
 

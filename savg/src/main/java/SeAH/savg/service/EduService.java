@@ -37,8 +37,9 @@ public class EduService {
 
 
     //(관리자)
+    /*
     // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회
-    public List<EduStatisticsDTO> showMonthEduTraineeStatis(edustate eduCategory, int month){
+    public List<EduStatisticsDTO> showMonthEduTraineeStatics(edustate eduCategory, int month){
         List<Object[]> results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month);
 
         List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
@@ -56,7 +57,36 @@ public class EduService {
         }
         return eduStatisticsDTOList;
     }
+  */
+    // 1-1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회
+    public List<EduStatisticsDTO> showMonthEduTraineeStatics(edustate eduCategory, int month, String department, String name) {
 
+        List<Object[]> results;
+
+        if ((department == null || department.isEmpty()) && (name == null || name.isEmpty())) {
+            results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month); //카테고리에 따른 교육 참가자 조회
+
+        } else if((name != null && !name.isEmpty() && (department == null || department.isEmpty()))){
+            results = eduRepository.eduTraineeStatisByName(eduCategory, month, name);   //카테고리, 이름에 따른 참가자 조회
+
+        }else {
+            results = eduRepository.eduTraineeStatisByDepart(eduCategory, month, department);   //카테고리, 부서에 따른 참가자 조회
+        }
+
+        List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
+        for (Object[] result : results) {
+            EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
+            eduStatisticsDTO.setEduTitle((String) result[0]);
+            eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
+            eduStatisticsDTO.setEduSumTime((String) result[2]);
+            eduStatisticsDTO.setAttenName((String) result[3]);
+            eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
+            eduStatisticsDTO.setAttenDepartment((String) result[5]);
+
+            eduStatisticsDTOList.add(eduStatisticsDTO);
+        }
+        return eduStatisticsDTOList;
+    }
 
     // 2. 월별교육통계 조회하기 - 교육 실행시간 조회
     // sumMonthlyEduTimeList = [CREW시간총계, MANAGE시간총계, DM시간총계, ETC시간총계, 전체시간총계]

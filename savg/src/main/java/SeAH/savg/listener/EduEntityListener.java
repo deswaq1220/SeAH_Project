@@ -19,6 +19,6 @@ public class EduEntityListener {
     public void eduPostUpdate(Edu edu){
 
     }
-
+//지금은 안씀!!!!!!!!!!!!
 
 }

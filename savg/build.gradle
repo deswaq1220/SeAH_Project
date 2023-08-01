@@ -52,9 +52,6 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
-	//Spring Batch 사용
-	implementation 'org.springframework.boot:spring-boot-starter-batch'
-	testImplementation('org.springframework.batch:spring-batch-test')
 }
 
 tasks.named('test') {

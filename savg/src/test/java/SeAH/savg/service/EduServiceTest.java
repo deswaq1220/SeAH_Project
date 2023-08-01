@@ -1,6 +1,7 @@
 package SeAH.savg.service;
 
 import SeAH.savg.constant.edustate;
+import SeAH.savg.dto.EduStatisticsDTO;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class EduServiceTest {
         System.out.println(result);
     }
 */
+    @Test
+    public void testSumShowEduTime(){
+        List<EduStatisticsDTO> result = eduService.showMonthEduTraineeStatics(edustate.CREW,7, "주조반", null);
+            System.out.println(result);
+    }
+
 
     @Test
     public void testRunEduList(){

@@ -22,8 +22,8 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
 
    ////관리자
-    //1. 월별 교육통계 조회하기(교육별 참석자 명단 출력)
-    @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+    //1-1. 월별 교육 참석자 명단 출력(교육 구분)
+    @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a " +
             "ON e.eduId = a.eduId " +
@@ -31,32 +31,56 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "AND MONTH(e.eduStartTime) = :month")
     List<Object[]> selectMonthEduTraineeStatis(@Param("eduCategory") edustate eduCategory , @Param("month") int month);
 
-    //2. 월별 교육통계 조회하기(월별 교육실시시간 총계)
+    //1-2. 월별 교육 참석자 명단 출력(교육 구분 + 부서구분)
+    @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+            "FROM Edu e " +
+            "JOIN Attendance a " +
+            "ON e.eduId = a.eduId " +
+            "WHERE e.eduCategory = :eduCategory " +
+            "AND MONTH(e.eduStartTime) = :month " +
+            "AND a.attenDepartment = :department")
+    List<Object[]> eduTraineeStatisByDepart(@Param("eduCategory") edustate eduCategory , @Param("month") int month, @Param("department") String department);
+
+    //1-3. 월별 교육 참석자 명단 출력(교육 구분 + 성명구분)
+    @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+            "FROM Edu e " +
+            "JOIN Attendance a " +
+            "ON e.eduId = a.eduId " +
+            "WHERE e.eduCategory = :eduCategory " +
+            "AND MONTH(e.eduStartTime) = :month " +
+            "AND a.attenName = :name")
+    List<Object[]> eduTraineeStatisByName(@Param("eduCategory") edustate eduCategory , @Param("month") int month, @Param("name") String name);
+
+
+    //2-1. 월별 교육시간 조회하기(월별 교육실시시간 총계)
+    @Query("SELECT e.eduCategory, e.eduSumTime " +
+            "FROM Edu e " +
+            "WHERE MONTH(e.eduStartTime) = :month")
+    List<Object[]> selectSumMonthEduTime(@Param("month") int month);
+
+    //2-2. 월별 교육시간 조회하기(월별 교육실시시간 총계(카테고리, 월 기재버전))
     @Query("SELECT e.eduSumTime " +
             "FROM Edu e " +
             "WHERE e.eduCategory = :eduCategory " +
             "AND MONTH(e.eduStartTime) = :month ")
     List<Object[]> selectMonthEduTimeList(@Param("eduCategory") edustate eduCategory, @Param("month") int month);
 
-    @Query("SELECT e.eduCategory, e.eduSumTime " +
-            "FROM Edu e " +
-            "WHERE MONTH(e.eduStartTime) = :month")
-    List<Object[]> selectSumMonthEduTime(@Param("month") int month);
 
-    //월별 교육실행목록 조회하기(eduStartTime이 빠른 순으로 정렬)
+    //3. 월별 교육실행목록 조회하기(eduStartTime이 빠른 순으로 정렬)
     @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime " +
             "FROM Edu e " +
             "WHERE MONTH(e.eduStartTime) = :month " +
             "ORDER BY e.eduStartTime ASC")
     Page<Object[]> selectRunMonthEduList(@Param("month") int month, Pageable pageable);
 
-   //월별 교육실행목록 조회하기(category별)
+   //4. 월별 교육실행목록 조회하기(category별)
    @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime " +
            "FROM Edu e " +
            "WHERE MONTH(e.eduStartTime) = :month " +
            "AND e.eduCategory = :eduCategory " +
            "ORDER BY e.eduStartTime ASC")
    Page<Object[]> runMonthEduListByCategory(@Param("month") int month, @Param("eduCategory") edustate eduCategory, Pageable pageable);
+
 
     Edu findByEduId(Long eduId);
 
