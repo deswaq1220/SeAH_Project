@@ -106,8 +106,6 @@ public class EduService {
             // 여기서는 기본적으로 전체 리스트를 반환하도록 처리합니다.
             return eduRepository.selectRunMonthEduList(month, pageable);
         }
-
-
     }
 
 /*

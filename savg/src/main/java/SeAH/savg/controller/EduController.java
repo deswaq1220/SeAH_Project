@@ -172,6 +172,7 @@ public class EduController {
 
 
     //(관리자) 월별 교육실행리스트 통계 조회하기
+    //ex)   http://localhost:8081/edustatistics/getmonthlyedulist/7?pageNumber=0&eduCategory=MANAGE
     @GetMapping("/edustatistics/getmonthlyedulist/{month}")
     public Page<Object[]> getEduListByMonth(@PathVariable int month,
                                             @RequestParam(defaultValue = "0") int pageNumber,

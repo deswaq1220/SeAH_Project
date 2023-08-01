@@ -78,10 +78,11 @@
     }
 
     // 교육실행 리스트를 요청하는 함수
-    function loadEduList(monthValue, pageNumber) {
+    function loadEduList(monthValue, pageNumber, categoryValue) {
 
         // 선택한 드롭다운 값을 가져옴
-        const categoryValue = document.getElementById("categoryDropdown").value;
+
+        //const categoryValue = document.getElementById("categoryDropdown").value;
 
         // 교육실행 리스트 요청
         $.ajax({
@@ -147,7 +148,11 @@
     document.getElementById("nextButton").addEventListener("click", goToNextPage);
 
     // 드롭다운 값이 변경되었을 때 handleSubmit 함수 호출
-    document.getElementById("categoryDropdown").addEventListener("change", loadEduList);
+    document.getElementById("categoryDropdown").addEventListener("change", function() {
+        const monthValue = document.getElementById("monthInput").value;
+        const categoryValue = document.getElementById("categoryDropdown").value;
+        loadEduList(monthValue, 0, categoryValue); // 페이지 번호를 0으로 초기화하여 첫 번째 페이지를 요청
+    });
 </script>
 </body>
 </html>
