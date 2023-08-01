@@ -19,7 +19,6 @@ public class SpecialController {
 
     // 등록화면 조회 : 프론트연결용
 //    @GetMapping(value = "/special/new/{masterdataFacility}")
-////    public ResponseEntity<?> speForm(@RequestBody Map<String, Object> requestData){
 //    public ResponseEntity<?> speForm(@RequestBody Map<String, Object> requestData){
 //        return new ResponseEntity<>(specialInspectionService.findEmail(requestData), HttpStatus.OK);
 //    }
@@ -62,6 +61,11 @@ public class SpecialController {
         return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
     }
 
+//    // 일별 수시점검현황
+//    @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
+//    public ResponseEntity<?> speDaily(){
+//        return new ResponseEntity<>(specialInspectionService.findSpeDaily(), HttpStatus.OK);
+//    }
 
 
 

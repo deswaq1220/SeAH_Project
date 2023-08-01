@@ -147,5 +147,15 @@ public class SpecialInspectionService {
         return special;
     }
 
-
+//    // 일별현황 : 점검 완료()건, 미완료 ()건
+//    @Transactional
+//    public int findSpeDaily(){
+//        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+////        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(NO, startOfToday);
+//        int countNotComplete = specialInspectionRepository.countBySpeId();
+//
+//
+//
+//        return countNotComplete ;
+//    }
 }
