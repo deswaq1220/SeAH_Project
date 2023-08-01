@@ -1,5 +1,6 @@
 package SeAH.savg.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name="attendance")
-@Getter @Setter
+@Data
 public class Attendance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +24,7 @@ public class Attendance {
     private String attenDepartment;            // 부서
 
     @Column(nullable = false)
-    private Long eduId; //교육일지 id
+    private String eduId; //교육일지 id
 
     //@ManyToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name = "edu_id")

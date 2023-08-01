@@ -3,6 +3,7 @@ package SeAH.savg.repository;
 import SeAH.savg.entity.SpecialInspection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,4 +27,11 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
 //    int countBySpeId();
 
     // daily 완료 갯수
+
+
+    //월별 수시점검 통계 조회 - 영역별
+    @Query("SELECT s.spePart, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.spePart")
+    List<Object[]> specialListByPart(@Param("month") int month);
+
+
 }

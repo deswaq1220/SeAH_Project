@@ -146,6 +146,7 @@ public class EduController {
         return ResponseEntity.ok().build();
     }
 
+
     /*(html 임시 확인용)
     @PostMapping("/edustatistics/getmonth")
     public String viewMonthEduStatis(@RequestParam("eduCategory") edustate eduCategory

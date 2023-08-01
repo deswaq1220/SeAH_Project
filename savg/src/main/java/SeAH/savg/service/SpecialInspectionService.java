@@ -158,4 +158,8 @@ public class SpecialInspectionService {
 //
 //        return countNotComplete ;
 //    }
+
+
+    //월별 수시점검 건수 통계조회 - 파트별
+
 }
