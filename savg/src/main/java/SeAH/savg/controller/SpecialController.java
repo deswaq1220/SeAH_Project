@@ -6,13 +6,11 @@ import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
     private final SpecialInspectionRepository specialInspectionRepository;
@@ -62,7 +60,8 @@ public class SpecialController {
     }
 
     // 일별 수시점검현황
-    @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
+//    @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
+    @GetMapping("/userselectInspection")
     public ResponseEntity<?> speDaily(){
         return new ResponseEntity<>(specialInspectionService.findSpeDaily(), HttpStatus.OK);
     }

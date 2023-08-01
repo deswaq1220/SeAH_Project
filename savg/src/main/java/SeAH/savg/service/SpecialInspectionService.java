@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
-import static SeAH.savg.constant.SpeStatus.NO;
 import static SeAH.savg.constant.SpeStatus.OK;
 
 @Service
@@ -151,18 +150,23 @@ public class SpecialInspectionService {
         return special;
     }
 
-    // 일별현황 : 점검 완료()건, 미완료 ()건
+    // 일별현황 : 완료()건, 미완료 ()건
     @Transactional
     public Map<String, Object> findSpeDaily(){
         Map<String, Object> reponseData = new HashMap<>();
         LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
         // 미완료건수
-        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, NO, startOfToday);
-        // 완료건수
-        int countComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, OK, startOfToday);
+//        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, NO, startOfToday);
+//        reponseData.put("dailyNotComplete", countNotComplete);       // 오늘미완료건수
 
-        reponseData.put("dailyNotComplete", countNotComplete);       // 오늘미완료건수
-        reponseData.put("dailyComplete", countComplete);             // 오늘완료건수
+        // 전체점검건수
+        int countDailyAll = specialInspectionRepository.countAllBySpeDateAndSpeIdIsNotNullSpeDateAfter(startOfToday);
+        // 완료건수
+        int countDailyComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, OK, startOfToday);
+
+
+        reponseData.put("dailyAll", countDailyAll);             // 오늘등록건수
+        reponseData.put("dailyComplete", countDailyComplete);             // 오늘완료건수
 
         return reponseData ;
     }
