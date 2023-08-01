@@ -6,13 +6,19 @@ import SeAH.savg.entity.Edu;
 import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static SeAH.savg.constant.edustate.*;
 
 
 @Service
@@ -31,7 +37,7 @@ public class EduService {
 
 
     //(관리자)
-    // 1. 월별교육통계 조회하기(카테고리에 따른 교육참가자 조회)
+    // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회
     public List<EduStatisticsDTO> showMonthEduTraineeStatis(edustate eduCategory, int month){
         List<Object[]> results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month);
 
@@ -51,15 +57,67 @@ public class EduService {
         return eduStatisticsDTOList;
     }
 
-    // 2. 월별교육통계 조회하기(월별 교육 실행시간 조회)
-    public Long showMonthEduTimeStatis(edustate eduCategory, int month){
+
+    // 2. 월별교육통계 조회하기 - 교육 실행시간 조회
+    // sumMonthlyEduTimeList = [CREW시간총계, MANAGE시간총계, DM시간총계, ETC시간총계, 전체시간총계]
+    public List<Integer> showMonthEduTimeStatis(int month){
+
+        List<Object[]> results = eduRepository.selectSumMonthEduTime(month); //교육 시행 시간 리스트
+        List<Integer> sumMonthlyEduTimeList = new ArrayList<>(Collections.nCopies(5, 0));
+
+        for(Object[] result : results){
+            edustate eduCategory = (edustate)result[0];
+            String time = (String)result[1];
+            Integer timeValue = Integer.valueOf(time);
+
+            if(eduCategory == CREW){
+                sumMonthlyEduTimeList.set(1, sumMonthlyEduTimeList.get(1)+timeValue);
+            }else if(eduCategory == MANAGE){
+                sumMonthlyEduTimeList.set(2, sumMonthlyEduTimeList.get(2)+timeValue);
+            }else if(eduCategory == DM){
+                sumMonthlyEduTimeList.set(3, sumMonthlyEduTimeList.get(3)+timeValue);
+            }else if(eduCategory == ETC){
+                sumMonthlyEduTimeList.set(4, sumMonthlyEduTimeList.get(4)+timeValue);
+            }
+
+        }
+        //전체시간 합산하기
+        sumMonthlyEduTimeList.set(0, sumMonthlyEduTimeList.get(1)+sumMonthlyEduTimeList.get(2)
+                                    +sumMonthlyEduTimeList.get(3)+sumMonthlyEduTimeList.get(4));
+        return sumMonthlyEduTimeList;
+    }
+
+    //3-1. 월별교육실행목록 조회하기(Paging, Sort 사용)
+    public Page<Object[]> getRunEduListByMonth(int month, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return eduRepository.selectRunMonthEduList(month, pageable);
+    }
+
+    //3-2. 월별교육실행목록 조회하기(dropDown 사용 등)
+    public Page<Object[]> getRunEduListByMonthAndCategory(int month, int pageNumber, int pageSize, String eduCategory) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        try {
+            return eduRepository.runMonthEduListByCategory(month, edustate.valueOf(eduCategory), pageable);
+        } catch (IllegalArgumentException e) {
+            // category 값을 edustate로 변환하는데 예외가 발생한 경우
+            // 이 부분에 대한 예외 처리를 수행하거나, 기본 처리 방법을 정의할 수 있습니다.
+            // 예를 들면, 이 경우에는 전체 리스트를 반환하도록 기본적인 처리를 하거나, 에러 메시지를 반환하는 등의 방법이 있을 수 있습니다.
+            // 여기서는 기본적으로 전체 리스트를 반환하도록 처리합니다.
+            return eduRepository.selectRunMonthEduList(month, pageable);
+        }
+    }
+
+/*
+    // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
+    public Long showMonthEduTimeStatis2(edustate eduCategory, int month){
 
         List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
         List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
         Long eduSumTime = 0L;
 
         for(Object[] result : results){
-           String time = (String)result[0];
+            String time = (String)result[0];
 
             try {
                 Long timeValue = Long.parseLong(time);
@@ -69,9 +127,9 @@ public class EduService {
             }
 
         }
-
         return eduSumTime;
     }
+*/
 
     //상세조회
     public Edu getEduById(Long eduId) {
