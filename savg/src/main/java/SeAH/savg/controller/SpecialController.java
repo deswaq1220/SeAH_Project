@@ -59,11 +59,11 @@ public class SpecialController {
         return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
     }
 
-    // 일별 수시점검현황
+    // 월별 수시점검현황
 //    @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
     @GetMapping("/userselectInspection")
     public ResponseEntity<?> speDaily(){
-        return new ResponseEntity<>(specialInspectionService.findSpeDaily(), HttpStatus.OK);
+        return new ResponseEntity<>(specialInspectionService.findSpeMonthly(), HttpStatus.OK);
     }
 
 

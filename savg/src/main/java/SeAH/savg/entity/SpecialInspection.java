@@ -22,7 +22,7 @@ public class SpecialInspection {
     private String spePerson;               // 점검자
 
     @Column(nullable = false)
-    private  String speEmpNum;            // 사원번호
+    private  String speEmpNum;             // 사원번호
 
     @Column(nullable = false)
     private String speEmail;                // 점검자 이메일(조치완료시 회신)
@@ -56,7 +56,13 @@ public class SpecialInspection {
     private String speActContent;           // 개선대책
 
     @Column(nullable = false)
+    private String speActPerson;              // 조치자 이름
+
+    @Column(nullable = false)
     private String speActEmail;             // 조치자 이메일
+
+    @Column
+    private LocalDateTime speActDate;          // 점검완료일
 
     @Column(nullable = false)
     private LocalDateTime speDeadline;      // 완료요청기한
@@ -71,6 +77,7 @@ public class SpecialInspection {
 
     public void updateSpe(SpeStatus speComplete){
         this.speComplete = speComplete;
+//        this.speActDate = speActDate;
     }
 
 }

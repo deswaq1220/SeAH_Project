@@ -21,12 +21,17 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     // 아이디로 찾기
     SpecialInspection findAllBySpeId(String speId);
 
-    // daily 전체 점검 건수
-    @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE DATE_FORMAT(s.speDate, '%Y-%m-%d') = DATE_FORMAT(?1, '%Y-%m-%d') AND s.speId IS NOT NULL AND s.speDate > ?1")
+    // monthly: 전체 점검 건수
+    @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE DATE_FORMAT(s.speDate, '%Y-%m') = DATE_FORMAT(?1, '%Y-%m') AND s.speId IS NOT NULL AND s.speDate > ?1")
     int countAllBySpeDateAndSpeIdIsNotNullSpeDateAfter(LocalDateTime startOfToday);
 
-    // daily 미완료 갯수
-    @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE DATE_FORMAT(s.speDate, '%Y-%m-%d') = DATE_FORMAT(?1, '%Y-%m-%d') AND s.speComplete = ?2 AND s.speId IS NOT NULL AND s.speDate > ?3")
-    int countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(LocalDateTime speDate, SpeStatus speComplete, LocalDateTime startOfToday);
+    // monthly: 완료 갯수
+    @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE DATE_FORMAT(s.speActDate, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m') AND s.speComplete = ?1 ")
+    int countBySpeActDateAndSpeComplete(SpeStatus speComplete, LocalDateTime startOfToday);
 
+    // monthly: 이번달 deadline 중 미완료건수
+    @Query("SELECT COUNT(s) FROM SpecialInspection s " +
+            "WHERE DATE_FORMAT(s.speDeadline, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')" +
+            "AND s.speComplete =? 1")
+    int countBySpeDeadlineAndSpeComplete(SpeStatus speComplete);
 }
