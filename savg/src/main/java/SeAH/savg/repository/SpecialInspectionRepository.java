@@ -1,10 +1,12 @@
 package SeAH.savg.repository;
 
+import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.entity.SpecialInspection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -20,10 +22,7 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     SpecialInspection findAllBySpeId(String speId);
 
     // daily 미완료 갯수
-//    @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE DATE_FORMAT(s.speDate, '%Y-%m-%d') = DATE_FORMAT(?1, '%Y-%m-%d') AND s.speComplete = ?1 AND s.speId IS NOT NULL AND s.speDate > ?2")
-//    int countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(SpeStatus speComplete, LocalDateTime startOfToday);
+    @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE DATE_FORMAT(s.speDate, '%Y-%m-%d') = DATE_FORMAT(?1, '%Y-%m-%d') AND s.speComplete = ?2 AND s.speId IS NOT NULL AND s.speDate > ?3")
+    int countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(LocalDateTime speDate, SpeStatus speComplete, LocalDateTime startOfToday);
 
-//    int countBySpeId();
-
-    // daily 완료 갯수
 }

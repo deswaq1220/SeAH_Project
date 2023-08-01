@@ -12,13 +12,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
+import static SeAH.savg.constant.SpeStatus.NO;
+import static SeAH.savg.constant.SpeStatus.OK;
 
 @Service
 @RequiredArgsConstructor
@@ -147,15 +151,19 @@ public class SpecialInspectionService {
         return special;
     }
 
-//    // 일별현황 : 점검 완료()건, 미완료 ()건
-//    @Transactional
-//    public int findSpeDaily(){
-//        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-////        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(NO, startOfToday);
-//        int countNotComplete = specialInspectionRepository.countBySpeId();
-//
-//
-//
-//        return countNotComplete ;
-//    }
+    // 일별현황 : 점검 완료()건, 미완료 ()건
+    @Transactional
+    public Map<String, Object> findSpeDaily(){
+        Map<String, Object> reponseData = new HashMap<>();
+        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+        // 미완료건수
+        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, NO, startOfToday);
+        // 완료건수
+        int countComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, OK, startOfToday);
+
+        reponseData.put("dailyNotComplete", countNotComplete);       // 오늘미완료건수
+        reponseData.put("dailyComplete", countComplete);             // 오늘완료건수
+
+        return reponseData ;
+    }
 }
