@@ -173,6 +173,7 @@ public class EduController {
 
     //(관리자) 월별 교육실행리스트 통계 조회하기
     //ex)   http://localhost:8081/edustatistics/getmonthlyedulist/7?pageNumber=0&eduCategory=MANAGE
+
     @GetMapping("/edustatistics/getmonthlyedulist/{month}")
     public Page<Object[]> getEduListByMonth(@PathVariable int month,
                                             @RequestParam(defaultValue = "0") int pageNumber,
@@ -184,6 +185,19 @@ public class EduController {
             return eduService.getRunEduListByMonth(month, pageNumber, pageSize);
         }
     }
+
+/*    @GetMapping("/edustatistics/getmonthlyedulist/{month}")
+    public Page<Object[]> getEduListByMonth(@PathVariable int month,
+                                            @RequestParam(defaultValue = "0") int pageNumber,
+                                            @RequestParam(defaultValue = "10") int pageSize,
+                                            @RequestParam(required = false) String eduCategory) {
+        if (eduCategory != null && !eduCategory.isEmpty()) {
+            return eduService.getRunEduListByMonthAndCategory(month, pageNumber, pageSize, eduCategory);
+        } else {
+            return eduService.getRunEduListByMonth(month, pageNumber, pageSize);
+        }
+    }*/
+
 }
 
 
