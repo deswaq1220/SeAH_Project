@@ -56,7 +56,7 @@ public class SpecialInspection {
     private String speActContent;           // 개선대책
 
     @Column(nullable = false)
-    private String speActEmail;             // 점검자 이메일
+    private String speActEmail;             // 조치자 이메일
 
     @Column(nullable = false)
     private LocalDateTime speDeadline;      // 완료요청기한

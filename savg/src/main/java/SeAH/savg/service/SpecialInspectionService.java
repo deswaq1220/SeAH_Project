@@ -31,7 +31,7 @@ public class SpecialInspectionService {
 
 
 
-//    // 수시점검 등록화면 조회 : 프론트연결용
+    // 수시점검 등록화면 조회 : 프론트연결용
 //    @Transactional
 //    public List<Email> findEmail(Map<String, Object> requestData){
 //        SpecialInspection speIns = new SpecialInspection();
@@ -46,13 +46,9 @@ public class SpecialInspectionService {
 
     // 수시점검 등록화면 조회 : 테스트용
     @Transactional
-    public List<Email> findEmail(){
-        SpecialInspection speIns = new SpecialInspection();
-        speIns.setSpePart("주조");          // 영역 세팅
-        speIns.setSpeFacility("주조1");    // 설비 세팅
-
+    public List<Email> findEmail(String masterdataPart){
         // 고정수신자, 파트관리자 이메일리스트
-        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(speIns.getSpePart(), Y);
+        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
         return emailList;
     }
 
@@ -61,19 +57,12 @@ public class SpecialInspectionService {
 
     // 수시점검 저장
     @Transactional
-    public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
-        System.out.println("서비스 저장임: "+speInsFormDTO);
-        // id 세팅
-        speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));
-
-        // 영역이랑 설비도 선택해서 안넘어오면 파라미터로 받아서 세팅하던지, 아니면 requestData로 하던지
-        // 세팅해줘야함
-
-        // 점검일 세팅
-        speInsFormDTO.setSpeDate(LocalDateTime.now());
-
-        // 위험도에 따른 완료요청기한 세팅
-        SpeStatus.deadLineCal(speInsFormDTO);
+    public SpecialInspection speCreate(String masterdataPart, String masterdataFacility, SpeInsFormDTO speInsFormDTO) throws Exception {
+        speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));     // id 세팅
+        speInsFormDTO.setSpePart(masterdataPart);               // 영역 세팅
+        speInsFormDTO.setSpeFacility(masterdataFacility);       // 설비 세팅
+        speInsFormDTO.setSpeDate(LocalDateTime.now());          // 점검일 세팅
+        SpeStatus.deadLineCal(speInsFormDTO);                   // 위험도에 따른 완료요청기한 세팅
         // 수시점검 저장
         SpecialInspection special = speInsFormDTO.createSpeIns();
         specialInspectionRepository.save(special);
@@ -141,7 +130,6 @@ public class SpecialInspectionService {
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
-        System.out.println("서비스임: "+speInsFormDTO);
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             String completeKey = "완료";

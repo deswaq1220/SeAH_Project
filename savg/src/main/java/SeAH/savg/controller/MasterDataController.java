@@ -4,8 +4,6 @@ import SeAH.savg.dto.EmailFormDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
-import SeAH.savg.repository.EmailRepository;
-import SeAH.savg.repository.MasterDataRepository;
 import SeAH.savg.service.EmailService;
 import SeAH.savg.service.MasterDataService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +20,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MasterDataController {
     private final MasterDataService masterDataService;
-    private final MasterDataRepository masterDataRepository;
-    private final EmailRepository emailRepository;
     private final EmailService emailService;
 
 
@@ -62,7 +58,7 @@ public class MasterDataController {
     }
 
     // 이메일수정
-    @PatchMapping("/master/email/update/{emailId}")
+    @PutMapping("/master/email/update/{emailId}")
     public ResponseEntity<?> emailUpdate(@RequestBody EmailFormDTO emailFormDTO, @PathVariable Long emailId){
         return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, emailId), HttpStatus.CREATED);
     }
