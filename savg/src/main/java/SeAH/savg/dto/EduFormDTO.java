@@ -13,7 +13,7 @@ import java.util.List;
 @Getter @Setter
 public class EduFormDTO {
 
-    private Long eduId;
+    private String eduId;
     private edustate eduCategory;
     private String eduInstructor; //강사
     private String eduPlace; //장소
