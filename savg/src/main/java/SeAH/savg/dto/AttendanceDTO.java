@@ -6,15 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 public class AttendanceDTO {
 
-    private Long attenId;           // id
+    private Long attenId;                     // id
     private String attenEmployeeNumber;       // 사원번호
-    private String attenName;                  // 이름
-    private String attenDepartment;            // 부서
-    private Long eduId;            // 교육일지id
+    private String attenName;                 // 이름
+    private String attenDepartment;           // 부서
+    private Long eduId;                       // 교육일지id
+    private LocalDateTime attenTime;         // 출석시간
 
     private static ModelMapper modelMapper = new ModelMapper(); //엔티티랑 dto의 동일 필드명 맵핑
 

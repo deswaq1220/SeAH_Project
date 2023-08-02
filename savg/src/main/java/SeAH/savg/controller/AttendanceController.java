@@ -9,6 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +41,7 @@ public class AttendanceController {
         String attenName = (String) requestData.get("attenName");
         String attenEmployeeNumber = (String) requestData.get("attenEmployeeNumber");
         Long eduId = (Long) requestData.get("eduId"); //(조건) front에서 eduId를 보내줘야한다
+
         attendanceService.attendEdu(attenDepartment, attenName, attenEmployeeNumber, eduId);
 
         return ResponseEntity.ok().build();

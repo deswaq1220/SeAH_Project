@@ -15,7 +15,7 @@ public class SpecialInspectionRepositoryTest {
 
     @Test
     public void testSpecialListByPart(){
-       List<Object[]> result = specialInspectionRepository.specialListByPart(7);
+       List<Object[]> result = specialInspectionRepository.specialListByPartAndMonth(7);
        for(Object[] res : result) {
            String part = (String) res[0];
            Long count = (Long) res[1];

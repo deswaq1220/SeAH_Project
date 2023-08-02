@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
+import java.time.LocalDateTime;
+
+
 @SpringBootTest
 @RequiredArgsConstructor
 public class AttendanceServiceTest {
@@ -18,6 +21,9 @@ public class AttendanceServiceTest {
     @Test
     @Rollback(false)
     public void testAttend(){
-    attendanceService.attendEdu("칠월이십육일", "김홍홍", "11232", 1L);
+
+
+
+    attendanceService.attendEdu("칠월이십육일", "김홍홍222", "11232", 1L);
     }
 }

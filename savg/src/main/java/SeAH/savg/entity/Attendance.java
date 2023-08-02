@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="attendance")
@@ -25,6 +26,9 @@ public class Attendance {
 
     @Column(nullable = false)
     private String eduId; //교육일지 id
+
+    @Column(nullable = false)
+    private LocalDateTime attenTime; //출석시간
 
     //@ManyToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name = "edu_id")
