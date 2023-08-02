@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>수시점검 정보 입력</title>
+</head>
+<body>
+<h1>수시점검 정보 입력</h1>
+<form action="/save" method="POST"> <!-- 저장 버튼을 누르면 '/save' URL로 폼 데이터를 전송 -->
+  <label>점검일:</label>
+<!--  <input type="datetime-local" id="speDate" name="speDate" required>-->
+  <br>
+  <label for="spePerson">점검자:</label>
+  <input type="text" id="spePerson" name="spePerson" required>
+  <br>
+  <label for="spePart">점검영역:</label>
+  <input type="text" id="spePart" name="spePart" required>
+  <br>
+  <label for="speFacility">점검설비:</label>
+  <input type="text" id="speFacility" name="speFacility" required>
+  <br>
+  <label for="speDanger">위험분류:</label>
+  <select id="speDanger" name="speDanger" required>
+    <option value="추락">추락</option>
+    <option value="협착">협착</option>
+    <option value="끼임">끼임</option>
+    <option value="말림">말림</option>
+    <option value="전도">전도</option>
+    <option value="절단">절단</option>
+    <option value="베임">베임</option>
+    <option value="찔림">찔림</option>
+    <option value="충돌">충돌</option>
+    <option value="화상">화상</option>
+    <option value="화재폭발">화재폭발</option>
+    <option value="근골격">근골격</option>
+    <option value="지게차">지게차</option>
+    <option value="크레인">크레인</option>
+    <option value="누출">누출</option>
+    <option value="환경사고">환경사고</option>
+    <option value="기타">기타</option>
+  </select>
+  <br>
+  <label for="speInjure">부상부위:</label>
+  <select id="speInjure" name="speInjure" required onchange="handleInjureOption()">
+    <option value="신체">신체</option>
+    <option value="머리">머리</option>
+    <option value="팔">팔</option>
+    <option value="다리">다리</option>
+    <option value="가슴">가슴</option>
+    <option value="등,허리">등,허리</option>
+    <option value="안면">안면</option>
+    <option value="기타">기타(직접입력)</option>
+  </select>
+  <br>
+  <div id="otherInjureContainer" style="display: none;">
+    <label for="otherInjure">기타 부상부위:</label>
+    <input type="text" id="otherInjure" name="otherInjure">
+  </div>
+  <br>
+  <label for="speCause">위험원인:</label>
+  <select id="speCause" name="speCause" required onchange="handleDangerOption()">
+    <option value="설비원인">설비원인</option>
+    <option value="작업방법">작업방법</option>
+    <option value="점검불량">점검불량</option>
+    <option value="정비불량">정비불량</option>
+    <option value="지식부족">지식부족</option>
+    <option value="불안전한 행동">불안전한 행동</option>
+    <option value="기타">기타(직접입력)</option>
+  </select>
+  <br>
+  <div id="otherDangerContainer" style="display: none;">
+    <label for="otherDanger">기타 위험원인:</label>
+    <input type="text" id="otherDanger" name="otherDanger">
+  </div>
+  <br>
+
+
+  <label for="speTrap">실수함정:</label>
+  <input type="text" id="speTrap" name="speTrap" required>
+  <br>
+  <label for="speRiskAssess">위험성평가:</label>
+  <select id="speRiskAssess" name="speRiskAssess" required>
+    <option value="HIGH">높음</option>
+    <option value="MEDIUM">중간</option>
+    <option value="LOW">낮음</option>
+  </select>
+  <br>
+  <label for="speContent">점검내용:</label>
+  <textarea id="speContent" name="speContent" required></textarea>
+  <br>
+  <label for="speActContent">개선대책:</label>
+  <textarea id="speActContent" name="speActContent" required></textarea>
+  <br>
+  <label for="speActPerson">담당자:</label>
+  <input type="text" id="speActPerson" name="speActPerson" required>
+  <br>
+  <label for="speDeadline">완료요청기한:</label>
+  <input type="datetime-local" id="speDeadline" name="speDeadline" required>
+  <br>
+
+  <!-- 파일 업로드 -->
+  <label for="file">파일 업로드:</label>
+  <input type="file" id="file" name="fileUpload">
+  <br>
+
+  <button type="submit">저장</button> <!-- 폼 데이터를 서버로 전송하는 버튼 -->
+
+
+  <script>
+    // 기타 부상부위 -------------
+    function handleInjureOption() {
+      const selectElement = document.getElementById("speInjure");
+      const otherInjureContainer = document.getElementById("otherInjureContainer");
+      const otherInjureInput = document.getElementById("otherInjureInput");
+
+      if (selectElement.value === "기타") {
+        otherInjureContainer.style.display = "block"; // 기타(직접입력) 선택 시 입력 필드 표시
+        otherInjureInput.setAttribute("required", "required"); // 입력 필드를 필수로 설정
+      } else {
+        otherInjureContainer.style.display = "none"; // 다른 옵션 선택 시 입력 필드 숨김
+        otherInjureInput.removeAttribute("required"); // 입력 필드를 필수에서 제거
+      }
+    }
+
+    // 폼 제출 시 처리 함수
+    document.querySelector("form").addEventListener("submit", function(event) {
+      event.preventDefault(); // 폼이 서버로 전송되는 것을 막습니다.
+
+      const selectElement = document.getElementById("speInjure");
+      const otherInjureInput = document.getElementById("otherInjureInput");
+      const speInjureInput = document.getElementById("speInjure");
+
+      if (selectElement.value === "기타") {
+        // "기타(직접입력)"이 선택된 경우, 값을 speInjure 필드에 직접 할당합니다.
+        speInjureInput.value = otherInjureInput.value;
+      }
+
+      // 폼을 서버로 전송합니다.
+      this.submit();
+    });
+
+  // --------
+
+
+  // 기타 위험원인 -------
+    function handleDangerOption() {
+      const selectElement = document.getElementById("speCause");
+      const otherInjureContainer = document.getElementById("otherDangerContainer");
+      const otherInjureInput = document.getElementById("otherDangerInput");
+
+      if (selectElement.value === "기타") {
+        otherInjureContainer.style.display = "block"; // 기타(직접입력) 선택 시 입력 필드 표시
+        otherInjureInput.setAttribute("required", "required"); // 입력 필드를 필수로 설정
+      } else {
+        otherInjureContainer.style.display = "none"; // 다른 옵션 선택 시 입력 필드 숨김
+        otherInjureInput.removeAttribute("required"); // 입력 필드를 필수에서 제거
+      }
+    }
+
+    // 폼 제출 시 처리 함수
+    document.querySelector("form").addEventListener("submit", function(event) {
+      event.preventDefault(); // 폼이 서버로 전송되는 것을 막습니다.
+
+      const selectElement = document.getElementById("speCause");
+      const otherInjureInput = document.getElementById("otherDangerInput");
+      const speInjureInput = document.getElementById("speCause");
+
+      if (selectElement.value === "기타") {
+        // "기타(직접입력)"이 선택된 경우, 값을 speInjure 필드에 직접 할당합니다.
+        speInjureInput.value = otherInjureInput.value;
+      }
+
+      // 폼을 서버로 전송합니다.
+      this.submit();
+    });
+    // --------------
+
+
+
+  </script>
+
+
+</form>
+</body>
+</html>

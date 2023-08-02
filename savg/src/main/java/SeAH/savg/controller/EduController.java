@@ -9,7 +9,9 @@ import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import SeAH.savg.service.EduFileService;
 import SeAH.savg.service.EduService;
+import SeAH.savg.service.MakeIdService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
-import java.util.List;
+
 
 
 
@@ -42,24 +44,30 @@ public class EduController {
     private final EduService eduService;
     private final EduFileService eduFileService;
     private final EduFileRepository eduFileRepository;
+    private final MakeIdService makeIdService;
 
 
     public EduController(EduRepository eduRepository, EduService eduService, EduFileService eduFileService,
-                         EduFileRepository eduFileRepository) {
+                         EduFileRepository eduFileRepository, MakeIdService makeIdService) {
         this.eduRepository = eduRepository;
         this.eduService = eduService;
         this.eduFileService = eduFileService;
         this.eduFileRepository=eduFileRepository;
+        this.makeIdService = makeIdService;
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
 
     }
 
+    // 교육, 수시, 정기 카테고리 저장할 함수
+    private String categoryType = "E";
+
     //안전교육 일지 등록
     @PostMapping("/edureg")
     public ResponseEntity<?> handleEduReg(EduDTO eduDTO) {
         log.info("여기 되나?");
+        System.out.println(eduDTO);
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
@@ -70,7 +78,10 @@ public class EduController {
             }
 //        log.info(eduDTO.getFiles());
             // 데이터 처리 로직: 데이터 저장
+            // DTO에 아이디 세팅
+            eduDTO.setEduId(makeIdService.makeId(categoryType));
             Edu edu = eduDTO.toEntity();
+
             if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
                 log.info("파일 없음");
             } else {
