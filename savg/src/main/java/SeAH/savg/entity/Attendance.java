@@ -28,7 +28,7 @@ public class Attendance {
     private String eduId; //교육일지 id
 
     @Column(nullable = false)
-    private LocalDateTime attenTime; //출석시간
+    private LocalDateTime attenTime; //출석일자
 
     //@ManyToOne(fetch = FetchType.EAGER)
     //@JoinColumn(name = "edu_id")
