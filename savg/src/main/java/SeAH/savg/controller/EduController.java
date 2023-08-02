@@ -171,10 +171,6 @@ public class EduController {
     }
     */
 
-    //(관리자) 월별 교육참석자 조회하기(카테고리별/ 카테고리+이름 구분가능)
-
-
-
     //(관리자) 월별 교육실행시간 통계 조회하기(★프론트 연결 필요)
     @PostMapping("/edustatistics/getmonthlyruntime")
     public List<Integer> viewMonthlyEduTimeStatis(@RequestBody Map<String, Integer> requestData){
