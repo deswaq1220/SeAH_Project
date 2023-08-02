@@ -15,9 +15,9 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/usereduatten")
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
+@CrossOrigin(origins = "http://172.20.10.5:3000")
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://127.0.0.1:3000")
+//@CrossOrigin(origins = "http://127.0.0.1:3000")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
@@ -32,16 +32,27 @@ public class AttendanceController {
     }
 
     //2. (사용자) 출석 등록하기
+//    @PostMapping("/register")
+//    public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, Object> requestData) {
+//        String attenDepartment = (String) requestData.get("attenDepartment");
+//        String attenName = (String) requestData.get("attenName");
+//        String attenEmployeeNumber = (String) requestData.get("attenEmployeeNumber");
+//        Long eduId = (Long) requestData.get("eduId"); //(조건) front에서 eduId를 보내줘야한다
+//        attendanceService.attendEdu(attenDepartment, attenName, attenEmployeeNumber, eduId);
+//
+//        return ResponseEntity.ok().build();
+//    }
     @PostMapping("/register")
-    public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, Object> requestData) {
-        String attenDepartment = (String) requestData.get("attenDepartment");
-        String attenName = (String) requestData.get("attenName");
-        String attenEmployeeNumber = (String) requestData.get("attenEmployeeNumber");
-        Long eduId = (Long) requestData.get("eduId"); //(조건) front에서 eduId를 보내줘야한다
+    public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, String> requestData) { // eduId를 String으로 받도록 수정
+        String attenDepartment = requestData.get("attenDepartment");
+        String attenName = requestData.get("attenName");
+        String attenEmployeeNumber = requestData.get("attenEmployeeNumber");
+        Long eduId = Long.parseLong(requestData.get("eduId")); // String을 Long으로 변환
         attendanceService.attendEdu(attenDepartment, attenName, attenEmployeeNumber, eduId);
 
         return ResponseEntity.ok().build();
     }
+
 
 
   ////관리자 관련
