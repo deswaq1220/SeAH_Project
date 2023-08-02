@@ -109,6 +109,50 @@ public class SpecialController {
         return ResponseEntity.ok(statisticsList);
     }
 
+    /* 월별 수시점검 현황 통계 조회 - 위험원인별
+     * 형태: 위험원인(설비원인,작업방법,점검불량,정비불량,지식부족,불안전한 행동,기타(직접입력)) + 점검건수 리스트
+     * ex : 설비원인 1건, 작업방법 2건 ...
+     */
+    @GetMapping("/special/statistics/specauseandmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("month") int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeCauseAndMonth(month);
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+    /* 월별 수시점검 현황 통계 조회 - 실수함정별
+     * 형태: 실수함정(N/A,자만심,시간압박,미흡한 의사소통,주의산만,처음작업,비일상작업,과중한업무부하,불명확한 작업지시,4일이상 업무공백,근무교대 시점) + 점검건수 리스트
+     * ex : N/A 1건, 자만심 2건 ...
+     */
+    @GetMapping("/special/statistics/spetrapandmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeTrapAndMonth(@RequestParam("month") int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeTrapAndMonth(month);
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+    /* 월별 수시점검 현황 통계 조회 - 부상부위별
+     * 형태: 실수함정(신체,머리,팔,다리,가슴,등/허리,안면,기타(직접입력) + 점검건수 리스트
+     * ex : 신체 1건, 머리 2건 ...
+     */
+    @GetMapping("/special/statistics/speinjureandmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeInjureAndMonth(month);
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+    /* 월별 수시점검 현황 통계 조회 - 위험성 평가별
+     * 형태: 고위험, 중위험, 저위험 + 점검건수 리스트
+     * ex : 고위험 1건, 중위험 2건 ...
+     */
+    @GetMapping("/special/statistics/speriskassessdmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeRiskAssessAndMonth(@RequestParam("month") int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeRiskAssessAndMonth(month);
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
 
 
 

@@ -29,12 +29,29 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     // daily 완료 갯수
 
 
-    //월별 수시점검 통계 조회 - 영역별 건수
+    //통계
+    //월별 수시점검 통계 조회 - 영역별 건 수
     @Query("SELECT s.spePart, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.spePart")
     List<Object[]> specialListByPartAndMonth(@Param("month") int month);
 
-    //월별 수시점검 통계 조회 - 위험분류 발생건수
+    //월별 수시점검 통계 조회 - 위험분류 발생 건 수
     @Query("SELECT s.speDanger, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speDanger")
     List<Object[]> specialListByDangerAndMonth(@Param("month") int month);
+
+    //월별 수시점검 통계 조회 - 위험원인별 발생 건 수
+    @Query("SELECT s.speCause, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speCause")
+    List<Object[]> specialListBySpeCauseAndMonth(@Param("month") int month);
+
+    //월별 수시점검 통계 조회 - 실수함정별 발생 건 수
+    @Query("SELECT s.speTrap, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speTrap")
+    List<Object[]> specialListBySpeTrapAndMonth(@Param("month") int month);
+
+    //월별 수시점검 통계 조회 - 부상부위별 발생 건 수
+    @Query("SELECT s.speInjure, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speInjure")
+    List<Object[]> specialListBySpeInjureAndMonth(@Param("month") int month);
+
+    //월별 수시점검 통계 조회 - 위험성 평가별 발생 건 수
+    @Query("SELECT s.speRiskAssess, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speRiskAssess")
+    List<Object[]> specialListBySpeRiskAssessAndMonth(@Param("month") int month);
 
 }
