@@ -16,7 +16,7 @@ public class AttendanceRepositoryTest {
 
     @Test
     public void testShowAttendList(){
-        List<Attendance> result = attendanceRepository.findAllByEduId(1L);
+        List<Attendance> result = attendanceRepository.findAllByEduId("1");
 
         for(Attendance res :result){
             System.out.println(res);

@@ -35,7 +35,7 @@ public class AttendanceController {
     }
 
     //2. (사용자) 출석 등록하기
-    @PostMapping("/register")
+    @PostMapping("/register/{eduId}")
     public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, Object> requestData) {
         String attenDepartment = (String) requestData.get("attenDepartment");
         String attenName = (String) requestData.get("attenName");
@@ -56,8 +56,8 @@ public class AttendanceController {
   ////관리자 관련
     //해당 교육일지에 따른 학생 출석 리스트 조회
     @PostMapping("") //(임시, 출석리스트 페이지 만들어지면 변경필요 ★)
-    public String showUserEduAttenList(@RequestBody Map<String, Long> requestData) {
-        Long eduId = requestData.get("eduId");
+    public String showUserEduAttenList(@RequestBody Map<String, String> requestData) {
+        String eduId = requestData.get("eduId");
         attendanceRepository.findAllByEduId(eduId);
 
         return "page/attendance2"; //(임시, 출석리스트 페이지 만들어지면 변경필요 ★)

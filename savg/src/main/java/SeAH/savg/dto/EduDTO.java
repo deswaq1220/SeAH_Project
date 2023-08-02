@@ -2,22 +2,22 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
+import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.persistence.EntityListeners;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @ToString
+@EntityListeners(EduEntityListener.class)
 public class EduDTO {
-    private Long eduId;
-
-    @NotNull(message = "교육분류를 선택해주세요.")
+    private String eduId;
     private edustate eduCategory;
 
     @NotEmpty(message = "교육 제목을 입력하세요")
