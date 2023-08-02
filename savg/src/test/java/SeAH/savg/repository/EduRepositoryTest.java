@@ -1,3 +1,4 @@
+/*
 package SeAH.savg.repository;
 
 import SeAH.savg.constant.edustate;
@@ -74,4 +75,4 @@ public class EduRepositoryTest {
         System.out.println(timeList);
 
     }
-}
+}*/

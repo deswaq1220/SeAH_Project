@@ -14,7 +14,7 @@ public class AttendanceDTO {
     private String attenEmployeeNumber;       // 사원번호
     private String attenName;                  // 이름
     private String attenDepartment;            // 부서
-    private Long eduId;            // 교육일지id
+    private String eduId;            // 교육일지id
 
     private static ModelMapper modelMapper = new ModelMapper(); //엔티티랑 dto의 동일 필드명 맵핑
 

@@ -38,9 +38,9 @@ import java.util.ArrayList;
 
 //@Controller
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://127.0.0.1:3000")
+//@CrossOrigin(origins = "http://127.0.0.1:3000")
 @Log4j2
 
 public class EduController {
@@ -72,7 +72,6 @@ public class EduController {
     //안전교육 일지 등록
     @PostMapping("/edureg")
     public ResponseEntity<?> handleEduReg(EduDTO eduDTO) {
-        log.info("여기 되나?");
         System.out.println(eduDTO);
         try {
             // 데이터 처리 로직: 유효성 검사
@@ -86,7 +85,13 @@ public class EduController {
             // 데이터 처리 로직: 데이터 저장
             // DTO에 아이디 세팅
             eduDTO.setEduId(makeIdService.makeId(categoryType));
+
+            String nextEduNum = getNextEduNum(); // 다음 eduNum 값 조회
+            eduDTO.setEduNum(Long.parseLong(nextEduNum)); // eduNum에 할당
+
             Edu edu = eduDTO.toEntity();
+
+            eduRepository.save(edu); // Edu 엔티티 저장
 
             if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
                 log.info("파일 없음");
@@ -99,7 +104,6 @@ public class EduController {
                 }
             }
 
-            eduRepository.save(edu); // Edu 엔티티 저장
 
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
@@ -108,6 +112,15 @@ public class EduController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+//교육 일지 번호 등록
+    private String getNextEduNum() {
+        Long maxEduNum = eduRepository.findMaxEduNum(); // eduNum 최댓값 조회
+        if (maxEduNum == null) {
+            return "1"; // 최초 등록인 경우, eduNum은 1부터 시작
+        }
+        return String.valueOf(maxEduNum + 1); // 다음 eduNum 값은 최댓값 + 1
     }
 
 
@@ -127,7 +140,7 @@ public class EduController {
 
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
-    public ResponseEntity<EduDTO> getEduDetail(@PathVariable Long eduId) {
+    public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
         Edu edu = eduService.getEduById(eduId);
         if (edu == null) {
             return ResponseEntity.notFound().build();
@@ -139,7 +152,7 @@ public class EduController {
 
     // 교육일지 수정
     @PutMapping("/edumodify/{eduId}")
-    public ResponseEntity<?> handleEduModify(@PathVariable Long eduId, @Valid  EduDTO eduDTO) {
+    public ResponseEntity<?> handleEduModify(@PathVariable String eduId, @Valid  EduDTO eduDTO) {
         try {
             Edu edu = eduService.getEduById(eduId);
             if (edu == null) {
@@ -196,23 +209,6 @@ public class EduController {
 
     }
 
-
-    /*(html 임시 확인용)
-    @PostMapping("/edustatistics/getmonth")
-    public String viewMonthEduStatis(@RequestParam("eduCategory") edustate eduCategory
-                                                    ,@RequestParam("month") int month
-                                                    ,Model model){
-        List<EduStatisticsDTO> results = eduService.showMonthEduStatis(eduCategory, month);
-        System.out.println(results);
-        model.addAttribute("results", results);
-        return "/page/edustatisresult";
-    }
-
-    @GetMapping("/getmonth")
-    public String showGetMonthForm() {
-        return "page/getmonth";
-    }
-    */
 
     //(관리자) 월별 교육실행시간 통계 조회하기(★프론트 연결 필요)
     @PostMapping("/edustatistics/getmonthlyruntime")

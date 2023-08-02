@@ -20,6 +20,14 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
     List<Edu> findAll(Sort sort);
 
+ @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+         "FROM Edu e " +
+         "JOIN Attendance a " +
+         "ON e.eduId = a.eduId " +
+         "WHERE MONTH(e.eduStartTime) = :month")
+ List<Object[]> selectMonth (@Param("month") int month);
+
+
 
    ////관리자
     //1-1. 월별 교육 참석자 명단 출력(교육 구분)
@@ -31,7 +39,9 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "AND MONTH(e.eduStartTime) = :month")
     List<Object[]> selectMonthEduTraineeStatis(@Param("eduCategory") edustate eduCategory , @Param("month") int month);
 
-    //1-2. 월별 교육 참석자 명단 출력(교육 구분 + 부서구분)
+
+
+ //1-2. 월별 교육 참석자 명단 출력(교육 구분 + 부서구분)
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a " +
@@ -50,6 +60,17 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "AND MONTH(e.eduStartTime) = :month " +
             "AND a.attenName = :name")
     List<Object[]> eduTraineeStatisByName(@Param("eduCategory") edustate eduCategory , @Param("month") int month, @Param("name") String name);
+
+    //1-4. 월별 교육  참석자 명단 출력(교육구분 + 부서 + 이름)
+    @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+            "FROM Edu e " +
+            "JOIN Attendance a " +
+            "ON e.eduId = a.eduId " +
+            "WHERE e.eduCategory = :eduCategory " +
+            "AND MONTH(e.eduStartTime) = :month " +
+            "And a.attenDepartment = :department " +
+            "AND a.attenName = :name")
+    List<Object[]> eduTraineeStatisByNameAndDepart(@Param("eduCategory") edustate eduCategory , @Param("month") int month, @Param("name") String name, @Param("department") String department);
 
 
     //2-1. 월별 교육시간 조회하기(월별 교육실시시간 총계)
@@ -82,10 +103,15 @@ public interface EduRepository extends JpaRepository<Edu, String> {
    Page<Object[]> runMonthEduListByCategory(@Param("month") int month, @Param("eduCategory") edustate eduCategory, Pageable pageable);
 
 
-    Edu findByEduId(Long eduId);
+    Edu findByEduId(String eduId);
 
     // DB에서 id들 들고와서 '-'기준으로 잘른 뒤에꺼의 가장 마지막 번호를 얻은 다음(int로 변환해서 비교해야할거같음) 가장 큰 숫자 구하기
     @Query("select MAX(substring(e.eduId, 7)) from Edu e where substring(e.eduId,2,4) =? 1")
     int findAllByMaxSeq(String todayYearAndMonth);
+
+
+// eduNum 만들기
+ @Query("SELECT MAX(e.eduNum) FROM Edu e")
+ Long findMaxEduNum();
 
 }

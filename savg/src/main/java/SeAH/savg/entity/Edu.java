@@ -20,6 +20,9 @@ public class Edu {
     private String eduId;                    // id
 
     @Column(nullable = false)
+    private Long eduNum;            // 교육등록 번호 (자동 증가)
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private edustate eduCategory;           //교육분류: 크루미팅, 관리감독자미팅, DM미팅, 기타
 
