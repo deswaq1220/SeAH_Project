@@ -27,7 +27,7 @@ public class Edu {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private edustate eduCategory;           //교육분류:집체,관리감독,안전조회 등
+    private edustate eduCategory;           //교육분류: 크루미팅, 관리감독자미팅, DM미팅, 기타
 
     @Column
     private String eduTitle;    // 제목

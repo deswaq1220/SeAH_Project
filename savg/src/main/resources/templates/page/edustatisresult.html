@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>결과페이지</title>
+</head>
+<body>
+<h1>조회 결과</h1>
+<ul>
+  <li th:each="item : ${results}">
+    <span th:text="${item.eduCategory}"></span>
+    <span th:text="${item.eduStartTime}"></span>
+    <span th:text="${item.eduSumTime}"></span>
+    <span th:text="${item.attenName}"></span>
+    <span th:text="${item.attenEmployeeNumber}"></span>
+    <span th:text="${item.attenDepartment}"></span>
+    <hr>
+  </li>
+</ul>
+</body>
+</html>

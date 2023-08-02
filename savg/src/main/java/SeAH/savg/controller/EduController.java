@@ -1,6 +1,7 @@
 package SeAH.savg.controller;
 
 
+import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
@@ -21,14 +22,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+
+import java.io.File;
+import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 
 
+
 @Controller
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
+@CrossOrigin(origins = "http://127.0.0.1:3000")
 @Log4j2
 
 public class EduController {
@@ -157,4 +164,34 @@ public class EduController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    //(관리자) 월별 교육 통계 조회하기(★프론트 연결되는지 확인요청(경원님))
+    @PostMapping("/edustatistics/getmonth")
+    public ResponseEntity<?> viewMonthEduStatis(@RequestBody Map<String, Object> requestData){
+        edustate eduCategory = (edustate)requestData.get("eduCategory");
+        int month = (int)requestData.get("month");
+        eduService.showMonthEduTraineeStatis(eduCategory, month);
+
+        return ResponseEntity.ok().build();
+    }
+
+    /*(html 임시 확인용)
+    @PostMapping("/edustatistics/getmonth")
+    public String viewMonthEduStatis(@RequestParam("eduCategory") edustate eduCategory
+                                                    ,@RequestParam("month") int month
+                                                    ,Model model){
+        List<EduStatisticsDTO> results = eduService.showMonthEduStatis(eduCategory, month);
+        System.out.println(results);
+        model.addAttribute("results", results);
+        return "/page/edustatisresult";
+    }
+
+    @GetMapping("/getmonth")
+    public String showGetMonthForm() {
+        return "page/getmonth";
+    }
+    */
+
 }
+
+

@@ -17,16 +17,20 @@ public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
 
-    //교육생 출석등록하기
-    //@Transactional
+    //(교육생) 출석등록하기
+    @Transactional
     public void attendEdu(String attendEmployeeDepartment
-                                      , String attendEmployeeName
-                                      , String attendEmployeeNumber){
+                                      ,String attendEmployeeName
+                                      ,String attendEmployeeNumber
+                                      ,Long eduId
+    ){
 
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setAttenDepartment(attendEmployeeDepartment);
         attendanceDTO.setAttenName(attendEmployeeName);
         attendanceDTO.setAttenEmployeeNumber(attendEmployeeNumber);
+        attendanceDTO.setEduId(eduId);
+
 
         Attendance attendance = attendanceDTO.toEntity();
         System.out.println(attendance);
@@ -37,5 +41,6 @@ public class AttendanceService {
     public List<EduDTO> getEduListByAttenName(String attenName) {
         return attendanceRepository.getEduListByAttenName(attenName);
     }
+
 
 }
