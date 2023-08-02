@@ -29,9 +29,12 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     // daily 완료 갯수
 
 
-    //월별 수시점검 통계 조회 - 영역별
+    //월별 수시점검 통계 조회 - 영역별 건수
     @Query("SELECT s.spePart, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.spePart")
-    List<Object[]> specialListByPart(@Param("month") int month);
+    List<Object[]> specialListByPartAndMonth(@Param("month") int month);
 
+    //월별 수시점검 통계 조회 - 위험분류 발생건수
+    @Query("SELECT s.speDanger, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speDanger")
+    List<Object[]> specialListByDangerAndMonth(@Param("month") int month);
 
 }

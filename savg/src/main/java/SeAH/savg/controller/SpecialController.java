@@ -87,15 +87,27 @@ public class SpecialController {
 
 
 
-    //월별 수시점검 현황 통계 조회 - 카테고리별
-   @GetMapping("/special/statistics")
-    public ResponseEntity<List<Object[]>> getSpecialListStatistics(@RequestParam("month") int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByPart(month);
+    /* 월별 수시점검 현황 통계 조회 - 점검영역별
+     * 형태: 파트(주조, 압출, 가공, 품질, 생산기술, 금형) + 점검건수 리스트
+     * ex : 주조 1건, 압출 2건 ...
+     */
+   @GetMapping("/special/statistics/partandmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListByPartAndMonth(@RequestParam("month") int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(month);
 
         return ResponseEntity.ok(statisticsList);
     }
 
+    /* 월별 수시점검 현황 통계 조회 - 위험분류별
+     * 형태: 위험분류(추락, 협착, 끼임, 말림, 전도, 절단, 베임, 찔림, 충돌, 화상,화재폭발, 근골격, 지게차, 크레인, 누출, 환경사고, 기타) + 점검건수 리스트
+     * ex : 추락 1건, 기타 2건 ...
+     */
+    @GetMapping("/special/statistics/departandmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListByDangerAndMonth(@RequestParam("month") int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(month);
 
+        return ResponseEntity.ok(statisticsList);
+    }
 
 
 
