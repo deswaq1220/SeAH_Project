@@ -15,18 +15,19 @@ import SeAH.savg.service.MakeIdService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 
 import java.io.File;
 import java.util.List;
@@ -50,6 +51,7 @@ public class EduController {
     private final MakeIdService makeIdService;
 
 
+
     public EduController(EduRepository eduRepository, EduService eduService, EduFileService eduFileService,
                          EduFileRepository eduFileRepository, MakeIdService makeIdService) {
         this.eduRepository = eduRepository;
@@ -69,7 +71,6 @@ public class EduController {
     //안전교육 일지 등록
     @PostMapping("/edureg")
     public ResponseEntity<?> handleEduReg(EduDTO eduDTO) {
-        log.info("여기 되나?");
         System.out.println(eduDTO);
         try {
             // 데이터 처리 로직: 유효성 검사
@@ -83,7 +84,10 @@ public class EduController {
             // 데이터 처리 로직: 데이터 저장
             // DTO에 아이디 세팅
             eduDTO.setEduId(makeIdService.makeId(categoryType));
+
             Edu edu = eduDTO.toEntity();
+
+            eduRepository.save(edu); // Edu 엔티티 저장
 
             if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
                 log.info("파일 없음");
@@ -96,7 +100,6 @@ public class EduController {
                 }
             }
 
-            eduRepository.save(edu); // Edu 엔티티 저장
 
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
@@ -107,7 +110,7 @@ public class EduController {
         }
     }
 
-    
+
     //교육일지 목록 조회
     @GetMapping("/edumain")
     public ResponseEntity<List<EduDTO>> getEduList() {
@@ -122,9 +125,10 @@ public class EduController {
     }
 
 
+
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
-    public ResponseEntity<EduDTO> getEduDetail(@PathVariable Long eduId) {
+    public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
         Edu edu = eduService.getEduById(eduId);
         if (edu == null) {
             return ResponseEntity.notFound().build();
@@ -134,42 +138,69 @@ public class EduController {
         return ResponseEntity.ok(eduDTO);
     }
 
+    // 교육일지 수정
+    @PutMapping("/edumodify/{eduId}")
+    public ResponseEntity<?> handleEduModify(@PathVariable String eduId, @Valid  EduDTO eduDTO) {
+        try {
+            Edu edu = eduService.getEduById(eduId);
+            if (edu == null) {
+                return ResponseEntity.notFound().build();
+            }
 
+            // 기존 파일 삭제 및 수정된 파일 업로드
+            if (eduDTO.getFiles() != null && !eduDTO.getFiles().isEmpty()) {
+                List<EduFile> existingFiles = eduFileRepository.findByEdu(edu);
+                if (existingFiles != null && !existingFiles.isEmpty()) {
+                    for (EduFile existingFile : existingFiles) {
+                        String fileName = existingFile.getEduFileName();
+                        eduFileService.deleteFile(fileName);
+                    }
+                }
+                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO.getFiles());
+                for (EduFile eduFile : uploadedFiles) {
+                    eduFile.setEdu(edu);
+                }
+            }
+            edu.setEduCategory(eduDTO.getEduCategory());
+            edu.setEduTitle(eduDTO.getEduTitle());
+            edu.setEduInstructor(eduDTO.getEduInstructor());
+            edu.setEduPlace(eduDTO.getEduPlace());
+            edu.setEduStartTime(eduDTO.getEduStartTime());
+            edu.setEduSumTime(eduDTO.getEduSumTime());
+            edu.setEduTarget(eduDTO.getEduTarget());
+            edu.setEduContent(eduDTO.getEduContent());
+            edu.setEduWriter(eduDTO.getEduWriter());
+
+            eduRepository.save(edu);
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
     //(관리자) 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명 구분가능)
     //department, name 값을 필요 시 프론트에서 넘겨줘야함
     @GetMapping("/edustatistics/getmonth") //나중에 주소를 /edu/statistics/getmonth 등으로 바꿔야 할듯
-    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam("eduCategory") edustate eduCategory,
-                                                                     @RequestParam("month") int month,
+    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam(required = false) edustate eduCategory,
+                                                                     @RequestParam(required = false) int month,
                                                                      @RequestParam(required = false) String department,
                                                                      @RequestParam(required = false) String name) {
+        System.out.println("department" + department);
+        if(department != null ){
+            if(department.equals("부서")){
+                department = null;
+            };
+            System.out.println("테스트 :" + department);
+        };
 
-        String filteredDepartment = (department != null && !department.isEmpty()) ? department : null;
-        String filteredName = (name != null && !name.isEmpty()) ? name : null;
-
-        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, month, filteredDepartment, filteredName);
+        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, month, department, name);
         return ResponseEntity.ok(statisticsList);
 
     }
 
-
-    /*(html 임시 확인용)
-    @PostMapping("/edustatistics/getmonth")
-    public String viewMonthEduStatis(@RequestParam("eduCategory") edustate eduCategory
-                                                    ,@RequestParam("month") int month
-                                                    ,Model model){
-        List<EduStatisticsDTO> results = eduService.showMonthEduStatis(eduCategory, month);
-        System.out.println(results);
-        model.addAttribute("results", results);
-        return "/page/edustatisresult";
-    }
-
-    @GetMapping("/getmonth")
-    public String showGetMonthForm() {
-        return "page/getmonth";
-    }
-    */
 
     //(관리자) 월별 교육실행시간 통계 조회하기(★프론트 연결 필요)
     @PostMapping("/edustatistics/getmonthlyruntime")

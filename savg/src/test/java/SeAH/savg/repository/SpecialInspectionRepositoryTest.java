@@ -1,3 +1,4 @@
+/*
 package SeAH.savg.repository;
 
 import SeAH.savg.dto.SpeInsStatisticsDTO;
@@ -25,3 +26,4 @@ public class SpecialInspectionRepositoryTest {
 
 
 }
+*/

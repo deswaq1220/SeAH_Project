@@ -20,9 +20,11 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
+
+@CrossOrigin(origins = "http://172.20.10.5:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
+
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
     private final SpecialInspectionRepository specialInspectionRepository;
@@ -71,11 +73,12 @@ public class SpecialController {
         return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
     }
 
-//    // 일별 수시점검현황
+    // 월별 수시점검현황
 //    @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
-//    public ResponseEntity<?> speDaily(){
-//        return new ResponseEntity<>(specialInspectionService.findSpeDaily(), HttpStatus.OK);
-//    }
+    @GetMapping("/userselectInspection")
+    public ResponseEntity<?> speDaily(){
+        return new ResponseEntity<>(specialInspectionService.findSpeMonthly(), HttpStatus.OK);
+    }
 
 /*    @GetMapping("/special/statistics")
     public ModelAndView viewSpecialStatistics(){

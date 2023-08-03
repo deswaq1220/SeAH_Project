@@ -63,14 +63,18 @@ public class EduService {
 
         List<Object[]> results;
 
-        if ((department == null || department.isEmpty()) && (name == null || name.isEmpty())) {
-            results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month); //카테고리에 따른 교육 참가자 조회
-
-        } else if((name != null && !name.isEmpty() && (department == null || department.isEmpty()))){
-            results = eduRepository.eduTraineeStatisByName(eduCategory, month, name);   //카테고리, 이름에 따른 참가자 조회
-
-        }else {
-            results = eduRepository.eduTraineeStatisByDepart(eduCategory, month, department);   //카테고리, 부서에 따른 참가자 조회
+        if ((department == null || department.isEmpty()) && (name == null || name.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())) {
+            results = eduRepository.selectMonth(month); // 월에 따른 데이터 조회
+        } else if ((department == null || department.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())){
+            results = eduRepository.selectMonthAndName(month, name);
+        } else if ((department == null || department.isEmpty()) && (name == null || name.isEmpty())) {
+            results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month); // 카테고리에 따른 교육 참가자 조회
+        } else if ((name != null && !name.isEmpty()) && (department == null || department.isEmpty())) {
+            results = eduRepository.eduTraineeStatisByName(eduCategory, month, name); // 카테고리, 이름에 따른 참가자 조회
+        } else if ((department != null && !department.isEmpty()) && (name == null || name.isEmpty())) {
+            results = eduRepository.eduTraineeStatisByDepart(eduCategory, month, department); // 카테고리, 부서에 따른 참가자 조회
+        } else {
+            results = eduRepository.eduTraineeStatisByNameAndDepart(eduCategory, month, name, department); // 카테고리, 부서, 이름에 따른 참가자 조회
         }
 
         List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
@@ -162,7 +166,7 @@ public class EduService {
 */
 
     //상세조회
-    public Edu getEduById(Long eduId) {
+    public Edu getEduById(String eduId) {
         return eduRepository.findByEduId(eduId);
     }
 

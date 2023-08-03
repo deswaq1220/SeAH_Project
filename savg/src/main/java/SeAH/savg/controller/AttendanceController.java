@@ -1,10 +1,13 @@
 package SeAH.savg.controller;
 
+
+import SeAH.savg.dto.EduDTO;
 import SeAH.savg.entity.Attendance;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
 import SeAH.savg.repository.AttendanceRepository;
 import SeAH.savg.service.AttendanceService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +25,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/usereduatten")
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://172.20.10.5:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 public class AttendanceController {
 
@@ -33,10 +36,11 @@ public class AttendanceController {
 
   ////사용자 관련(1~2)
     //1. (사용자) 출석 등록 페이지보기
-    @GetMapping("")
+    @GetMapping("/register/{eduId}")
     public String showUserEduAtten() {
         return "page/attendance";
     }
+
 
     //2. (사용자) 출석 등록하기
     @PostMapping("/register/{eduId}")
@@ -44,12 +48,13 @@ public class AttendanceController {
         String attenDepartment = (String) requestData.get("attenDepartment");
         String attenName = (String) requestData.get("attenName");
         String attenEmployeeNumber = (String) requestData.get("attenEmployeeNumber");
-        Long eduId = (Long) requestData.get("eduId"); //(조건) front에서 eduId를 보내줘야한다
+        String eduId = (String) requestData.get("eduId"); //(조건) front에서 eduId를 보내줘야한다
 
         attendanceService.attendEdu(attenDepartment, attenName, attenEmployeeNumber, eduId);
 
         return ResponseEntity.ok().build();
     }
+
 
 
   ////관리자 관련
@@ -64,3 +69,4 @@ public class AttendanceController {
     }
 
 }
+

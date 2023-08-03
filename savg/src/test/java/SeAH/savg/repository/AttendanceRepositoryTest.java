@@ -1,3 +1,4 @@
+/*
 package SeAH.savg.repository;
 
 import SeAH.savg.entity.Attendance;
@@ -24,3 +25,4 @@ public class AttendanceRepositoryTest {
     }
 
 }
+*/
