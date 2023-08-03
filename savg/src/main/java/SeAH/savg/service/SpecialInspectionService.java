@@ -50,10 +50,14 @@ public class SpecialInspectionService {
 
     // 수시점검 등록화면 조회 : 테스트용
     @Transactional
-    public List<Email> findEmail(String masterdataPart){
+    public Map<String, Object> findEmail(String masterdataPart){
+        Map<String, Object> responseData = new HashMap<>();
+
         // 고정수신자, 파트관리자 이메일리스트
         List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
-        return emailList;
+
+        responseData.put("emailList", emailList);
+        return responseData;
     }
 
     // 교육, 수시, 정기 카테고리 저장할 함수
