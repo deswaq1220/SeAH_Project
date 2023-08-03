@@ -35,39 +35,46 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
 
     //통계
     //월별 수시점검 통계 조회 - 영역별 건 수
-    @Query("SELECT s.spePart, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.spePart")
-    List<Object[]> specialListByPartAndMonth(@Param("month") int month);
+    @Query("SELECT p.partKind, COALESCE(COUNT(s.spePart), 0) " +
+            "FROM SpecialPartINFO p " +
+            "LEFT JOIN SpecialInspection s ON s.spePart = p.partKind AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY p.partKind")
+    List<Object[]> specialListByPartAndMonth(@Param("year") int year, @Param("month") int month);
+/*    @Query("SELECT s.spePart, COUNT(s) FROM SpecialInspection s WHERE YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month GROUP BY s.spePart")
+    List<Object[]> specialListByPartAndMonth(@Param("year") int year, @Param("month") int month);*/
 
     //월별 수시점검 통계 조회 - 위험분류 발생 건 수
     @Query("SELECT s.speDanger, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speDanger")
     List<Object[]> specialListByDangerAndMonth(@Param("month") int month);
 
+
     //월별 수시점검 통계 조회 - 위험분류 발생 건 수(0건인 것들도 함께 나옴)
-    @Query(value = "SELECT dangers.speDanger, COALESCE(COUNT(s), 0) " +
-            "FROM (SELECT '추락' AS speDanger UNION SELECT '협착' AS speDanger UNION SELECT '끼임' AS speDanger UNION SELECT '말림' AS speDanger UNION SELECT '전도' AS speDanger" +
-            "UNION SELECT '절단' AS speDanger UNION SELECT '베임' AS speDanger UNION SELECT '찔림' AS speDanger UNION SELECT '충돌' AS speDanger UNION SELECT '화상' AS speDanger" +
-            "UNION SELECT '화재폭발' AS speDanger UNION SELECT '근골격' AS speDanger UNION SELECT '지게차' AS speDanger UNION SELECT '크레인' AS speDanger UNION SELECT '누출' AS speDanger" +
-            "UNION SELECT '환경사고' AS speDanger UNION SELECT '기타' AS speDanger) AS dangers " +
-            "LEFT JOIN SpecialInspection s ON dangers.speDanger = s.speDanger AND MONTH(s.speDate) = :month " +
-            "GROUP BY dangers.speDanger", nativeQuery = true)
-    List<Object[]> specialListByDangerAndMonthPlus0(@Param("month") int month);
+    @Query("SELECT i.dangerKind, COALESCE(COUNT(s), 0) " +
+            "FROM SpecialDangerINFO i " +
+            "LEFT JOIN SpecialInspection s ON s.speDanger = i.dangerKind AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY i.dangerKind")
+    List<Object[]> specialListByDangerAndMonthPlus0(@Param("year") int year, @Param("month") int month);
 
 
     //월별 수시점검 통계 조회 - 위험원인별 발생 건 수
     @Query("SELECT s.speCause, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speCause")
     List<Object[]> specialListBySpeCauseAndMonth(@Param("month") int month);
 
+
     //월별 수시점검 통계 조회 - 실수함정별 발생 건 수
     @Query("SELECT s.speTrap, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speTrap")
     List<Object[]> specialListBySpeTrapAndMonth(@Param("month") int month);
+
 
     //월별 수시점검 통계 조회 - 부상부위별 발생 건 수
     @Query("SELECT s.speInjure, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speInjure")
     List<Object[]> specialListBySpeInjureAndMonth(@Param("month") int month);
 
+
     //월별 수시점검 통계 조회 - 위험성 평가별 발생 건 수
     @Query("SELECT s.speRiskAssess, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speRiskAssess")
     List<Object[]> specialListBySpeRiskAssessAndMonth(@Param("month") int month);
+
 
     // monthly: 이번달 deadline 중 미완료건수
     @Query("SELECT COUNT(s) FROM SpecialInspection s " +

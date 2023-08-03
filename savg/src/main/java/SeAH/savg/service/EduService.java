@@ -93,7 +93,7 @@ public class EduService {
     }
 
     // 2. 월별교육통계 조회하기 - 교육 실행시간 조회
-    // sumMonthlyEduTimeList = [CREW시간총계, MANAGE시간총계, DM시간총계, ETC시간총계, 전체시간총계]
+    // sumMonthlyEduTimeList = [전체시간총계, CREW시간총계, MANAGE시간총계, DM시간총계, ETC시간총계]
     public List<Integer> showMonthEduTimeStatis(int month){
 
         List<Object[]> results = eduRepository.selectSumMonthEduTime(month); //교육 시행 시간 리스트

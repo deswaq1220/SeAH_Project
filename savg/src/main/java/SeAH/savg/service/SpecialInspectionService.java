@@ -176,8 +176,8 @@ public class SpecialInspectionService {
 
 
     //월별 수시점검 현황 통계 조회 - 위험분류별
-    public List<Map<String, Object>> setSpecialListByDangerAndMonth(int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(month);
+    public List<Map<String, Object>> setSpecialListByDangerAndMonth(int year, int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonthPlus0(year, month);
 
         List<Map<String, Object>> dataPoints = new ArrayList<>();
 
