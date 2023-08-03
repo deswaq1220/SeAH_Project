@@ -48,11 +48,6 @@ public class AttendanceController {
         return ResponseEntity.ok().build();
     }
 
-    //특정 교육생이 들은 교육 목록
-/*    @GetMapping("/edulist/{attenName}")
-    public ResponseEntity<List<EduDTO>> getEduListByAttenName(@PathVariable String attenName) {
-        List<EduDTO> eduList = attendanceService.getEduListByAttenName(attenName);
-        return ResponseEntity.ok(eduList);*/
 
 
   ////관리자 관련

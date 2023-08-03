@@ -86,9 +86,6 @@ public class EduController {
             // DTO에 아이디 세팅
             eduDTO.setEduId(makeIdService.makeId(categoryType));
 
-            String nextEduNum = getNextEduNum(); // 다음 eduNum 값 조회
-            eduDTO.setEduNum(Long.parseLong(nextEduNum)); // eduNum에 할당
-
             Edu edu = eduDTO.toEntity();
 
             eduRepository.save(edu); // Edu 엔티티 저장
@@ -112,15 +109,6 @@ public class EduController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-    }
-
-//교육 일지 번호 등록
-    private String getNextEduNum() {
-        Long maxEduNum = eduRepository.findMaxEduNum(); // eduNum 최댓값 조회
-        if (maxEduNum == null) {
-            return "1"; // 최초 등록인 경우, eduNum은 1부터 시작
-        }
-        return String.valueOf(maxEduNum + 1); // 다음 eduNum 값은 최댓값 + 1
     }
 
 

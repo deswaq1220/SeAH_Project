@@ -118,9 +118,4 @@ public interface EduRepository extends JpaRepository<Edu, String> {
     @Query("select MAX(substring(e.eduId, 7)) from Edu e where substring(e.eduId,2,4) =? 1")
     int findAllByMaxSeq(String todayYearAndMonth);
 
-
-// eduNum 만들기
- @Query("SELECT MAX(e.eduNum) FROM Edu e")
- Long findMaxEduNum();
-
 }

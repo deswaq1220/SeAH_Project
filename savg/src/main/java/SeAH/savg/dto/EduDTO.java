@@ -21,8 +21,6 @@ import java.util.List;
 public class EduDTO {
     private String eduId;
 
-    private Long eduNum;
-
     private edustate eduCategory;
 
     @NotEmpty(message = "교육 제목을 입력하세요")
@@ -59,7 +57,6 @@ public class EduDTO {
     public EduDTO(Edu edu) {
         if (edu != null) {
             this.eduId = edu.getEduId();
-            this.eduNum = edu.getEduNum();
             this.eduCategory = edu.getEduCategory();
             this.eduTitle = edu.getEduTitle();
             this.eduInstructor = edu.getEduInstructor();
@@ -80,7 +77,6 @@ public class EduDTO {
     public Edu toEntity() {
         Edu edu = new Edu();
         edu.setEduId(this.eduId);
-        edu.setEduNum(this.eduNum);
         edu.setEduCategory(this.eduCategory);
         edu.setEduTitle(this.eduTitle);
         edu.setEduInstructor(this.eduInstructor);
