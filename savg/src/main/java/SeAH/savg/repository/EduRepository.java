@@ -20,16 +20,25 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
     List<Edu> findAll(Sort sort);
 
- @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
-         "FROM Edu e " +
-         "JOIN Attendance a " +
-         "ON e.eduId = a.eduId " +
-         "WHERE MONTH(e.eduStartTime) = :month")
- List<Object[]> selectMonth (@Param("month") int month);
+    //월 필터링
+    @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+            "FROM Edu e " +
+            "JOIN Attendance a " +
+            "ON e.eduId = a.eduId " +
+            "WHERE MONTH(e.eduStartTime) = :month")
+    List<Object[]> selectMonth(@Param("month") int month);
+
+    //이름+월 필터링
+    @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
+            "FROM Edu e " +
+            "JOIN Attendance a " +
+            "ON e.eduId = a.eduId " +
+            "WHERE MONTH(e.eduStartTime) = :month " +
+            "AND a.attenName = :name")
+    List<Object[]> selectMonthAndName(@Param("month") int month, @Param("name") String name);
 
 
-
-   ////관리자
+    ////관리자
     //1-1. 월별 교육 참석자 명단 출력(교육 구분)
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +

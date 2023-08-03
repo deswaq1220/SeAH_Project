@@ -196,15 +196,19 @@ public class EduController {
     //(관리자) 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명 구분가능)
     //department, name 값을 필요 시 프론트에서 넘겨줘야함
     @GetMapping("/edustatistics/getmonth") //나중에 주소를 /edu/statistics/getmonth 등으로 바꿔야 할듯
-    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam("eduCategory") edustate eduCategory,
-                                                                     @RequestParam("month") int month,
+    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam(required = false) edustate eduCategory,
+                                                                     @RequestParam(required = false) int month,
                                                                      @RequestParam(required = false) String department,
                                                                      @RequestParam(required = false) String name) {
+        System.out.println("department" + department);
+        if(department != null ){
+            if(department.equals("부서")){
+                department = null;
+            };
+            System.out.println("테스트 :" + department);
+        };
 
-        String filteredDepartment = (department != null && !department.isEmpty()) ? department : null;
-        String filteredName = (name != null && !name.isEmpty()) ? name : null;
-
-        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, month, filteredDepartment, filteredName);
+        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, month, department, name);
         return ResponseEntity.ok(statisticsList);
 
     }

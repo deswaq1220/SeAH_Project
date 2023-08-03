@@ -65,6 +65,8 @@ public class EduService {
 
         if ((department == null || department.isEmpty()) && (name == null || name.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())) {
             results = eduRepository.selectMonth(month); // 월에 따른 데이터 조회
+        } else if ((department == null || department.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())){
+            results = eduRepository.selectMonthAndName(month, name);
         } else if ((department == null || department.isEmpty()) && (name == null || name.isEmpty())) {
             results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month); // 카테고리에 따른 교육 참가자 조회
         } else if ((name != null && !name.isEmpty()) && (department == null || department.isEmpty())) {
