@@ -90,10 +90,5 @@ public class EduDTO {
         return edu;
     }
 
- /*
-    // 생성자 추가
-    public EduDTO() {}
-    */
-
 
 }

@@ -26,6 +26,11 @@ public class Edu {
     @Column
     private String eduTitle;    // 제목
 
+
+    public String getEduTitle() {
+        return eduTitle;
+    }
+
     @Column(nullable = false)
     private String eduInstructor;           //강사
 

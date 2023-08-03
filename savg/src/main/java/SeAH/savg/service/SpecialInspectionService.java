@@ -12,13 +12,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
+import static SeAH.savg.constant.SpeStatus.NO;
+import static SeAH.savg.constant.SpeStatus.OK;
 
 @Service
 @RequiredArgsConstructor
@@ -140,9 +144,15 @@ public class SpecialInspectionService {
         }
 
         // 완료세팅
-        if(!(speInsFormDTO.getSpeComplete() == null)) {
-            special.updateSpe(speInsFormDTO.getSpeComplete());
-        }
+//        if(!(speInsFormDTO.getSpeComplete() == null)) {
+//            special.updateSpe(speInsFormDTO.getSpeComplete());
+//        }
+
+        special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+        special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
+
+
+
 
         return special;
     }
@@ -162,4 +172,29 @@ public class SpecialInspectionService {
 
     //월별 수시점검 건수 통계조회 - 파트별
 
+    // 월별현황 : 점검실시 ()건, 조치완료 ()건, 조치필요 ()건
+    @Transactional
+    public Map<String, Object> findSpeMonthly(){
+        Map<String, Object> reponseData = new HashMap<>();
+        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+
+
+        // 미완료건수
+//        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, NO, startOfToday);
+//        reponseData.put("dailyNotComplete", countNotComplete);       // 오늘미완료건수
+
+        // 전체점검건수
+        int countMonthlyAll = specialInspectionRepository.countAllBySpeDateAndSpeIdIsNotNullSpeDateAfter(startOfToday);
+        // 완료건수
+        int countMonthlyComplete = specialInspectionRepository.countBySpeActDateAndSpeComplete(OK, startOfToday);
+        // 이번달 deadline중 미완료건수
+        int countMonthlyNoComplete = specialInspectionRepository.countBySpeDeadlineAndSpeComplete(NO);
+
+
+        reponseData.put("monthlyAll", countMonthlyAll);                 // 이번달 전체등록건수
+        reponseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 완료건수
+        reponseData.put("monthlyNoComplete", countMonthlyNoComplete);               // 이번달 deadline중 미완료건수
+
+        return reponseData ;
+    }
 }
