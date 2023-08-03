@@ -9,14 +9,14 @@ import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static SeAH.savg.constant.MasterStatus.Y;
 
@@ -160,6 +160,33 @@ public class SpecialInspectionService {
 //    }
 
 
-    //월별 수시점검 건수 통계조회 - 파트별
+    //월별 수시점검 현황 통계 조회 - 위험분류별
+    public List<Map<String, Object>> setSpecialListByDangerAndMonth(int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(month);
+
+        List<Map<String, Object>> dataPoints = new ArrayList<>();
+
+        for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
+
+            String dangerType = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("x", dangerType);
+            dataPoint.put("y", count);
+
+            dataPoints.add(dataPoint);
+        }
+
+        Map<String, Object> finalDate = new HashMap<>();   //Map형태:
+        finalDate.put("id", "수시점검");
+        finalDate.put("data", dataPoints);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        resultList.add(finalDate);
+
+
+        return resultList;
+    }
 
 }

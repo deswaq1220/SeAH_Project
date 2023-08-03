@@ -16,9 +16,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+//@CrossOrigin(origins = "http://172.20.10.5:3000")
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://127.0.0.1:3000")
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
     private final SpecialInspectionRepository specialInspectionRepository;
@@ -102,11 +106,12 @@ public class SpecialController {
      * 형태: 위험분류(추락, 협착, 끼임, 말림, 전도, 절단, 베임, 찔림, 충돌, 화상,화재폭발, 근골격, 지게차, 크레인, 누출, 환경사고, 기타) + 점검건수 리스트
      * ex : 추락 1건, 기타 2건 ...
      */
-    @GetMapping("/special/statistics/departandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListByDangerAndMonth(@RequestParam("month") int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(month);
+    @GetMapping("/special/statistics/dangerandmonth")
+    public ResponseEntity<List<Map<String, Object>>> getSpecialListByDangerAndMonth(@RequestParam("month") int month){
 
-        return ResponseEntity.ok(statisticsList);
+       List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByDangerAndMonth(month);
+
+        return new ResponseEntity<>(statisticsList, HttpStatus.OK);
     }
 
     /* 월별 수시점검 현황 통계 조회 - 위험원인별

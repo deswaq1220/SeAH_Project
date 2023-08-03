@@ -38,6 +38,13 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     @Query("SELECT s.speDanger, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speDanger")
     List<Object[]> specialListByDangerAndMonth(@Param("month") int month);
 
+    /*@Query("SELECT dangers.speDanger, COALESCE(COUNT(s), 0) " +
+            "FROM (SELECT 'A' AS speDanger UNION SELECT 'B' AS speDanger UNION SELECT 'C' AS speDanger) AS dangers " +
+            "LEFT JOIN SpecialInspection s ON dangers.speDanger = s.speDanger AND MONTH(s.speDate) = :month " +
+            "GROUP BY dangers.speDanger")
+    List<Object[]> specialListByDangerAndMonth(@Param("month") int month);*/
+
+
     //월별 수시점검 통계 조회 - 위험원인별 발생 건 수
     @Query("SELECT s.speCause, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speCause")
     List<Object[]> specialListBySpeCauseAndMonth(@Param("month") int month);

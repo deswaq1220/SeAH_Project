@@ -36,9 +36,9 @@ import java.util.ArrayList;
 
 //@Controller
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://127.0.0.1:3000")
+//@CrossOrigin(origins = "http://127.0.0.1:3000")
 @Log4j2
 
 public class EduController {
