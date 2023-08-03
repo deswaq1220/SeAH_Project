@@ -1,4 +1,4 @@
-/*
+
 package SeAH.savg.repository;
 
 import SeAH.savg.dto.SpeInsStatisticsDTO;
@@ -24,6 +24,10 @@ public class SpecialInspectionRepositoryTest {
        }
     }
 
+    @Test
+    public void testSpecialListByDanger(){
+        List<Object[]> result = specialInspectionRepository.specialListByDangerAndMonthPlus0(7);
 
+    }
 }
-*/
+

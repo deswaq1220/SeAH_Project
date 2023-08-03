@@ -21,8 +21,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 
-@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.10.5:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 
 public class SpecialController {

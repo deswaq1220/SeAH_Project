@@ -42,11 +42,15 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     @Query("SELECT s.speDanger, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speDanger")
     List<Object[]> specialListByDangerAndMonth(@Param("month") int month);
 
-    /*@Query("SELECT dangers.speDanger, COALESCE(COUNT(s), 0) " +
-            "FROM (SELECT 'A' AS speDanger UNION SELECT 'B' AS speDanger UNION SELECT 'C' AS speDanger) AS dangers " +
+    //월별 수시점검 통계 조회 - 위험분류 발생 건 수(0건인 것들도 함께 나옴)
+    @Query(value = "SELECT dangers.speDanger, COALESCE(COUNT(s), 0) " +
+            "FROM (SELECT '추락' AS speDanger UNION SELECT '협착' AS speDanger UNION SELECT '끼임' AS speDanger UNION SELECT '말림' AS speDanger UNION SELECT '전도' AS speDanger" +
+            "UNION SELECT '절단' AS speDanger UNION SELECT '베임' AS speDanger UNION SELECT '찔림' AS speDanger UNION SELECT '충돌' AS speDanger UNION SELECT '화상' AS speDanger" +
+            "UNION SELECT '화재폭발' AS speDanger UNION SELECT '근골격' AS speDanger UNION SELECT '지게차' AS speDanger UNION SELECT '크레인' AS speDanger UNION SELECT '누출' AS speDanger" +
+            "UNION SELECT '환경사고' AS speDanger UNION SELECT '기타' AS speDanger) AS dangers " +
             "LEFT JOIN SpecialInspection s ON dangers.speDanger = s.speDanger AND MONTH(s.speDate) = :month " +
-            "GROUP BY dangers.speDanger")
-    List<Object[]> specialListByDangerAndMonth(@Param("month") int month);*/
+            "GROUP BY dangers.speDanger", nativeQuery = true)
+    List<Object[]> specialListByDangerAndMonthPlus0(@Param("month") int month);
 
 
     //월별 수시점검 통계 조회 - 위험원인별 발생 건 수

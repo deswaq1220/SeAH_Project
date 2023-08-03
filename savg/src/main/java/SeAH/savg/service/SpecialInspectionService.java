@@ -203,6 +203,33 @@ public class SpecialInspectionService {
 
         return resultList;
     }
+ /*   public List<Map<String, Object>> setSpecialListByDangerAndMonth(int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(month);
+
+        List<Map<String, Object>> dataPoints = new ArrayList<>();
+
+        for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
+
+            String dangerType = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("x", dangerType);
+            dataPoint.put("y", count);
+
+            dataPoints.add(dataPoint);
+        }
+
+        Map<String, Object> finalDate = new HashMap<>();   //Map형태:
+        finalDate.put("id", "수시점검");
+        finalDate.put("data", dataPoints);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        resultList.add(finalDate);
+
+
+        return resultList;
+    }*/
 
     // 월별현황 : 점검실시 ()건, 조치완료 ()건, 조치필요 ()건
     @Transactional
