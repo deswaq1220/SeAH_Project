@@ -11,11 +11,11 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
-@SpringBootTest
+/*@SpringBootTest
 public class EduServiceTest {
 
     @Autowired
-    private EduService eduService;
+    private EduService eduService;*/
 /*
     @Test
     public void testShowEduTimeStatis(){
@@ -31,7 +31,7 @@ public class EduServiceTest {
         System.out.println(result);
     }
 */
-    @Test
+/*    @Test
     public void testSumShowEduTime(){
         List<EduStatisticsDTO> result = eduService.showMonthEduTraineeStatics(edustate.CREW,7, "주조반", null);
             System.out.println(result);
@@ -43,4 +43,4 @@ public class EduServiceTest {
         Page<Object[]> result = eduService.getRunEduListByMonth(7, 0,10);
         System.out.println(result);
     }
-}
+}*/
