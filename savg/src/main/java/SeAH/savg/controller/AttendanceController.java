@@ -1,9 +1,12 @@
 package SeAH.savg.controller;
 
 import SeAH.savg.entity.Attendance;
+import SeAH.savg.entity.Email;
+import SeAH.savg.entity.MasterData;
 import SeAH.savg.repository.AttendanceRepository;
 import SeAH.savg.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,14 +54,13 @@ public class AttendanceController {
 
   ////관리자 관련
     //해당 교육일지에 따른 학생 출석 리스트 조회
-    @PostMapping("") //(임시, 출석리스트 페이지 만들어지면 변경필요 ★)
-    public String showUserEduAttenList(@RequestBody Map<String, String> requestData) {
-        String eduId = requestData.get("eduId");
-        attendanceRepository.findAllByEduId(eduId);
+    @GetMapping("/list/{eduId}")
+    public ResponseEntity<?> showUserEduAttenList(@RequestParam("eduId") String eduId) {
 
-        return "page/attendance2"; //(임시, 출석리스트 페이지 만들어지면 변경필요 ★)
-    }
+        List<Attendance> result = attendanceRepository.findAllByEduId(eduId);
 
-
+        return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
+
+}
