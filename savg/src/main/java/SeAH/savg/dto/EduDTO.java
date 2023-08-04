@@ -2,6 +2,7 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
+import SeAH.savg.entity.EduFile;
 import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
@@ -51,6 +53,10 @@ public class EduDTO {
     private String eduQr;    //교육 QR코드 정보
 
     private List<MultipartFile> files; // 파일
+
+    private List<EduFileDTO> eduFiles = new ArrayList<>();
+
+//    private List<EduFile> eduFiles;
     //    private MultipartFile[] files;
     private static ModelMapper modelMapper = new ModelMapper();
 

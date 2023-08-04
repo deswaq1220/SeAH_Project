@@ -1,8 +1,12 @@
 package SeAH.savg.service;
 
 import SeAH.savg.constant.edustate;
+import SeAH.savg.dto.EduDTO;
+import SeAH.savg.dto.EduFileDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
+import SeAH.savg.entity.EduFile;
+import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +34,7 @@ public class EduService {
 
     private final EduRepository eduRepository;
     private final EduFileService eduFileService;
+    private final EduFileRepository eduFileRepository;
 
     //교육 목록
     public List<Edu> getEdu() {
@@ -165,11 +171,25 @@ public class EduService {
     }
 */
 
-    //상세조회
-    public Edu getEduById(String eduId) {
-        return eduRepository.findByEduId(eduId);
+   //상세조회
+    public EduDTO getEduById(String eduId) {
+        Edu edu = eduRepository.findByEduId(eduId);
+
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
+        for(EduFile file : eduFileList){
+            EduFileDTO eduFileDTO = EduFileDTO.of(file);
+            eduFileDTOList.add(eduFileDTO);
+        }
+        EduDTO eduDTO = new EduDTO(edu);
+        eduDTO.setEduFiles(eduFileDTOList);
+
+
+        return eduDTO;
     }
 
-
+    public void update(EduDTO eduDTO)throws Exception{
+        for()
+    }
 
 }
