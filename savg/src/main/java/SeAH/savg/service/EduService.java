@@ -188,8 +188,8 @@ public class EduService {
         return eduDTO;
     }
 
-    public void update(EduDTO eduDTO)throws Exception{
-        for()
-    }
+//    public void update(EduDTO eduDTO)throws Exception{
+//        for()
+//    }
 
 }
