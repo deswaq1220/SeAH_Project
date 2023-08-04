@@ -260,7 +260,7 @@ public class SpecialInspectionService {
     }
 
     //특정년도의 전체 월별 수시점검 위험분류 건수
-   public List<Map<String,Object>> setSpecialDetailListByDangerAndMonth(int year){
+   public List<Map<String,Object>> SpecialDetailListByDangerAndYear(int year){
 
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDangerAndMonth(year);
         Map<String, Object> dataPoint = new HashMap<>();
