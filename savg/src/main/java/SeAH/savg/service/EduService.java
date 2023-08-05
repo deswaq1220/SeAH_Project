@@ -188,8 +188,14 @@ public class EduService {
         return eduDTO;
     }
 
-//    public void update(EduDTO eduDTO)throws Exception{
-//        for()
-//    }
+    public void update(EduDTO eduDTO)throws Exception{
+        Edu edu = eduDTO.toEntity();
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+        for(int i=0; i<eduDTO.getFiles().size(); i++){
+            eduFileService.updateFile(eduFileList.get(i).getEduFileId(),eduDTO.getFiles().get(i));
+        }
+
+        eduRepository.save(edu);
+    }
 
 }

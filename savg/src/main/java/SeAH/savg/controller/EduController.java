@@ -143,14 +143,13 @@ public class EduController {
     @PostMapping("/edudetails/{eduId}")
     public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO) {
         try {
-            System.out.println("이거?: "  + eduDTO.getEduContent());
-//            Edu edu = eduService.getEduById(eduId);
-            eduDTO.setEduId(eduId);
-            Edu edu = eduDTO.toEntity();
 
-            if (edu == null) {
-                return ResponseEntity.notFound().build();
-            }
+            eduDTO.setEduId(eduId);
+
+
+//            if (edu == null) {
+//                return ResponseEntity.notFound().build();
+//            }
 
             // 기존 파일 삭제 및 수정된 파일 업로드
 //            if (eduDTO.getFiles() != null && !eduDTO.getFiles().isEmpty()) {
@@ -176,7 +175,7 @@ public class EduController {
 //            edu.setEduContent(eduDTO.getEduContent());
 //            edu.setEduWriter(eduDTO.getEduWriter());
 
-            eduRepository.save(edu);
+
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {

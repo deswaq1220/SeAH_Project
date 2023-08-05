@@ -82,9 +82,12 @@ public class EduFileService {
             if(!StringUtils.isEmpty(savedFile.getEduFileName())){
                 deleteFile(savedFile.getEduFileName());
             }
+            String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+            String eduFileOriName = multipartFile.getOriginalFilename();
+            String eduFileName = generateUniqueFileName(eduFileOriName);
+            String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + eduFileOriName;
 
-            String originalFilename = multipartFile.getOriginalFilename();
-            String generateUniqueFileName = generateUniqueFileName(originalFilename);
+            savedFile.updateEduFile(eduFileName, eduFileOriName, fileUploadFullUrl);
 
         }
     }
