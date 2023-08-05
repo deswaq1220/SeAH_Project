@@ -3,9 +3,11 @@ package SeAH.savg.service;
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.entity.Email;
+import SeAH.savg.entity.SpecialCause;
 import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.entity.SpecialInspection;
 import SeAH.savg.repository.EmailRepository;
+import SeAH.savg.repository.SpecialCauseRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,33 +34,28 @@ public class SpecialInspectionService {
     private final SpecialFileService specialFileService;
     private final MakeIdService makeIdService;
     private final SpeicalFileRepository specialFileRepository;
+    private final SpecialCauseRepository specialCauseRepository;
 
 
-
-    // 수시점검 등록화면 조회 : 프론트연결용
-//    @Transactional
-//    public List<Email> findEmail(Map<String, Object> requestData){
-//        SpecialInspection speIns = new SpecialInspection();
-//        speIns.setSpePart((String) requestData.get("masterdataPart"));          // 영역 세팅
-//        speIns.setSpeFacility((String) requestData.get("masterdataFacility"));  // 설비 세팅
-//
-//
-//        // 고정수신자, 파트관리자 이메일리스트
-//        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(speIns.getSpePart(), Y);
-//        return emailList;
-//    }
-
-    // 수시점검 등록화면 조회 : 테스트용
+    // 수시점검 등록화면 조회
     @Transactional
-    public Map<String, Object> findEmail(String masterdataPart){
+    public Map<String, Object> findCreateMenu(String masterdataPart){
         Map<String, Object> responseData = new HashMap<>();
 
         // 고정수신자, 파트관리자 이메일리스트
         List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
-
         responseData.put("emailList", emailList);
+
+        // 위험원인
+        List<SpecialCause> specialCauseList = specialCauseRepository.findAll();
+        responseData.put("specialCauseList", specialCauseList);
+
         return responseData;
     }
+
+
+
+
 
     // 교육, 수시, 정기 카테고리 저장할 함수
     private String categoryType = "S";

@@ -16,7 +16,7 @@ public class SpeInsFormDTO {
     private String speId;                     // id
     private LocalDateTime speDate;          // 점검일
     private String spePerson;               // 점검자
-    private  String speEmpNum;              // 사원번호
+    private String speEmpNum;               // 사원번호
     private String speEmail;                // 점검자 이메일(조치완료시 회신)
     private String spePart;                 // 점검영역
     private String speFacility;             // 점검설비

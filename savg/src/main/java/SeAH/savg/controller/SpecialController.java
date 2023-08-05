@@ -24,7 +24,7 @@ public class SpecialController {
     // 수시점검 저장화면(조회) : 테스트용
     @GetMapping("/special/new/{masterdataPart}/{masterdataFacility}")
     public ResponseEntity<?> speForm(@PathVariable String masterdataPart){    // @PathVariable String masterdataFacility로 파라미터 받아서 해도될것같은디
-        return new ResponseEntity<>(specialInspectionService.findEmail(masterdataPart), HttpStatus.OK);
+        return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart), HttpStatus.OK);
     }
 
     // 수시점검 저장
