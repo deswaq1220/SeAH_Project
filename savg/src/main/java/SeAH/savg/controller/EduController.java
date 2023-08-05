@@ -145,7 +145,7 @@ public class EduController {
         try {
 
             eduDTO.setEduId(eduId);
-
+            eduService.update(eduDTO);
 
 //            if (edu == null) {
 //                return ResponseEntity.notFound().build();

@@ -54,7 +54,7 @@ public class EduDTO {
 
     private List<MultipartFile> files; // 파일
 
-    private List<EduFileDTO> eduFiles = new ArrayList<>();
+    private List<String> eduFiles;
 
 //    private List<EduFile> eduFiles;
     //    private MultipartFile[] files;

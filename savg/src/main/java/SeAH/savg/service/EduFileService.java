@@ -89,6 +89,10 @@ public class EduFileService {
 
             savedFile.updateEduFile(eduFileName, eduFileOriName, fileUploadFullUrl);
 
+            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+
+            fos.write(multipartFile.getBytes());
+            fos.close();
         }
     }
 
