@@ -47,7 +47,7 @@ public class SpecialInspectionService {
         responseData.put("emailList", emailList);
 
         // 위험원인
-        List<SpecialCause> specialCauseList = specialCauseRepository.findAll();
+        List<SpecialCause> specialCauseList = specialCauseRepository.findAllOrderByCauseNum();
         responseData.put("specialCauseList", specialCauseList);
 
         return responseData;

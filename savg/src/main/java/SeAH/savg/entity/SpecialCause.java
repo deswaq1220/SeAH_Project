@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Getter @ToString
 public class SpecialCause {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int causeId;  // id
+    private String causeMenu;       // 원인
 
-    private String causeMenu;
+    private int causeNum;           // 순서
+
 }
