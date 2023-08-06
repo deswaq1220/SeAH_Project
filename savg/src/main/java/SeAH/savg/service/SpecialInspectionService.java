@@ -260,22 +260,27 @@ public class SpecialInspectionService {
     }
 
     //특정년도의 전체 월별 수시점검 위험분류 건수
-   public List<Map<String,Object>> SpecialDetailListByDangerAndYear(int year){
+   public List<Map<String,Object>> SpecialDetailListByDanger(int year){
+        List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 
-        List<Object[]> specialList = specialInspectionRepository.specialDetailListByDangerAndMonth(year);
-        Map<String, Object> dataPoint = new HashMap<>();
+        Map<Integer, Map<String, Object>> dataByMonth = new HashMap<>();
+
 
         for(Object[] row : specialList){
+
             Integer month = (Integer) row[0];
             String dangerKind = (String) row[1];
             Long count = (Long) row[2];
 
-            dataPoint.put("dangerKind", dangerKind);
-            dataPoint.put("count", count);
+            if(!dataByMonth.containsKey(month)){
+                Map<String, Object> dataPoint = new HashMap<>();
+                dataPoint.put("month", month);
+                dataByMonth.put(month, dataPoint);
+            }
+            Map<String, Object> dataPoint = dataByMonth.get(month);
+            dataPoint.put(dangerKind, count);
         }
-       List<Map<String, Object>> finalData = new ArrayList<>();
-       finalData.add(dataPoint);
-
+       List<Map<String, Object>> finalData = new ArrayList<>(dataByMonth.values());
 
         return finalData;
     }

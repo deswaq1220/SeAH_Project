@@ -4,13 +4,16 @@ package SeAH.savg.service;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
+@RunWith(SpringRunner.class)
 @RequiredArgsConstructor
 public class SpecialListStatisticsServiceTest {
 
@@ -18,11 +21,14 @@ public class SpecialListStatisticsServiceTest {
     private SpecialInspectionService specialInspectionService;
 
     @Test
-    public void testSpecialDetailListByDangerAndMonth(){
+    public void testSpecialDetailListByDanger(){
 
-        List<Map<String, Object>> result = specialInspectionService.SpecialDetailListByDangerAndYear(2023);
-
+        if (specialInspectionService == null) {
+            System.out.println("specialInspectionService is null!");
+        } else {
+            List<Map<String, Object>> result = specialInspectionService.SpecialDetailListByDanger(2023);
             System.out.println(result);
+        }
     }
 }
 

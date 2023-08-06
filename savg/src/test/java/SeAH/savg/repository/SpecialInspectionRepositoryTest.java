@@ -37,18 +37,18 @@ public class SpecialInspectionRepositoryTest {
 
     @Test
     public void testSpecialDetailListByDangerAndMonth(){
-        List<Object[]> result = specialInspectionRepository.specialDetailListByDangerAndMonth(2023);
+        List<Object[]> result = specialInspectionRepository.specialDetailListByDanger(2023);
         for(Object[] res : result){
             Integer month = (Integer)res[0];
             String dangerKind = (String)res[1];
             Long count = (Long)res[2];
-           /* if(month != null) {*/
-                System.out.println(month + "월: " + dangerKind + count);
-            /*}*/ /*else{
-                System.out.println(month + "월: " + dangerKind + count);
-            }*/
+           if(month != null) {
+                System.out.println(month + dangerKind + count);
+            }else{
+                System.out.println("month가 null 입니다");
+            }
         }
-
+      
     }
 
 
