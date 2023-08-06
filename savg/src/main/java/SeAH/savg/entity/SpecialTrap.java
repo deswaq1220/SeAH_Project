@@ -8,10 +8,9 @@ import javax.persistence.Id;
 
 @Entity
 @Getter @ToString
-public class SpecialDanger {
+public class SpecialTrap {
     @Id
-    private String dangerMenu;       // 위험분류
-
-    private int dangerNum;           // 순서
+    private String trapMenu;       // 실수함정
+    private int trapNum;           // 순서
 
 }

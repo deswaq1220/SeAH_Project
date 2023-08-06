@@ -2,14 +2,8 @@ package SeAH.savg.service;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
-import SeAH.savg.entity.Email;
-import SeAH.savg.entity.SpecialCause;
-import SeAH.savg.entity.SpecialFile;
-import SeAH.savg.entity.SpecialInspection;
-import SeAH.savg.repository.EmailRepository;
-import SeAH.savg.repository.SpecialCauseRepository;
-import SeAH.savg.repository.SpecialInspectionRepository;
-import SeAH.savg.repository.SpeicalFileRepository;
+import SeAH.savg.entity.*;
+import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,20 +29,36 @@ public class SpecialInspectionService {
     private final MakeIdService makeIdService;
     private final SpeicalFileRepository specialFileRepository;
     private final SpecialCauseRepository specialCauseRepository;
+    private final SpecialInjuredRepository specialInjuredRepository;
+    private final SpecialDangerRepository specialDangerRepository;
+    private final SpecialTrapRepository specialTrapRepository;
 
 
     // 수시점검 등록화면 조회
     @Transactional
     public Map<String, Object> findCreateMenu(String masterdataPart){
         Map<String, Object> responseData = new HashMap<>();
+        // 위험분류
+        List<SpecialDanger> specialDangerList = specialDangerRepository.findAllOrderByDangerNum();
+        responseData.put("specialDangerList", specialDangerList);
+
+        // 부상부위
+        List<SpecialInjured> specialInjuredList = specialInjuredRepository.findAllOrderByInjuredNum();
+        responseData.put("specialInjuredList", specialInjuredList);
+
+        // 위험원인
+        List<SpecialCause> specialCauseList = specialCauseRepository.findAllOrderByCauseNum();
+        responseData.put("specialCauseList", specialCauseList);
+
+        // 실수함정
+        List<SpecialTrap> specialTrapList = specialTrapRepository.findAllOrderByTrapNum();
+        responseData.put("specialTrapList", specialTrapList);
 
         // 고정수신자, 파트관리자 이메일리스트
         List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
         responseData.put("emailList", emailList);
 
-        // 위험원인
-        List<SpecialCause> specialCauseList = specialCauseRepository.findAllOrderByCauseNum();
-        responseData.put("specialCauseList", specialCauseList);
+
 
         return responseData;
     }
