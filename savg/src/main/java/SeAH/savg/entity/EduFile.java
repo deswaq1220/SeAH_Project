@@ -1,8 +1,10 @@
 package SeAH.savg.entity;
 
+import SeAH.savg.dto.EduDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -10,6 +12,7 @@ import javax.persistence.*;
 @Table(name="edu_file")
 @Getter @Setter
 public class EduFile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eduFileId;           // id
@@ -27,4 +30,6 @@ public class EduFile {
         this.eduFileOriName = eduFileOriName;
         this.eduFileUrl = eduFileUrl;
     }
+
+
 }

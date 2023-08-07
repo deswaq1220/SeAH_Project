@@ -1,6 +1,7 @@
 package SeAH.savg.controller;
 
 
+
 import SeAH.savg.dto.EduDTO;
 import SeAH.savg.entity.Attendance;
 import SeAH.savg.entity.Email;
@@ -11,14 +12,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.HashMap;
+
 import java.util.List;
 import java.util.Map;
 
