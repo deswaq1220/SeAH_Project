@@ -7,17 +7,17 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "special_inspection_danger")
+@Table(name = "special_part")
 @Getter
 @Setter
 @ToString
-public class SpecialDangerINFO {
+public class SpecialPart {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long dangerId; // id
+    private String partMenu; //영역분류
 
     @Column(nullable = false)
-    private String dangerKind; //위험분류
+    private int partNum; //순서
 
 
 }

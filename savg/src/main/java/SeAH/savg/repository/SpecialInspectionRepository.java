@@ -36,27 +36,20 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     //통계
     //월별
     //월별 수시점검 통계 조회 - 영역별 건 수(0건인 것들도 함께 나옴)
-    @Query("SELECT p.partKind, COALESCE(COUNT(s.spePart), 0) " +
-            "FROM SpecialPartINFO p " +
-            "LEFT JOIN SpecialInspection s ON s.spePart = p.partKind AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
-            "GROUP BY p.partKind")
+    @Query("SELECT p.partMenu, COALESCE(COUNT(s.spePart), 0) " +
+            "FROM SpecialPart p " +
+            "LEFT JOIN SpecialInspection s ON s.spePart = p.partMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY p.partMenu")
     List<Object[]> specialListByPartAndMonth(@Param("year") int year, @Param("month") int month);
-
-/*     //월별 수시점검 통계 조회 - 영역별 건 수(0건인 것들 안나옴)
-   @Query("SELECT s.spePart, COUNT(s) FROM SpecialInspection s WHERE YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month GROUP BY s.spePart")
-    List<Object[]> specialListByPartAndMonth(@Param("year") int year, @Param("month") int month);*/
 
 
     //월별 수시점검 통계 조회 - 위험분류 발생 건 수(0건인 것들도 함께 나옴)
-    @Query("SELECT i.dangerKind, COALESCE(COUNT(s), 0) " +
-            "FROM SpecialDangerINFO i " +
-            "LEFT JOIN SpecialInspection s ON s.speDanger = i.dangerKind AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
-            "GROUP BY i.dangerKind")
+    @Query("SELECT i.dangerMenu, COALESCE(COUNT(s), 0) " +
+            "FROM SpecialDanger i " +
+            "LEFT JOIN SpecialInspection s ON s.speDanger = i.dangerMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY i.dangerMenu")
     List<Object[]> specialListByDangerAndMonthPlus0(@Param("year") int year, @Param("month") int month);
 
-/*    //월별 수시점검 통계 조회 - 위험분류 발생 건 수(0건인 것들 안나옴)
-    @Query("SELECT s.speDanger, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speDanger")
-    List<Object[]> specialListByDangerAndMonth(@Param("month") int month);*/
 
 
     //월별 수시점검 통계 조회 - 위험원인별 발생 건 수
