@@ -22,7 +22,7 @@ public class SpecialInspection {
     private String spePerson;               // 점검자
 
     @Column(nullable = false)
-    private  String speEmpNum;             // 사원번호
+    private String speEmpNum;             // 사원번호
 
     @Column(nullable = false)
     private String speEmail;                // 점검자 이메일(조치완료시 회신)
@@ -56,7 +56,7 @@ public class SpecialInspection {
     private String speActContent;           // 개선대책
 
     @Column(nullable = false)
-    private String speActPerson;              // 조치자 이름
+    private String speActPerson;             // 조치자 이름
 
     @Column(nullable = false)
     private String speActEmail;             // 조치자 이메일
@@ -69,7 +69,7 @@ public class SpecialInspection {
 
 //    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private SpeStatus speComplete = SpeStatus.NO;              // 완료여부 : 기본값 NO
+    private SpeStatus speComplete;              // 완료여부
 
 //    @Column(nullable = false)
 //    private int speMasterdataId;            // qr로 넘어오는 설비id : 필요없을것같음 확인후 삭제

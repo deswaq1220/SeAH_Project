@@ -79,15 +79,15 @@ public class EduController {
             eduDTO.setEduId(makeIdService.makeId(categoryType));
 
             Edu edu = eduDTO.toEntity();
-
             eduRepository.save(edu); // Edu 엔티티 저장
+
 
             if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
                 log.info("파일 없음");
             } else {
                 log.info("파일 있음: ");
                 // 데이터 처리 로직: 파일 업로드 및 파일 정보 저장
-                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO.getFiles());
+                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO);
                 for (EduFile eduFile : uploadedFiles) {
                     eduFile.setEdu(edu); // EduFile 엔티티와 연결
                 }
@@ -122,47 +122,52 @@ public class EduController {
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
     public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
-        Edu edu = eduService.getEduById(eduId);
-        if (edu == null) {
+        EduDTO eduDTO = eduService.getEduById(eduId);
+
+        if (eduDTO == null) {
             return ResponseEntity.notFound().build();
         }
 
-        EduDTO eduDTO = new EduDTO(edu);
+
         return ResponseEntity.ok(eduDTO);
     }
 
     // 교육일지 수정
-    @PutMapping("/edumodify/{eduId}")
-    public ResponseEntity<?> handleEduModify(@PathVariable String eduId, @Valid  EduDTO eduDTO) {
+    @PostMapping("/edudetails/{eduId}")
+    public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO) {
         try {
-            Edu edu = eduService.getEduById(eduId);
+            System.out.println("이거?: "  + eduDTO.getEduContent());
+//            Edu edu = eduService.getEduById(eduId);
+            eduDTO.setEduId(eduId);
+            Edu edu = eduDTO.toEntity();
+
             if (edu == null) {
                 return ResponseEntity.notFound().build();
             }
 
             // 기존 파일 삭제 및 수정된 파일 업로드
-            if (eduDTO.getFiles() != null && !eduDTO.getFiles().isEmpty()) {
-                List<EduFile> existingFiles = eduFileRepository.findByEdu(edu);
-                if (existingFiles != null && !existingFiles.isEmpty()) {
-                    for (EduFile existingFile : existingFiles) {
-                        String fileName = existingFile.getEduFileName();
-                        eduFileService.deleteFile(fileName);
-                    }
-                }
-                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO.getFiles());
-                for (EduFile eduFile : uploadedFiles) {
-                    eduFile.setEdu(edu);
-                }
-            }
-            edu.setEduCategory(eduDTO.getEduCategory());
-            edu.setEduTitle(eduDTO.getEduTitle());
-            edu.setEduInstructor(eduDTO.getEduInstructor());
-            edu.setEduPlace(eduDTO.getEduPlace());
-            edu.setEduStartTime(eduDTO.getEduStartTime());
-            edu.setEduSumTime(eduDTO.getEduSumTime());
-            edu.setEduTarget(eduDTO.getEduTarget());
-            edu.setEduContent(eduDTO.getEduContent());
-            edu.setEduWriter(eduDTO.getEduWriter());
+//            if (eduDTO.getFiles() != null && !eduDTO.getFiles().isEmpty()) {
+//                List<EduFile> existingFiles = eduFileRepository.findByEdu(edu);
+//                if (existingFiles != null && !existingFiles.isEmpty()) {
+//                    for (EduFile existingFile : existingFiles) {
+//                        String fileName = existingFile.getEduFileName();
+//                        eduFileService.deleteFile(fileName);
+//                    }
+//                }
+//                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO);
+//                for (EduFile eduFile : uploadedFiles) {
+//                    eduFile.setEdu(edu);
+//                }
+//            }
+//            edu.setEduCategory(eduDTO.getEduCategory());
+//            edu.setEduTitle(eduDTO.getEduTitle());
+//            edu.setEduInstructor(eduDTO.getEduInstructor());
+//            edu.setEduPlace(eduDTO.getEduPlace());
+//            edu.setEduStartTime(eduDTO.getEduStartTime());
+//            edu.setEduSumTime(eduDTO.getEduSumTime());
+//            edu.setEduTarget(eduDTO.getEduTarget());
+//            edu.setEduContent(eduDTO.getEduContent());
+//            edu.setEduWriter(eduDTO.getEduWriter());
 
             eduRepository.save(edu);
 
