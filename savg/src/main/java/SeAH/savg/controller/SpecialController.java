@@ -120,17 +120,16 @@ public class SpecialController {
         return new ResponseEntity<>(statisticsList, HttpStatus.OK);
     }
 
-    /* 특정 년도 내 발생한 월별 수시점검 현황 통계 조회 - 위험분류별
+    /* 1~12월 내 발생한 월별 수시점검 현황 통계 조회 - 위험분류별
      * 형태: 위험분류(추락,협착,끼임,말림,전도,절단,베임,찔림,충돌,화상,화재폭발,근골격,지게차,크레인,누출,환경사고,기타) + 점검건수 리스트
      * ex : 1월 추락 1건, 기타 2건 ...
      */
-/*    @GetMapping("/special/statistics/detaildanger")
+    @GetMapping("/special/statistics/detaildanger")
     public ResponseEntity<List<Map<String, Object>>> getDetailSpecialListByDanger(@RequestParam("year") int year){
-        List<Map<String, Object>> statisticsList = specialInspectionService.SpecialDetailListByDanger(year);
-        System.out.println(statisticsList);
-        System.out.println("--------------------");
+        List<Map<String, Object>> statisticsList = specialInspectionService.specialDetailListByDanger(year);
+
         return new ResponseEntity<>(statisticsList, HttpStatus.OK);
-    }*/
+    }
 
     /* 월별 수시점검 현황 통계 조회 - 위험원인별
      * 형태: 위험원인(설비원인,작업방법,점검불량,정비불량,지식부족,불안전한 행동,기타(직접입력)) + 점검건수 리스트
@@ -175,8 +174,5 @@ public class SpecialController {
 
         return ResponseEntity.ok(statisticsList);
     }
-
-
-
 
 }

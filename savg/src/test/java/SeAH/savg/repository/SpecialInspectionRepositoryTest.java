@@ -51,6 +51,18 @@ public class SpecialInspectionRepositoryTest {
       
     }
 
+    @Test
+    public void testSpecialCountList(){
+        List<Object[]> result = specialInspectionRepository.specialCountList(2023);
+        for(Object[] res : result){
+            Integer month = (Integer)res[0];
+            Long count = (Long)res[1];
+                System.out.println("결과: " + month+ ",   " + count);
+        }
+
+    }
+
+
 
 
 }

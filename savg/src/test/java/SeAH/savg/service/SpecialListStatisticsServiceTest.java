@@ -26,7 +26,7 @@ public class SpecialListStatisticsServiceTest {
         if (specialInspectionService == null) {
             System.out.println("specialInspectionService is null!");
         } else {
-            List<Map<String, Object>> result = specialInspectionService.SpecialDetailListByDanger(2023);
+            List<Map<String, Object>> result = specialInspectionService.specialDetailListByDanger(2023);
             System.out.println(result);
         }
     }

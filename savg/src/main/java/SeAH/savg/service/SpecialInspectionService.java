@@ -260,7 +260,7 @@ public class SpecialInspectionService {
     }
 
     //특정년도의 전체 월별 수시점검 위험분류 건수
-   public List<Map<String,Object>> SpecialDetailListByDanger(int year){
+   public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 
         Map<Integer, Map<String, Object>> dataByMonth = new HashMap<>();
@@ -283,6 +283,37 @@ public class SpecialInspectionService {
        List<Map<String, Object>> finalData = new ArrayList<>(dataByMonth.values());
 
         return finalData;
+    }
+
+
+
+    // 1~12월까지 월별 수시점검 건수
+     public List<Map<String, Object>> setSpecialDetailCountList(int year){
+        List<Object[]> statisticsList = specialInspectionRepository.specialCountList(year);
+
+        List<Map<String, Object>> dataPoints = new ArrayList<>();
+
+        for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
+
+            String dangerType = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("x", dangerType);
+            dataPoint.put("y", count);
+
+            dataPoints.add(dataPoint);
+        }
+
+        Map<String, Object> finalDate = new HashMap<>();   //Map형태:
+        finalDate.put("id", "수시점검");
+        finalDate.put("data", dataPoints);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        resultList.add(finalDate);
+
+
+        return resultList;
     }
 
 
