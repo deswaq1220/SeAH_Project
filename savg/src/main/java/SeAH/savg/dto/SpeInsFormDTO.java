@@ -29,6 +29,7 @@ public class SpeInsFormDTO {
     private String speActContent;           // 개선대책
     private String speActPerson;            // 조치자 이름
     private String speActEmail;             // 조지차 이메일
+    private String speActDate;              // 점검완료일
     private LocalDateTime speDeadline;      // 완료요청기한
     private SpeStatus speComplete;          // 완료여부
 

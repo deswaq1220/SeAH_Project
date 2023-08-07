@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
@@ -31,8 +33,8 @@ public class SpecialController {
     @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
     public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
                                     @PathVariable String masterdataFacility,
-                                    SpeInsFormDTO speInsFormDTO) throws Exception {
-        return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, speInsFormDTO), HttpStatus.CREATED);
+                                    @RequestBody Map<String, Object> requestData) throws Exception {
+        return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, requestData), HttpStatus.CREATED);
     }
 
     // 전체 현황 조회
