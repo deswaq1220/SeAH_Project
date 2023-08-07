@@ -85,7 +85,7 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     @Query("SELECT MONTH(s.speDate), COALESCE(COUNT(s), 0) " +
             "FROM SpecialInspection s " +
             "WHERE YEAR(s.speDate) = :year " +
-            "GROUP BY s.speDanger, MONTH(s.speDate)")
+            "GROUP BY MONTH(s.speDate)")
     List<Object[]> specialCountList(@Param("year") int year);
 
     //전체 월별 위험 발생 분류 건수

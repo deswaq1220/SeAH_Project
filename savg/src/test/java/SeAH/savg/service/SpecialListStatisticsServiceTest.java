@@ -30,5 +30,13 @@ public class SpecialListStatisticsServiceTest {
             System.out.println(result);
         }
     }
+
+
+    @Test
+    public void testSpecialCountList(){
+        List<Map<String, Object>> result = specialInspectionService.setSpecialCountList(2023);
+        System.out.println(result);
+
+    }
 }
 

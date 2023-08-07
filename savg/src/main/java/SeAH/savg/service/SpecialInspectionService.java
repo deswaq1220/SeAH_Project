@@ -288,18 +288,18 @@ public class SpecialInspectionService {
 
 
     // 1~12월까지 월별 수시점검 건수
-     public List<Map<String, Object>> setSpecialDetailCountList(int year){
+     public List<Map<String, Object>> setSpecialCountList(int year){
         List<Object[]> statisticsList = specialInspectionRepository.specialCountList(year);
 
         List<Map<String, Object>> dataPoints = new ArrayList<>();
 
         for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
 
-            String dangerType = (String) row[0];
+            Integer month = (Integer) row[0];
             Long count = (Long) row[1];
 
             Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("x", dangerType);
+            dataPoint.put("x", month);
             dataPoint.put("y", count);
 
             dataPoints.add(dataPoint);

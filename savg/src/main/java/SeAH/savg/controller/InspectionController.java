@@ -32,12 +32,12 @@ public class InspectionController {
      * ex : 수시점검: 1월, 7건 2월 1건...
      *      정기점검: 1월, 2건 2월 1건...
      */
-/*    @GetMapping("/statistics/Inspectioncount")
+    @GetMapping("/statistics/inspectioncount")
     public ResponseEntity<List<Map<String, Object>>> getSpecialCountList(@RequestParam("year") int year){
-        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByDangerAndMonth(year);
+        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialCountList(year);
 
         return new ResponseEntity<>(statisticsList, HttpStatus.OK);
-    }*/
+    }
 
 
 }
