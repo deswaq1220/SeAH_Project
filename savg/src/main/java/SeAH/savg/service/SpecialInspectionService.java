@@ -193,6 +193,21 @@ public class SpecialInspectionService {
         return special;
     }
 
+//    // 일별현황 : 점검 완료()건, 미완료 ()건
+//    @Transactional
+//    public int findSpeDaily(){
+//        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
+////        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(NO, startOfToday);
+//        int countNotComplete = specialInspectionRepository.countBySpeId();
+//
+//
+//
+//        return countNotComplete ;
+//    }
+
+
+    //월별 수시점검 건수 통계조회 - 파트별
+
     // 월별현황 : 점검실시 ()건, 조치완료 ()건, 조치필요 ()건
     @Transactional
     public Map<String, Object> findSpeMonthly(){

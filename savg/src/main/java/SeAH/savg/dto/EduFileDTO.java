@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 
 @Getter @Setter
 public class EduFileDTO {
+    private Long id;
     private String eduFileName;       // 파일명
     private String eduFileOriName;    // 원본 파일명
     private String eduFileUrl;        // 파일 조회 경로

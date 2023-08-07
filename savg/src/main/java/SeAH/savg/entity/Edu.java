@@ -26,6 +26,11 @@ public class Edu {
     @Column
     private String eduTitle;    // 제목
 
+
+    public String getEduTitle() {
+        return eduTitle;
+    }
+
     @Column(nullable = false)
     private String eduInstructor;           //강사
 
@@ -50,6 +55,9 @@ public class Edu {
 
     @Column(nullable = false)
     private String eduWriter;               //작성자
+
+    @Column
+    private String eduQr;                 //QR코드 정보
 
 
 

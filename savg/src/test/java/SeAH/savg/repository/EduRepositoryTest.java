@@ -1,8 +1,10 @@
+/*
 package SeAH.savg.repository;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
+import SeAH.savg.dto.EduSumStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,4 +59,20 @@ public class EduRepositoryTest {
         System.out.println(timeList);
 
     }
-}
+
+    @Test
+    public void testShhowEduTimeStatis2(){
+        List<Object[]> results = eduRepository.selectSumMonthEduTime(7); //실행한 교육의 리스트를 들고옴
+        List<EduSumStatisticsDTO> timeList = new ArrayList<>();
+
+        for(Object[] result : results){
+            EduSumStatisticsDTO eduSumStatisticsDTO = new EduSumStatisticsDTO();
+            eduSumStatisticsDTO.setEduCategory((edustate) result[0]);
+            eduSumStatisticsDTO.setEduSumTime((String) result[1]);
+
+            timeList.add(eduSumStatisticsDTO);
+        }
+        System.out.println(timeList);
+
+    }
+}*/

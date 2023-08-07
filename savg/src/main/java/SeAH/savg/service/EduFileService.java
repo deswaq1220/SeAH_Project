@@ -1,8 +1,13 @@
 package SeAH.savg.service;
 
 
+import SeAH.savg.dto.EduDTO;
+import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
 import SeAH.savg.repository.EduFileRepository;
+import SeAH.savg.repository.EduRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,20 +25,25 @@ import java.util.UUID;
 @Service
 public class EduFileService {
 
-    private final EduFileRepository eduFileRepository;
-    public EduFileService(EduFileRepository eduFileRepository) {
-        this.eduFileRepository = eduFileRepository;
-    }
+    @Autowired
+    private  EduRepository eduRepository;
+
+    @Autowired
+    private EduFileRepository eduFileRepository;
+//    public EduFileService(EduFileRepository eduFileRepository) {
+//        this.eduFileRepository = eduFileRepository;
+//    }
 
     @Value("${eduFileLocation}")
-    private String eduFileLocation;
+    private  String eduFileLocation;
 
 
     //파일 등록
-    public List<EduFile> uploadFile(List<MultipartFile> files) throws Exception {
+    public List<EduFile> uploadFile(EduDTO eduDTO) throws Exception {
+        Edu edu = eduRepository.findByEduId(eduDTO.getEduId());
         List<EduFile> uploadedFiles = new ArrayList<>();
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-
+        List<MultipartFile> files = eduDTO.getFiles();
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
             String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;
@@ -48,6 +58,7 @@ public class EduFileService {
             eduFile.setEduFileName(todayDate + "_" + originalFilename);
             eduFile.setEduFileOriName(originalFilename);
             eduFile.setEduFileUrl(fileUploadFullUrl);
+            eduFile.setEdu(edu);
             eduFileRepository.save(eduFile); // 데이터베이스에 저장
 
             uploadedFiles.add(eduFile);
@@ -58,10 +69,26 @@ public class EduFileService {
 
 
     //파일업뎃
-    public void updateFile(String fileName, List<MultipartFile> files) throws Exception {
-        deleteFile(fileName);
-        uploadFile(files);
+//    public void updateFile(String fileName, EduDTO eduDTO) throws Exception {
+//        List<MultipartFile> files =  eduDTO.getFiles();
+//        deleteFile(fileName);
+//        uploadFile(eduDTO);
+//    }
+
+    public void updateFile(Long eduFileId, MultipartFile multipartFile)throws Exception{
+        if(!multipartFile.isEmpty()){
+            EduFile savedFile = eduFileRepository.findById(eduFileId).orElseThrow();
+
+            if(!StringUtils.isEmpty(savedFile.getEduFileName())){
+                deleteFile(savedFile.getEduFileName());
+            }
+
+            String originalFilename = multipartFile.getOriginalFilename();
+            String generateUniqueFileName = generateUniqueFileName(originalFilename);
+
+        }
     }
+
 
     //파일삭제
     public void deleteFile(String fileName) {
@@ -84,4 +111,5 @@ public class EduFileService {
         String eduFileLocation = "C:\\seah\\edu"; // 파일 업로드 위치
         return Paths.get(eduFileLocation, fileName).toString();
     }
+
 }

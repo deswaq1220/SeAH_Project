@@ -4,6 +4,7 @@ import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.entity.SpecialInspection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,14 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     // monthly: 완료 갯수
     @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE DATE_FORMAT(s.speActDate, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m') AND s.speComplete = ?1 ")
     int countBySpeActDateAndSpeComplete(SpeStatus speComplete, LocalDateTime startOfToday);
+
+    // daily 완료 갯수
+
+
+    //월별 수시점검 통계 조회 - 영역별
+    @Query("SELECT s.spePart, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.spePart")
+    List<Object[]> specialListByPart(@Param("month") int month);
+
 
     // monthly: 이번달 deadline 중 미완료건수
     @Query("SELECT COUNT(s) FROM SpecialInspection s " +

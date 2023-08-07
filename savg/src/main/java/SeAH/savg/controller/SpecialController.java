@@ -1,12 +1,21 @@
 package SeAH.savg.controller;
 
 import SeAH.savg.dto.SpeInsFormDTO;
+import SeAH.savg.dto.SpeInsStatisticsDTO;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import java.util.Map;
 
@@ -67,6 +76,30 @@ public class SpecialController {
     public ResponseEntity<?> speDaily(){
         return new ResponseEntity<>(specialInspectionService.findSpeMonthly(), HttpStatus.OK);
     }
+
+/*    @GetMapping("/special/statistics")
+    public ModelAndView viewSpecialStatistics(){
+
+        //int today = LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfMonth();;
+        //List<Object[]> result = specialInspectionRepository.specialListByPart(today);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject(result);
+        modelAndView.setViewName("specialListSatistics");
+        return modelAndView;
+    }*/
+
+
+
+    //월별 수시점검 현황 통계 조회 - 카테고리별
+   @GetMapping("/special/statistics")
+    public ResponseEntity<List<Object[]>> getSpecialListStatistics(@RequestParam("month") int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByPart(month);
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+
 
 
 

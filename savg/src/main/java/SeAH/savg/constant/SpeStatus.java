@@ -3,6 +3,15 @@ package SeAH.savg.constant;
 import SeAH.savg.dto.SpeInsFormDTO;
 
 public enum SpeStatus {
+
+    // 수시점검 영역
+    CAST,            //주조
+    EXTRUSION,       //압출
+    MANUFACTURE,     //가공
+    QUALITY,         //품질
+    PRODUC_TECH,     //생산기술
+    MOLD,            //금형
+
     //  조치완료 : 위험성평가 enum 클래스 어떻게 구성되느냐에따라 나중에 따로 해야할 수도있음
     NO,             // 기본값
     OK,              // 조치완료
