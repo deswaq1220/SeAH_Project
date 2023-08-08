@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -32,7 +29,6 @@ import java.util.ArrayList;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.20.252:3000")
-//@CrossOrigin(origins = "http://127.0.0.1:3000")
 @Log4j2
 
 public class EduController {
@@ -57,6 +53,8 @@ public class EduController {
         objectMapper.registerModule(new JavaTimeModule());
 
     }
+
+
 
     // 교육, 수시, 정기 카테고리 저장할 함수
     private String categoryType = "E";
@@ -145,30 +143,6 @@ public class EduController {
                 return ResponseEntity.notFound().build();
             }
 
-            // 기존 파일 삭제 및 수정된 파일 업로드
-//            if (eduDTO.getFiles() != null && !eduDTO.getFiles().isEmpty()) {
-//                List<EduFile> existingFiles = eduFileRepository.findByEdu(edu);
-//                if (existingFiles != null && !existingFiles.isEmpty()) {
-//                    for (EduFile existingFile : existingFiles) {
-//                        String fileName = existingFile.getEduFileName();
-//                        eduFileService.deleteFile(fileName);
-//                    }
-//                }
-//                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO);
-//                for (EduFile eduFile : uploadedFiles) {
-//                    eduFile.setEdu(edu);
-//                }
-//            }
-//            edu.setEduCategory(eduDTO.getEduCategory());
-//            edu.setEduTitle(eduDTO.getEduTitle());
-//            edu.setEduInstructor(eduDTO.getEduInstructor());
-//            edu.setEduPlace(eduDTO.getEduPlace());
-//            edu.setEduStartTime(eduDTO.getEduStartTime());
-//            edu.setEduSumTime(eduDTO.getEduSumTime());
-//            edu.setEduTarget(eduDTO.getEduTarget());
-//            edu.setEduContent(eduDTO.getEduContent());
-//            edu.setEduWriter(eduDTO.getEduWriter());
-
             eduRepository.save(edu);
 
             return ResponseEntity.ok().build();
@@ -179,8 +153,43 @@ public class EduController {
     }
 
 
-    //(관리자) 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명 구분가능)
-    //department, name 값을 필요 시 프론트에서 넘겨줘야함
+    // 대시보드 (통계)
+    //1. 월별 교육실행시간 통계 조회하기 (3000/edustatics)
+    @GetMapping("/edustatistics/getmonthlyruntime")
+    public ResponseEntity <List<Integer>> viewMonthlyEduTimeStatis(@RequestParam(required = false) int year,@RequestParam(required = false) int month){
+        List<Integer> result = eduService.showMonthEduTimeStatis(year, month);
+        return ResponseEntity.ok(result);
+    }
+
+
+    // 1-1. 월별 교육실행리스트 통계 조회하기 (3000/edustatics)
+    @GetMapping("/edustatistics/getmonthlyedulist")
+    public ResponseEntity<List<Object[]>> viewMonthlyCategory(@RequestParam int year,
+                                                              @RequestParam int month,
+                                                              @RequestParam(required = false) edustate eduCategory) {
+        List<Object[]> statisticsList;
+
+        if (eduCategory != null) {
+            statisticsList = eduService.showMonthlyCategory(year, month, eduCategory);
+        } else if(eduService.getEduByYearAndMonth(year, month).isEmpty()) {
+            return ResponseEntity.badRequest().build();
+
+        }else {
+            List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
+            System.out.println(eduList.get(0).getEduId());
+            // Object 배열로 변환해서 반환
+            statisticsList = new ArrayList<>();
+            for (Edu edu : eduList) {
+                Object[] eduData = {edu.getEduCategory(), edu.getEduTitle(), edu.getEduStartTime(), edu.getEduSumTime()};
+                statisticsList.add(eduData);
+            }
+        }
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+
+    // 2. 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명) (3000/edustatics/atten)
     @GetMapping("/edustatistics/getmonth") //나중에 주소를 /edu/statistics/getmonth 등으로 바꿔야 할듯
     public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam(name = "eduCategory", required = false) edustate eduCategory,
                                                                      @RequestParam(name = "year") int year,
@@ -200,53 +209,6 @@ public class EduController {
 
     }
 
-
-    //(관리자) 월별 교육실행시간 통계 조회하기(★프론트 연결 필요)
-    @GetMapping("/edustatistics/getmonthlyruntime")
-    public ResponseEntity <List<Integer>> viewMonthlyEduTimeStatis(@RequestParam(required = false) int year,@RequestParam(required = false) int month){
-        List<Integer> result = eduService.showMonthEduTimeStatis(year, month);
-        return ResponseEntity.ok(result);
-    }
-
-
-    //(관리자) 월별 교육실행리스트 통계 조회하기
-    //ex)   http://localhost:8081/edustatistics/getmonthlyedulist/7?pageNumber=0&eduCategory=MANAGE
-/*    @GetMapping("/edustatistics/getmonthlyedulist/{month}&{year}")
-    public Page<Object[]> getEduListByMonth(@PathVariable int month,
-                                            @PathVariable int year,
-                                            @RequestParam(defaultValue = "0") int pageNumber,
-                                            @RequestParam(defaultValue = "10") int pageSize,
-                                            @RequestParam(required = false) String eduCategory) {
-        if (eduCategory != null && !eduCategory.isEmpty()) {
-            return eduService.getRunEduListByMonthAndCategory(year, month, pageNumber, pageSize, eduCategory);
-        } else {
-            return eduService.getRunEduListByMonth(year,month, pageNumber, pageSize);
-        }
-    }*/
-
-    // 월&카테고리 별 교육 목록
-    @GetMapping("/edustatistics/getmonthlyedulist")
-    public ResponseEntity<List<Object[]>> viewMonthlyCategory(@RequestParam int year,
-                                                              @RequestParam int month,
-                                                              @RequestParam(required = false) edustate eduCategory) {
-
-        List<Object[]> statisticsList;
-
-        if (eduCategory != null) {
-            statisticsList = eduService.showMonthlyCategory(year, month, eduCategory);
-        } else {
-            List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
-            System.out.println(eduList.get(0).getEduId());
-            // Object 배열로 변환해서 반환
-            statisticsList = new ArrayList<>();
-            for (Edu edu : eduList) {
-                Object[] eduData = {edu.getEduCategory(), edu.getEduTitle(), edu.getEduStartTime(), edu.getEduSumTime()};
-                statisticsList.add(eduData);
-            }
-        }
-
-        return ResponseEntity.ok(statisticsList);
-    }
 
 }
 

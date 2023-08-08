@@ -92,15 +92,7 @@ public class SpecialController {
     public ResponseEntity<?> speList(){
         return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
     }
-  
 
-    //월별 수시점검 현황 통계 조회 - 카테고리별
-   @GetMapping("/special/statistics")
-    public ResponseEntity<List<Object[]>> getSpecialListStatistics(@RequestParam("month") int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByPart(month);
-  
-        return ResponseEntity.ok(statisticsList);
-    }
 
     /* 월별 수시점검 현황 통계 조회 - 점검영역별
      * 형태: 파트(주조, 압출, 가공, 품질, 생산기술, 금형) + 점검건수 리스트
@@ -168,8 +160,10 @@ public class SpecialController {
      * ex : 신체 1건, 머리 2건 ...
      */
     @GetMapping("/special/statistics/speinjureandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month){
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month) {
         List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeInjureAndMonth(month);
+        return ResponseEntity.ok(statisticsList);
+    }
 
 
 

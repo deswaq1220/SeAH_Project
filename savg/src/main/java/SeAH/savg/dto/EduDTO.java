@@ -72,7 +72,6 @@ public class EduDTO {
             this.eduTarget = edu.getEduTarget();
             this.eduContent = edu.getEduContent();
             this.eduWriter = edu.getEduWriter();
-            this.eduQr = edu.getEduQr();
         }
     }
 
@@ -92,7 +91,6 @@ public class EduDTO {
         edu.setEduTarget(this.eduTarget);
         edu.setEduContent(this.eduContent);
         edu.setEduWriter(this.eduWriter);
-        edu.setEduQr(this.eduQr);
         return edu;
     }
 
