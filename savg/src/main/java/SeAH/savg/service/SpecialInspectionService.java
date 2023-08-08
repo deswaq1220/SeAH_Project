@@ -63,11 +63,8 @@ public class SpecialInspectionService {
         List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
         responseData.put("emailList", emailList);
 
-
-
         return responseData;
     }
-
 
 
 
@@ -106,8 +103,6 @@ public class SpecialInspectionService {
 
 
 
-
-
         // 수시점검 저장
         SpecialInspection special = speInsFormDTO.createSpeIns();
         specialInspectionRepository.save(special);
@@ -123,18 +118,29 @@ public class SpecialInspectionService {
         return special;
     }
 
-    // 수시점검 전체 조회
-    @Transactional(readOnly = true)
-    public Map<String, Object> findSpeAll(){
+
+    // 월별현황 : 점검실시 ()건, 조치완료 ()건, 조치필요 ()건
+    @Transactional
+    public Map<String, Object> findSpeMonthly(){
         Map<String, Object> responseData = new HashMap<>();
+        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 
-        List<SpecialInspection> specialInspectionList = specialInspectionRepository.findAll();
-        List<SpecialFile> specialFileList = specialFileRepository.findAll();
 
-        responseData.put("specialData", specialInspectionList);
-        responseData.put("specialFileData", specialFileList);
-        return responseData;
+        // 이번달 전체점검 실시 건수
+        int countMonthlyAll = specialInspectionRepository.countAllBySpeDateAndSpeIdIsNotNullSpeDateAfter(startOfToday);
+        // 이번달 조치 완료건수
+        int countMonthlyComplete = specialInspectionRepository.countBySpeActDateAndSpeComplete(OK, startOfToday);
+        // 이번달 deadline중 미완료건수
+        int countMonthlyNoComplete = specialInspectionRepository.countBySpeDeadlineAndSpeComplete(NO);
+
+
+        responseData.put("monthlyAll", countMonthlyAll);                 // 이번달 전체등록건수
+        responseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 완료건수
+        responseData.put("monthlyNoComplete", countMonthlyNoComplete);               // 이번달 deadline중 미완료건수
+
+        return responseData ;
     }
+
 
 
     // 수시점검 설비별 조회
@@ -171,10 +177,13 @@ public class SpecialInspectionService {
         return responseData;
     }
 
+
+
     // 완료처리:업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             String completeKey = "완료";
@@ -184,31 +193,14 @@ public class SpecialInspectionService {
                 specialFile.setSpecialInspection(special);
         }
 
-        // 완료세팅
-//        if(!(speInsFormDTO.getSpeComplete() == null)) {
-//            special.updateSpe(speInsFormDTO.getSpeComplete());
-//        }
 
         special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
         special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
 
-
-
-
         return special;
     }
 
-//    // 일별현황 : 점검 완료()건, 미완료 ()건
-//    @Transactional
-//    public int findSpeDaily(){
-//        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
-////        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(NO, startOfToday);
-//        int countNotComplete = specialInspectionRepository.countBySpeId();
-//
-//
-//
-//        return countNotComplete ;
-//    }
+// ----------------------------------------------------------------------------------------------------------
 
 
     //월별 수시점검 현황 통계 조회 - 위험분류별
@@ -269,30 +261,19 @@ public class SpecialInspectionService {
         return resultList;
     }*/
 
-    // 월별현황 : 점검실시 ()건, 조치완료 ()건, 조치필요 ()건
-    @Transactional
-    public Map<String, Object> findSpeMonthly(){
-        Map<String, Object> reponseData = new HashMap<>();
-        LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 
 
-        // 미완료건수
-//        int countNotComplete = specialInspectionRepository.countBySpeDateAndSpeCompleteAndSpeIdIsNotNullAndSpeDateAfter(startOfToday, NO, startOfToday);
-//        reponseData.put("dailyNotComplete", countNotComplete);       // 오늘미완료건수
+    // 수시점검 전체 조회
+    @Transactional(readOnly = true)
+    public Map<String, Object> findSpeAll(){
+        Map<String, Object> responseData = new HashMap<>();
 
-        // 전체점검건수
-        int countMonthlyAll = specialInspectionRepository.countAllBySpeDateAndSpeIdIsNotNullSpeDateAfter(startOfToday);
-        // 완료건수
-        int countMonthlyComplete = specialInspectionRepository.countBySpeActDateAndSpeComplete(OK, startOfToday);
-        // 이번달 deadline중 미완료건수
-        int countMonthlyNoComplete = specialInspectionRepository.countBySpeDeadlineAndSpeComplete(NO);
+        List<SpecialInspection> specialInspectionList = specialInspectionRepository.findAll();
+        List<SpecialFile> specialFileList = specialFileRepository.findAll();
 
-
-        reponseData.put("monthlyAll", countMonthlyAll);                 // 이번달 전체등록건수
-        reponseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 완료건수
-        reponseData.put("monthlyNoComplete", countMonthlyNoComplete);               // 이번달 deadline중 미완료건수
-
-        return reponseData ;
+        responseData.put("specialData", specialInspectionList);
+        responseData.put("specialFileData", specialFileList);
+        return responseData;
     }
 
     //특정년도의 전체 월별 수시점검 위험분류 건수
