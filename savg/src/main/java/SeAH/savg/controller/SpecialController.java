@@ -14,8 +14,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
     private final SpecialInspectionRepository specialInspectionRepository;
@@ -97,11 +97,14 @@ public class SpecialController {
      * ex : 추락 1건, 기타 2건 ...
      */
     @GetMapping("/special/statistics/dangerandmonth")
-    public ResponseEntity<List<Map<String, Object>>> getSpecialListByDangerAndMonth(@RequestParam("year") int year,
-                                                                                    @RequestParam("month") int month) {
-        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByDangerAndMonth(year, month);
+    public ResponseEntity<List<Object[]>> getSpecialListByDangerAndMonth(@RequestParam("yearmonth") String yearMonth) {
+        //List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByDangerAndMonth(year, month); - 그래프용 지금안씀(안쓸경우 삭제)
 
-        return new ResponseEntity<>(statisticsList, HttpStatus.OK);
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
+
+        return ResponseEntity.ok(statisticsList);
     }
 
     /* 1~12월 내 발생한 월별 수시점검 현황 통계 조회 - 위험분류별
@@ -115,13 +118,15 @@ public class SpecialController {
         return new ResponseEntity<>(statisticsList, HttpStatus.OK);
     }
 
-    /* 월별 수시점검 현황 통계 조회 - 위험원인별
+    /* 월별 수시점검 현황 통계 조회 - 위험원인별(0건까지 나옴)
      * 형태: 위험원인(설비원인,작업방법,점검불량,정비불량,지식부족,불안전한 행동,기타(직접입력)) + 점검건수 리스트
      * ex : 설비원인 1건, 작업방법 2건 ...
      */
-    @GetMapping("/special/statistics/specauseandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("month") int month) {
-        List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeCauseAndMonth(month);
+    @GetMapping("/special/statistics/causeandmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonth(year, month);
         return ResponseEntity.ok(statisticsList);
     }
 

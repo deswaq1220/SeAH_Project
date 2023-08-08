@@ -203,9 +203,9 @@ public class SpecialInspectionService {
 // ----------------------------------------------------------------------------------------------------------
 
 
-    //월별 수시점검 현황 통계 조회 - 위험분류별
+    //월간 수시점검 현황 통계 조회 - 위험분류별(그래프용-지금 안씀)
     public List<Map<String, Object>> setSpecialListByDangerAndMonth(int year, int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonthPlus0(year, month);
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
 
         List<Map<String, Object>> dataPoints = new ArrayList<>();
 
@@ -232,37 +232,6 @@ public class SpecialInspectionService {
         return resultList;
     }
 
-    //차트용
- /*   public List<Map<String, Object>> setSpecialListByDangerAndMonth(int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(month);
-
-        List<Map<String, Object>> dataPoints = new ArrayList<>();
-
-        for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
-
-            String dangerType = (String) row[0];
-            Long count = (Long) row[1];
-
-            Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("x", dangerType);
-            dataPoint.put("y", count);
-
-            dataPoints.add(dataPoint);
-        }
-
-        Map<String, Object> finalData = new HashMap<>();   //Map형태:
-        finalData.put("id", "수시점검");
-        finalData.put("data", dataPoints);
-
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        resultList.add(finalData);
-
-
-        return resultList;
-    }*/
-
-
-
     // 수시점검 전체 조회
     @Transactional(readOnly = true)
     public Map<String, Object> findSpeAll(){
@@ -276,7 +245,8 @@ public class SpecialInspectionService {
         return responseData;
     }
 
-    //특정년도의 전체 월별 수시점검 위험분류 건수
+    //1~12월까지 월별 수시점검 위험분류 건수
+
    public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 
