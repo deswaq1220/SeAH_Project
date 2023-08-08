@@ -23,21 +23,21 @@ public class SpecialController {
 
     // 월별 수시점검현황: 수시점검 qr찍고 첫번째 페이지
     @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
-    public ResponseEntity<?> speMonthly(){
+    public ResponseEntity<?> speMonthly() {
         return new ResponseEntity<>(specialInspectionService.findSpeMonthly(), HttpStatus.OK);
     }
 
 
     // 설비별 현황 조회: 수시점검 qr찍고 두번째 페이지
     @GetMapping("/special/list/{masterdataPart}/{masterdataFacility}")
-    public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility){
+    public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility) {
         return new ResponseEntity<>(specialInspectionService.findListOfFac(masterdataFacility), HttpStatus.OK);
     }
 
 
     // 수시점검 저장화면(조회)
     @GetMapping("/special/new/{masterdataPart}/{masterdataFacility}")
-    public ResponseEntity<?> speForm(@PathVariable String masterdataPart){    // @PathVariable String masterdataFacility로 파라미터 받아서 해도될것같은디
+    public ResponseEntity<?> speForm(@PathVariable String masterdataPart) {    // @PathVariable String masterdataFacility로 파라미터 받아서 해도될것같은디
         return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart), HttpStatus.OK);
     }
 
@@ -52,10 +52,9 @@ public class SpecialController {
 
     // 상세조회
     @GetMapping("/special/detail/{speId}")
-    public ResponseEntity<?> speDetail(@PathVariable String speId){
+    public ResponseEntity<?> speDetail(@PathVariable String speId) {
         return new ResponseEntity<>(specialInspectionService.findSpeDetail(speId), HttpStatus.OK);
     }
-
 
 
     // 완료처리(update)
@@ -80,37 +79,24 @@ public class SpecialController {
     }*/
 
 
-
-
-
-
-
 // --------------------------- 관리자
-  
-     // 관리자 : 전체 현황 조회
+
+    // 관리자 : 전체 현황 조회
     @GetMapping("/special/list")
-    public ResponseEntity<?> speList(){
+    public ResponseEntity<?> speList() {
         return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
     }
-  
 
-    //월별 수시점검 현황 통계 조회 - 카테고리별
-   @GetMapping("/special/statistics")
-    public ResponseEntity<List<Object[]>> getSpecialListStatistics(@RequestParam("month") int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByPart(month);
-  
-        return ResponseEntity.ok(statisticsList);
-    }
 
     /* 월별 수시점검 현황 통계 조회 - 점검영역별
      * 형태: 파트(주조, 압출, 가공, 품질, 생산기술, 금형) + 점검건수 리스트
      * ex : 주조 1건, 압출 2건 ...
      */
-   @GetMapping("/special/statistics/partandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth){
-        int year = Integer.parseInt(yearMonth.substring(0,4));
-        int month = Integer.parseInt(yearMonth.substring(5,7));
-        System.out.println("========================== 연도:" + year + "          월:"+ month );
+    @GetMapping("/special/statistics/partandmonth")
+    public ResponseEntity<List<Object[]>> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+        System.out.println("========================== 연도:" + year + "          월:" + month);
         List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
 
         return ResponseEntity.ok(statisticsList);
@@ -122,8 +108,8 @@ public class SpecialController {
      */
     @GetMapping("/special/statistics/dangerandmonth")
     public ResponseEntity<List<Map<String, Object>>> getSpecialListByDangerAndMonth(@RequestParam("year") int year,
-                                                                                    @RequestParam("month") int month){
-       List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByDangerAndMonth(year, month);
+                                                                                    @RequestParam("month") int month) {
+        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByDangerAndMonth(year, month);
 
         return new ResponseEntity<>(statisticsList, HttpStatus.OK);
     }
@@ -133,7 +119,7 @@ public class SpecialController {
      * ex : 1월 추락 1건, 기타 2건 ...
      */
     @GetMapping("/special/statistics/detaildanger")
-    public ResponseEntity<List<Map<String, Object>>> getDetailSpecialListByDanger(@RequestParam("year") int year){
+    public ResponseEntity<List<Map<String, Object>>> getDetailSpecialListByDanger(@RequestParam("year") int year) {
         List<Map<String, Object>> statisticsList = specialInspectionService.specialDetailListByDanger(year);
 
         return new ResponseEntity<>(statisticsList, HttpStatus.OK);
@@ -144,12 +130,10 @@ public class SpecialController {
      * ex : 설비원인 1건, 작업방법 2건 ...
      */
     @GetMapping("/special/statistics/specauseandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("month") int month){
+    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("month") int month) {
         List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeCauseAndMonth(month);
-      return ResponseEntity.ok(statisticsList);
+        return ResponseEntity.ok(statisticsList);
     }
-
-
 
 
     /* 월별 수시점검 현황 통계 조회 - 실수함정별
@@ -157,7 +141,7 @@ public class SpecialController {
      * ex : N/A 1건, 자만심 2건 ...
      */
     @GetMapping("/special/statistics/spetrapandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpeTrapAndMonth(@RequestParam("month") int month){
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeTrapAndMonth(@RequestParam("month") int month) {
         List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeTrapAndMonth(month);
 
         return ResponseEntity.ok(statisticsList);
@@ -168,21 +152,19 @@ public class SpecialController {
      * ex : 신체 1건, 머리 2건 ...
      */
     @GetMapping("/special/statistics/speinjureandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month){
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month) {
         List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeInjureAndMonth(month);
-
-
-
+        return ResponseEntity.ok(statisticsList);
+    }
 
     /* 월별 수시점검 현황 통계 조회 - 위험성 평가별
      * 형태: 고위험, 중위험, 저위험 + 점검건수 리스트
      * ex : 고위험 1건, 중위험 2건 ...
      */
     @GetMapping("/special/statistics/speriskassessdmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpeRiskAssessAndMonth(@RequestParam("month") int month){
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeRiskAssessAndMonth ( @RequestParam("month") int month){
         List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeRiskAssessAndMonth(month);
 
         return ResponseEntity.ok(statisticsList);
     }
-
 }
