@@ -14,7 +14,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
     private final SpecialInspectionRepository specialInspectionRepository;
@@ -143,6 +144,7 @@ public class SpecialController {
     @GetMapping("/special/statistics/speinjureandmonth")
     public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month) {
         List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeInjureAndMonth(month);
+
         return ResponseEntity.ok(statisticsList);
     }
 
@@ -157,3 +159,5 @@ public class SpecialController {
         return ResponseEntity.ok(statisticsList);
     }
 }
+
+
