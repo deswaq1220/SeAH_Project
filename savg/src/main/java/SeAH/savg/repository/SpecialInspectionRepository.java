@@ -33,6 +33,9 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     // daily 완료 갯수
 
 
+
+
+    // --------------------------- 관리자
     //통계
     //월별
     //월별 수시점검 통계 조회 - 영역별 건 수(0건인 것들도 함께 나옴)

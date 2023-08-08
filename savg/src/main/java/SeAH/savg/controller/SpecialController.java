@@ -66,17 +66,6 @@ public class SpecialController {
 
 
 
-/*    @GetMapping("/special/statistics")
-    public ModelAndView viewSpecialStatistics(){
-
-        //int today = LocalDate.now(ZoneId.of("Asia/Seoul")).getDayOfMonth();;
-        //List<Object[]> result = specialInspectionRepository.specialListByPart(today);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject(result);
-        modelAndView.setViewName("specialListSatistics");
-        return modelAndView;
-    }*/
 
 
 // --------------------------- 관리자
