@@ -94,13 +94,6 @@ public class SpecialController {
     }
   
 
-    //월별 수시점검 현황 통계 조회 - 카테고리별
-   @GetMapping("/special/statistics")
-    public ResponseEntity<List<Object[]>> getSpecialListStatistics(@RequestParam("month") int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByPart(month);
-  
-        return ResponseEntity.ok(statisticsList);
-    }
 
     /* 월별 수시점검 현황 통계 조회 - 점검영역별
      * 형태: 파트(주조, 압출, 가공, 품질, 생산기술, 금형) + 점검건수 리스트
@@ -168,21 +161,22 @@ public class SpecialController {
      * ex : 신체 1건, 머리 2건 ...
      */
     @GetMapping("/special/statistics/speinjureandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month){
+    public ResponseEntity<List<Object[]>> getSpecialListBySpeInjureAndMonth(@RequestParam("month") int month) {
         List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeInjureAndMonth(month);
-
-
-
-
-    /* 월별 수시점검 현황 통계 조회 - 위험성 평가별
-     * 형태: 고위험, 중위험, 저위험 + 점검건수 리스트
-     * ex : 고위험 1건, 중위험 2건 ...
-     */
-    @GetMapping("/special/statistics/speriskassessdmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpeRiskAssessAndMonth(@RequestParam("month") int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeRiskAssessAndMonth(month);
-
         return ResponseEntity.ok(statisticsList);
     }
 
+
+
+
+        /* 월별 수시점검 현황 통계 조회 - 위험성 평가별
+         * 형태: 고위험, 중위험, 저위험 + 점검건수 리스트
+         * ex : 고위험 1건, 중위험 2건 ...
+         */
+        @GetMapping("/special/statistics/speriskassessdmonth")
+        public ResponseEntity<List<Object[]>> getSpecialListBySpeRiskAssessAndMonth(@RequestParam("month") int month){
+            List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeRiskAssessAndMonth(month);
+
+            return ResponseEntity.ok(statisticsList);
+        }
 }
