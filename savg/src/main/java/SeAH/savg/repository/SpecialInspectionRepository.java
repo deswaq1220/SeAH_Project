@@ -42,6 +42,9 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
 
 
 
+
+
+    // --------------------------- 관리자
     //통계
     //월별
     //월별 수시점검 통계 조회 - 영역별 건 수(0건인 것들도 함께 나옴)
@@ -53,17 +56,20 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
 
 
     //월별 수시점검 통계 조회 - 위험분류 발생 건 수(0건인 것들도 함께 나옴)
-    @Query("SELECT i.dangerMenu, COALESCE(COUNT(s), 0) " +
-            "FROM SpecialDanger i " +
-            "LEFT JOIN SpecialInspection s ON s.speDanger = i.dangerMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
-            "GROUP BY i.dangerMenu")
-    List<Object[]> specialListByDangerAndMonthPlus0(@Param("year") int year, @Param("month") int month);
+    @Query("SELECT d.dangerMenu, COALESCE(COUNT(s), 0) " +
+            "FROM SpecialDanger d " +
+            "LEFT JOIN SpecialInspection s ON s.speDanger = d.dangerMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY d.dangerMenu")
+    List<Object[]> specialListByDangerAndMonth(@Param("year") int year, @Param("month") int month);
 
 
 
-    //월별 수시점검 통계 조회 - 위험원인별 발생 건 수
-    @Query("SELECT s.speCause, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speCause")
-    List<Object[]> specialListBySpeCauseAndMonth(@Param("month") int month);
+    //월별 수시점검 통계 조회 - 위험원인별 발생 건 수(0건인 것들도 함께 나옴)
+    @Query("SELECT c.causeMenu, COALESCE(COUNT(s), 0) " +
+            "FROM SpecialCause c " +
+            "LEFT JOIN SpecialInspection s ON s.speCause = c.causeMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY c.causeMenu")
+    List<Object[]> specialListByCauseAndMonth(@Param("year") int year, @Param("month") int month);
 
 
     //월별 수시점검 통계 조회 - 실수함정별 발생 건 수
