@@ -195,9 +195,12 @@ public class EduService {
     public void update(EduDTO eduDTO)throws Exception{
         Edu edu = eduDTO.toEntity();
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-        for(int i=0; i<eduDTO.getFiles().size(); i++){
-            eduFileService.updateFile(eduFileList.get(i).getEduFileId(),eduDTO.getFiles().get(i));
+
+        for(EduFile eduFile : eduFileList){
+            eduFileRepository.delete(eduFile);
         }
+
+        eduFileService.uploadFile(eduDTO);
 
         eduRepository.save(edu);
     }

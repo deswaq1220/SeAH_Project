@@ -68,34 +68,6 @@ public class EduFileService {
     }
 
 
-    //파일업뎃
-//    public void updateFile(String fileName, EduDTO eduDTO) throws Exception {
-//        List<MultipartFile> files =  eduDTO.getFiles();
-//        deleteFile(fileName);
-//        uploadFile(eduDTO);
-//    }
-
-    public void updateFile(Long eduFileId, MultipartFile multipartFile)throws Exception{
-        if(!multipartFile.isEmpty()){
-            EduFile savedFile = eduFileRepository.findById(eduFileId).orElseThrow();
-
-            if(!StringUtils.isEmpty(savedFile.getEduFileName())){
-                deleteFile(savedFile.getEduFileName());
-            }
-            String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-            String eduFileOriName = multipartFile.getOriginalFilename();
-            String eduFileName = generateUniqueFileName(eduFileOriName);
-            String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + eduFileOriName;
-
-            savedFile.updateEduFile(eduFileName, eduFileOriName, fileUploadFullUrl);
-
-            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-
-            fos.write(multipartFile.getBytes());
-            fos.close();
-        }
-    }
-
 
     //파일삭제
     public void deleteFile(String fileName) {

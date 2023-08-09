@@ -13,4 +13,6 @@ public interface EduFileRepository extends JpaRepository<EduFile, Long> {
     Optional<EduFile> findByEduFileName(String fileName);
 
     List<EduFile> findByEdu(Edu edu);
+
+
 }
