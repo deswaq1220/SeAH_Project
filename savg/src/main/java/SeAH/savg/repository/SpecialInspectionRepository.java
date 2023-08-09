@@ -40,7 +40,9 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
             "AND s.speComplete =? 1")
     int countBySpeDeadlineAndSpeComplete(SpeStatus speComplete);
 
-
+    // --------------------------- 공통
+    // 등록된 전체 수시점검 조회
+//    List<SpecialInspection> findAll();
 
 
 
