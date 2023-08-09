@@ -1,19 +1,13 @@
 package SeAH.savg.controller;
 
 
-
-import SeAH.savg.dto.EduDTO;
 import SeAH.savg.entity.Attendance;
-import SeAH.savg.entity.Email;
-import SeAH.savg.entity.MasterData;
 import SeAH.savg.repository.AttendanceRepository;
 import SeAH.savg.service.AttendanceService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +15,9 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/usereduatten")
-@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
+//@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 public class AttendanceController {
 

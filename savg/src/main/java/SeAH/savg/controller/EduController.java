@@ -18,20 +18,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-
-import java.util.Arrays;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 
 //@Controller
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 @Log4j2
 
