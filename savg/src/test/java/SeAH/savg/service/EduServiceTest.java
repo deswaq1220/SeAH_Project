@@ -1,4 +1,4 @@
-package SeAH.savg.service;
+/*package SeAH.savg.service;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduStatisticsDTO;
@@ -16,22 +16,20 @@ public class EduServiceTest {
 
     @Autowired
     private EduService eduService;
-/*
+
     @Test
     public void testShowEduTimeStatis(){
         Long result = eduService.showMonthEduTimeStatis(edustate2.CREW, 7);
         System.out.println(result);
     }
-*/
 
-/*
     @Test
     public void testSumShowEduTime(){
         List<Integer> result = eduService.showMonthEduTimeStatis(7);
         System.out.println(result);
     }
-*/
-    @Test
+
+
     public void testSumShowEduTime(){
         List<EduStatisticsDTO> result = eduService.showMonthEduTraineeStatics(edustate.CREW,7, "주조반", null);
             System.out.println(result);
@@ -42,5 +40,4 @@ public class EduServiceTest {
     public void testRunEduList(){
         Page<Object[]> result = eduService.getRunEduListByMonth(7, 0,10);
         System.out.println(result);
-    }
-}
+    } */

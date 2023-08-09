@@ -4,7 +4,6 @@ package SeAH.savg.controller;
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
-import SeAH.savg.dto.EduSumStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
 import SeAH.savg.repository.EduFileRepository;
@@ -15,30 +14,21 @@ import SeAH.savg.service.MakeIdService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.validation.Valid;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
+import java.util.List;
 
 
 //@Controller
 @RestController
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.10.5:3000")
+@CrossOrigin(origins = "http://localhost:3000")
+// @CrossOrigin(origins = "http://172.20.10.5:3000")
+
+// @CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 @Log4j2
 
@@ -113,8 +103,8 @@ public class EduController {
 
     //교육일지 목록 조회
     @GetMapping("/edumain")
-    public ResponseEntity<List<EduDTO>> getEduList() {
-        List<Edu> eduList = eduService.getEdu(); // Edu 엔티티 리스트를 가져옴
+    public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
+        List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
 
         List<EduDTO> eduDTOList = new ArrayList<>();
         for (Edu edu : eduList) {
@@ -188,56 +178,72 @@ public class EduController {
     //(관리자) 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명 구분가능)
     //department, name 값을 필요 시 프론트에서 넘겨줘야함
     @GetMapping("/edustatistics/getmonth") //나중에 주소를 /edu/statistics/getmonth 등으로 바꿔야 할듯
-    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam(required = false) edustate eduCategory,
-                                                                     @RequestParam(required = false) int month,
-                                                                     @RequestParam(required = false) String department,
-                                                                     @RequestParam(required = false) String name) {
-        System.out.println("department" + department);
+    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam(name = "eduCategory", required = false) edustate eduCategory,
+                                                                     @RequestParam(name = "year") int year,
+                                                                     @RequestParam(name = "month") int month,
+                                                                     @RequestParam(name = "department", defaultValue = "") String department,
+                                                                     @RequestParam(name = "name") String name) {
+        System.out.println("이름: " + name);
+        System.out.println("카테고리: " + eduCategory);
         if(department != null ){
             if(department.equals("부서")){
                 department = null;
             };
-            System.out.println("테스트 :" + department);
         };
 
-        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, month, department, name);
+        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, year, month, department, name);
         return ResponseEntity.ok(statisticsList);
 
     }
 
 
     //(관리자) 월별 교육실행시간 통계 조회하기(★프론트 연결 필요)
-    @PostMapping("/edustatistics/getmonthlyruntime")
-    public List<Integer> viewMonthlyEduTimeStatis(@RequestBody Map<String, Integer> requestData){
-
-        int month = requestData.get("month");
-        List<Integer> result = eduService.showMonthEduTimeStatis(month);
-        System.out.println(result);
-        return result;
-    }
-
-    //(관리자) 월별 교육실행 시간 통계 조회하기 (html 임시 확인용)
-    @GetMapping("/getmonthlyruntime")
-    public ModelAndView showGetMonthForm() {
-        ModelAndView modelAndView = new ModelAndView("page/getmonthlyruntime");
-
-        return modelAndView;
+    @GetMapping("/edustatistics/getmonthlyruntime")
+    public ResponseEntity <List<Integer>> viewMonthlyEduTimeStatis(@RequestParam(required = false) int year,@RequestParam(required = false) int month){
+        List<Integer> result = eduService.showMonthEduTimeStatis(year, month);
+        return ResponseEntity.ok(result);
     }
 
 
     //(관리자) 월별 교육실행리스트 통계 조회하기
     //ex)   http://localhost:8081/edustatistics/getmonthlyedulist/7?pageNumber=0&eduCategory=MANAGE
-    @GetMapping("/edustatistics/getmonthlyedulist/{month}")
+/*    @GetMapping("/edustatistics/getmonthlyedulist/{month}&{year}")
     public Page<Object[]> getEduListByMonth(@PathVariable int month,
+                                            @PathVariable int year,
                                             @RequestParam(defaultValue = "0") int pageNumber,
                                             @RequestParam(defaultValue = "10") int pageSize,
                                             @RequestParam(required = false) String eduCategory) {
         if (eduCategory != null && !eduCategory.isEmpty()) {
-            return eduService.getRunEduListByMonthAndCategory(month, pageNumber, pageSize, eduCategory);
+            return eduService.getRunEduListByMonthAndCategory(year, month, pageNumber, pageSize, eduCategory);
         } else {
-            return eduService.getRunEduListByMonth(month, pageNumber, pageSize);
+            return eduService.getRunEduListByMonth(year,month, pageNumber, pageSize);
         }
+    }*/
+
+    // 월&카테고리 별 교육 목록
+    @GetMapping("/edustatistics/getmonthlyedulist")
+    public ResponseEntity<List<Object[]>> viewMonthlyCategory(@RequestParam int year,
+                                                              @RequestParam int month,
+                                                              @RequestParam(required = false) edustate eduCategory) {
+
+        List<Object[]> statisticsList;
+
+        if (eduCategory != null) {
+            statisticsList = eduService.showMonthlyCategory(year, month, eduCategory);
+        } else {
+            List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
+            System.out.println(eduList.get(0).getEduId());
+            // Object 배열로 변환해서 반환
+            statisticsList = new ArrayList<>();
+            for (Edu edu : eduList) {
+                Object[] eduData = {edu.getEduCategory(), edu.getEduTitle(), edu.getEduStartTime(), edu.getEduSumTime()};
+                statisticsList.add(eduData);
+            }
+        }
+
+        return ResponseEntity.ok(statisticsList);
     }
+
 }
 
 
