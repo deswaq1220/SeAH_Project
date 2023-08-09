@@ -5,21 +5,16 @@ import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import static SeAH.savg.constant.MasterStatus.Y;
 import static SeAH.savg.constant.SpeStatus.NO;
@@ -125,14 +120,12 @@ public class SpecialInspectionService {
         Map<String, Object> responseData = new HashMap<>();
         LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 
-
-        // 이번달 전체점검 실시 건수
+        // 이번달 전체점검 실시 건수(점검실시)
         int countMonthlyAll = specialInspectionRepository.countAllBySpeDateAndSpeIdIsNotNullSpeDateAfter(startOfToday);
-        // 이번달 조치 완료건수
+        // 이번달 조치 완료건수(조치완료)
         int countMonthlyComplete = specialInspectionRepository.countBySpeActDateAndSpeComplete(OK, startOfToday);
-        // 이번달 deadline중 미완료건수
+        // 이번달 deadline중 미완료건수(조치필요)
         int countMonthlyNoComplete = specialInspectionRepository.countBySpeDeadlineAndSpeComplete(NO);
-
 
         responseData.put("monthlyAll", countMonthlyAll);                 // 이번달 전체등록건수
         responseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 완료건수
