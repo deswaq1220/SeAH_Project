@@ -23,6 +23,7 @@ public class EmailController {
         this.mailSender = mailSender;
     }
 
+//    @CrossOrigin(origins = "http://172.20.10.2:3000") // 혜영
     @CrossOrigin(origins = "http://localhost:3000")
 //    @CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 
