@@ -58,6 +58,25 @@ public class EduController {
     // 교육, 수시, 정기 카테고리 저장할 함수
     private String categoryType = "E";
 
+
+    //교육일지 목록 조회
+    @GetMapping("/edumain")
+    public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
+        List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
+
+        int i = 0;
+
+        List<EduDTO> eduDTOList = new ArrayList<>();
+
+        for (Edu edu : eduList) {
+            eduDTOList.add(eduService.getEduById(edu.getEduId()));
+            log.info("테스트"+eduDTOList.get(i).getEduFiles());
+        }
+
+        return ResponseEntity.ok(eduDTOList);
+    }
+
+
     //안전교육 일지 등록
     @PostMapping("/edureg")
     public ResponseEntity<?> handleEduReg(EduDTO eduDTO) {
@@ -101,25 +120,6 @@ public class EduController {
     }
 
 
-    //교육일지 목록 조회
-    @GetMapping("/edumain")
-    public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
-        List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
-
-        int i = 0;
-
-            List<EduDTO> eduDTOList = new ArrayList<>();
-
-            for (Edu edu : eduList) {
-                eduDTOList.add(eduService.getEduById(edu.getEduId()));
-                log.info("테스트"+eduDTOList.get(i).getEduFiles());
-            }
-
-        return ResponseEntity.ok(eduDTOList);
-    }
-
-
-
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
     public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
@@ -148,6 +148,8 @@ public class EduController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    //  교육일지 삭제
 
 
     // 대시보드 (통계)

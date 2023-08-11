@@ -115,44 +115,12 @@ public class EduService {
         return eduRepository.selectRunMonthEduList(year ,month, pageable);
     }
 
-    //3-2. 월별교육실행목록 조회하기(dropDown 사용 등)
-/*    public Page<Object[]> getRunEduListByMonthAndCategory(int year, int month, int pageNumber, int pageSize, String eduCategory) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
 
-        try {
-            return eduRepository.runMonthEduListByCategory(month, edustate.valueOf(eduCategory), pageable);
-        } catch (IllegalArgumentException e) {
-            return eduRepository.selectRunMonthEduList(year,month, pageable);
-        }
-    }*/
-
+    // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
     public List<Object[]> showMonthlyCategory(int year, int month, edustate eduCategory){
         return eduRepository.runMonthEduListByCategory(year, month, eduCategory);
 
     }
-
-/*
-    // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
-    public Long showMonthEduTimeStatis2(edustate eduCategory, int month){
-
-        List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
-        List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
-        Long eduSumTime = 0L;
-
-        for(Object[] result : results){
-            String time = (String)result[0];
-
-            try {
-                Long timeValue = Long.parseLong(time);
-                eduSumTime += timeValue;
-            } catch (NumberFormatException e) {
-                System.out.println("월별 교육 실행시간 조회: 합산할 수 없습니다(Long타입 아님)");
-            }
-
-        }
-        return eduSumTime;
-    }
-*/
 
    //상세조회
     public EduDTO getEduById(String eduId) {
@@ -176,6 +144,7 @@ public class EduService {
         return eduDTO;
     }
 
+    //파일 수정
     public void update(EduDTO eduDTO)throws Exception{
         Edu edu = eduDTO.toEntity();
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
