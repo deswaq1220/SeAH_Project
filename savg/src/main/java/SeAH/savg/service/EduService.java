@@ -160,6 +160,7 @@ public class EduService {
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         List<EduFileDTO> eduFileDTOList = new ArrayList<>();
+
         EduDTO eduDTO = new EduDTO(edu);
         List<String> filesName = new ArrayList<>();
         for(EduFile file : eduFileList){
