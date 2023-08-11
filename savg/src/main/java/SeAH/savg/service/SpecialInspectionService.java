@@ -5,21 +5,16 @@ import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 import static SeAH.savg.constant.MasterStatus.Y;
 import static SeAH.savg.constant.SpeStatus.NO;
@@ -125,14 +120,12 @@ public class SpecialInspectionService {
         Map<String, Object> responseData = new HashMap<>();
         LocalDateTime startOfToday = LocalDateTime.of(LocalDate.now(), LocalTime.MIN);
 
-
-        // 이번달 전체점검 실시 건수
+        // 이번달 전체점검 실시 건수(점검실시)
         int countMonthlyAll = specialInspectionRepository.countAllBySpeDateAndSpeIdIsNotNullSpeDateAfter(startOfToday);
-        // 이번달 조치 완료건수
+        // 이번달 조치 완료건수(조치완료)
         int countMonthlyComplete = specialInspectionRepository.countBySpeActDateAndSpeComplete(OK, startOfToday);
-        // 이번달 deadline중 미완료건수
+        // 이번달 deadline중 미완료건수(조치필요)
         int countMonthlyNoComplete = specialInspectionRepository.countBySpeDeadlineAndSpeComplete(NO);
-
 
         responseData.put("monthlyAll", countMonthlyAll);                 // 이번달 전체등록건수
         responseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 완료건수
@@ -203,9 +196,9 @@ public class SpecialInspectionService {
 // ----------------------------------------------------------------------------------------------------------
 
 
-    //월별 수시점검 현황 통계 조회 - 위험분류별
+    //월간 수시점검 현황 통계 조회 - 위험분류별(그래프용-지금 안씀)
     public List<Map<String, Object>> setSpecialListByDangerAndMonth(int year, int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonthPlus0(year, month);
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
 
         List<Map<String, Object>> dataPoints = new ArrayList<>();
 
@@ -232,37 +225,6 @@ public class SpecialInspectionService {
         return resultList;
     }
 
-    //차트용
- /*   public List<Map<String, Object>> setSpecialListByDangerAndMonth(int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(month);
-
-        List<Map<String, Object>> dataPoints = new ArrayList<>();
-
-        for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
-
-            String dangerType = (String) row[0];
-            Long count = (Long) row[1];
-
-            Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("x", dangerType);
-            dataPoint.put("y", count);
-
-            dataPoints.add(dataPoint);
-        }
-
-        Map<String, Object> finalData = new HashMap<>();   //Map형태:
-        finalData.put("id", "수시점검");
-        finalData.put("data", dataPoints);
-
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        resultList.add(finalData);
-
-
-        return resultList;
-    }*/
-
-
-
     // 수시점검 전체 조회
     @Transactional(readOnly = true)
     public Map<String, Object> findSpeAll(){
@@ -276,7 +238,8 @@ public class SpecialInspectionService {
         return responseData;
     }
 
-    //특정년도의 전체 월별 수시점검 위험분류 건수
+    //1~12월까지 월별 수시점검 위험분류 건수
+
    public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 

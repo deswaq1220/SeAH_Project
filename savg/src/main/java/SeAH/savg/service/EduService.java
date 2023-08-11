@@ -160,19 +160,32 @@ public class EduService {
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         List<EduFileDTO> eduFileDTOList = new ArrayList<>();
+        EduDTO eduDTO = new EduDTO(edu);
+        List<String> filesName = new ArrayList<>();
         for(EduFile file : eduFileList){
             EduFileDTO eduFileDTO = EduFileDTO.of(file);
             eduFileDTOList.add(eduFileDTO);
+         filesName.add(eduFileDTO.getEduFileOriName());
+
         }
-        EduDTO eduDTO = new EduDTO(edu);
-        eduDTO.setEduFiles(eduFileDTOList);
+        eduDTO.setEduFiles(filesName);
+
 
 
         return eduDTO;
     }
 
-//    public void update(EduDTO eduDTO)throws Exception{
-//        for()
-//    }
+    public void update(EduDTO eduDTO)throws Exception{
+        Edu edu = eduDTO.toEntity();
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+
+        for(EduFile eduFile : eduFileList){
+            eduFileRepository.delete(eduFile);
+        }
+
+        eduFileService.uploadFile(eduDTO);
+
+        eduRepository.save(edu);
+    }
 
 }
