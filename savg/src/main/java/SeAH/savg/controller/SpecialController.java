@@ -14,9 +14,9 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://192.168.202.1:3000") // 혜영
-@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
@@ -48,7 +48,7 @@ public class SpecialController {
 //  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
 //  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
 //                                  @PathVariable String masterdataFacility,
-//                                  @RequestBody Map<String, Object> requestData) throws Exception {
+//                                  @RequestBody Map<String, Object> requesstData) throws Exception {
 //      return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, requestData), HttpStatus.CREATED);
 //  }
 
