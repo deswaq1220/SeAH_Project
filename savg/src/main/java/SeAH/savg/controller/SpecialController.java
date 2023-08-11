@@ -57,7 +57,6 @@ public class SpecialController {
  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
                                  @PathVariable String masterdataFacility,
                                  SpeInsFormDTO speInsFormDTO) throws Exception{
-
   return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, speInsFormDTO), HttpStatus.CREATED);
  }
 
