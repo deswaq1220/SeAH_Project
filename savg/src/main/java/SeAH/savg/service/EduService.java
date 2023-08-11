@@ -10,6 +10,8 @@ import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,35 +37,16 @@ public class EduService {
     private final EduFileService eduFileService;
     private final EduFileRepository eduFileRepository;
 
+
     //교육 목록
     public List<Edu> getEduByYearAndMonth(int year, int month) {
         return eduRepository.findAllByYearAndMonth(year, month);
     }
 
 
+
     //(관리자)
-    /*
-    // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회
-    public List<EduStatisticsDTO> showMonthEduTraineeStatics(edustate eduCategory, int month){
-        List<Object[]> results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month);
-
-        List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
-
-        for(Object[] result : results){
-            EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
-            eduStatisticsDTO.setEduCategory((edustate)result[0]);
-            eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
-            eduStatisticsDTO.setEduSumTime((String) result[2]);
-            eduStatisticsDTO.setAttenName((String) result[3]);
-            eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
-            eduStatisticsDTO.setAttenDepartment((String) result[5]);
-
-            eduStatisticsDTOList.add(eduStatisticsDTO);
-        }
-        return eduStatisticsDTOList;
-    }
-  */
-    // 1-1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회
+    // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회
     public List<EduStatisticsDTO> showMonthEduTraineeStatics(edustate eduCategory, int year, int month, String department, String name) {
 
         List<Object[]> results;

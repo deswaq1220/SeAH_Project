@@ -23,6 +23,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
 
 
+
     ////관리자
     //1-1 월 필터링
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +

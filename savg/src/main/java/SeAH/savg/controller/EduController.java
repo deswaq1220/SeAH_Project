@@ -41,6 +41,7 @@ public class EduController {
 
 
 
+
     public EduController(EduRepository eduRepository, EduService eduService, EduFileService eduFileService,
                          EduFileRepository eduFileRepository, MakeIdService makeIdService) {
         this.eduRepository = eduRepository;
@@ -48,6 +49,7 @@ public class EduController {
         this.eduFileService = eduFileService;
         this.eduFileRepository=eduFileRepository;
         this.makeIdService = makeIdService;
+
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -107,10 +109,14 @@ public class EduController {
     public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
         List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
 
-        List<EduDTO> eduDTOList = new ArrayList<>();
-        for (Edu edu : eduList) {
-            eduDTOList.add(new EduDTO(edu));
-        }
+        int i = 0;
+
+            List<EduDTO> eduDTOList = new ArrayList<>();
+
+            for (Edu edu : eduList) {
+                eduDTOList.add(eduService.getEduById(edu.getEduId()));
+                log.info("테스트"+eduDTOList.get(i).getEduFiles().get(i).getEduFileName());
+            }
 
         return ResponseEntity.ok(eduDTOList);
     }
@@ -134,8 +140,7 @@ public class EduController {
     @PostMapping("/edudetails/{eduId}")
     public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO) {
         try {
-            System.out.println("이거?: "  + eduDTO.getEduContent());
-//            Edu edu = eduService.getEduById(eduId);
+
             eduDTO.setEduId(eduId);
             Edu edu = eduDTO.toEntity();
 
