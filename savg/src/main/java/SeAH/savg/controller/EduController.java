@@ -115,8 +115,7 @@ public class EduController {
         return ResponseEntity.ok(eduDTOList);
     }
 
-
-
+    
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
     public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
@@ -145,6 +144,18 @@ public class EduController {
 
             eduRepository.save(edu);
 
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    
+    //교육삭제
+    @DeleteMapping("/edudetails/{eduId}")
+    public ResponseEntity<?> deleteEduAndFiles(@PathVariable String eduId) {
+        try {
+            eduService.deleteEdu(eduId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();

@@ -40,6 +40,33 @@ public class EduService {
         return eduRepository.findAllByYearAndMonth(year, month);
     }
 
+    //상세조회
+    public EduDTO getEduById(String eduId) {
+        Edu edu = eduRepository.findByEduId(eduId);
+
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
+        for(EduFile file : eduFileList){
+            EduFileDTO eduFileDTO = EduFileDTO.of(file);
+            eduFileDTOList.add(eduFileDTO);
+        }
+        EduDTO eduDTO = new EduDTO(edu);
+        eduDTO.setEduFiles(eduFileDTOList);
+
+
+        return eduDTO;
+    }
+
+    //교육 삭제
+    public void deleteEdu(String  eduId){
+        Edu edu = eduRepository.findByEduId(eduId);
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+        for (EduFile eduFile : eduFileList) {
+            eduFileRepository.delete(eduFile);
+        }
+        eduRepository.deleteById(eduId);
+    }
+
 
     //(관리자)
     /*
@@ -127,22 +154,12 @@ public class EduService {
     }
 
     //3-1. 월별교육실행목록 조회하기(Paging, Sort 사용)
-    public Page<Object[]> getRunEduListByMonth(int year ,int month, int pageNumber, int pageSize) {
+/*    public Page<Object[]> getRunEduListByMonth(int year ,int month, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return eduRepository.selectRunMonthEduList(year ,month, pageable);
-    }
-
-    //3-2. 월별교육실행목록 조회하기(dropDown 사용 등)
-/*    public Page<Object[]> getRunEduListByMonthAndCategory(int year, int month, int pageNumber, int pageSize, String eduCategory) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-        try {
-            return eduRepository.runMonthEduListByCategory(month, edustate.valueOf(eduCategory), pageable);
-        } catch (IllegalArgumentException e) {
-            return eduRepository.selectRunMonthEduList(year,month, pageable);
-        }
     }*/
 
+    //3-1. 월별교육실행목록 조회하기(Paging, Sort 사용)
     public List<Object[]> showMonthlyCategory(int year, int month, edustate eduCategory){
         return eduRepository.runMonthEduListByCategory(year, month, eduCategory);
 
@@ -171,25 +188,6 @@ public class EduService {
     }
 */
 
-   //상세조회
-    public EduDTO getEduById(String eduId) {
-        Edu edu = eduRepository.findByEduId(eduId);
 
-        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
-        for(EduFile file : eduFileList){
-            EduFileDTO eduFileDTO = EduFileDTO.of(file);
-            eduFileDTOList.add(eduFileDTO);
-        }
-        EduDTO eduDTO = new EduDTO(edu);
-        eduDTO.setEduFiles(eduFileDTOList);
-
-
-        return eduDTO;
-    }
-
-//    public void update(EduDTO eduDTO)throws Exception{
-//        for()
-//    }
 
 }
