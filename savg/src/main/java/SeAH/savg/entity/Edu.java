@@ -26,7 +26,6 @@ public class Edu {
     @Column
     private String eduTitle;    // 제목
 
-
     public String getEduTitle() {
         return eduTitle;
     }
@@ -55,10 +54,6 @@ public class Edu {
 
     @Column(nullable = false)
     private String eduWriter;               //작성자
-
-    @Column
-    private String eduQr;                 //QR코드 정보
-
 
 
     public void setEduFileName(String fileName) {
