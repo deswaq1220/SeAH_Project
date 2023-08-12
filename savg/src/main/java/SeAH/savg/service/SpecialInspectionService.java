@@ -69,34 +69,15 @@ public class SpecialInspectionService {
 
     // 수시점검 저장
     @Transactional
-    public SpecialInspection speCreate(String masterdataPart, String masterdataFacility, Map<String, Object> requestData) throws Exception {
-        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();                      // SpeInsFormDTO 세팅
+    public SpecialInspection speCreate(String masterdataPart, String masterdataFacility, SpeInsFormDTO speInsFormDTO) throws Exception {
+        // speIsFormDTO 나머지 데이터 세팅
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));             // id
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
-        speInsFormDTO.setSpePerson((String) requestData.get("spePerson"));      // 점검자
-        speInsFormDTO.setSpeEmpNum((String) requestData.get("speEmpNum"));      // 사원번호
-        speInsFormDTO.setSpeEmail((String) requestData.get("speEmail"));        // 점검자 이메일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
         speInsFormDTO.setSpeFacility(masterdataFacility);                       // 설비
-        speInsFormDTO.setSpeDanger((String) requestData.get("speDanger"));      // 위험분류
-        speInsFormDTO.setSpeInjure((String) requestData.get("speInjure"));      // 부상부위
-        speInsFormDTO.setSpeCause((String) requestData.get("speCause"));        // 위험원인
-        speInsFormDTO.setSpeTrap((String) requestData.get("speTrap"));          // 실수함정
-        speInsFormDTO.setSpeTrap((String) requestData.get("speTrap"));          // 실수함정
-        // 위험성평가 형변환
-        SpeStatus spsRisk = SpeStatus.valueOf((String) requestData.get("speRiskAssess"));
-        speInsFormDTO.setSpeRiskAssess(spsRisk);                                     // 위험성평가
-
-        speInsFormDTO.setSpeContent((String) requestData.get("speContent"));                // 점검내용
-        speInsFormDTO.setSpeActContent((String) requestData.get("speActContent"));          // 개선대책
-        speInsFormDTO.setSpeActPerson((String) requestData.get("speActPerson"));            // 조치자
-        speInsFormDTO.setSpeActEmail((String) requestData.get("speActEmail"));              // 조치자 이메일
         SpeStatus.deadLineCal(speInsFormDTO);                                               // 위험도에 따른 완료요청기한
-        // 완료여부 형변환
-        SpeStatus spsComp = SpeStatus.valueOf((String) requestData.get("speComplete"));
-        speInsFormDTO.setSpeComplete(spsComp);              // 완료여부
 
-
+        speInsFormDTO.createSpeIns();
 
         // 수시점검 저장
         SpecialInspection special = speInsFormDTO.createSpeIns();
@@ -106,7 +87,7 @@ public class SpecialInspectionService {
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
             String completeKey = "미완료";
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO.getFiles(), completeKey);
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, completeKey);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
@@ -180,7 +161,7 @@ public class SpecialInspectionService {
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             String completeKey = "완료";
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO.getFiles(), completeKey);
+            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO, completeKey);
 
             for(SpecialFile specialFile : uploadFiles)
                 specialFile.setSpecialInspection(special);
@@ -192,6 +173,9 @@ public class SpecialInspectionService {
 
         return special;
     }
+
+
+
 
 // ----------------------------------------------------------------------------------------------------------
 

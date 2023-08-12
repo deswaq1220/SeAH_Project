@@ -2,7 +2,6 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
-import SeAH.savg.entity.EduFile;
 import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;

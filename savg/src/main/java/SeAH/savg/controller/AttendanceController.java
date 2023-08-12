@@ -23,6 +23,7 @@ import java.util.Map;
 
 //@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
+//@CrossOrigin(origins = "http://192.168.202.1:3000")       // 혜영
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
