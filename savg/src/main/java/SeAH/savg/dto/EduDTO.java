@@ -50,11 +50,11 @@ public class EduDTO {
 
     @NotEmpty(message = "작성자를 입력하세요")
     private String eduWriter; //작성자
-    private String eduQr;    //교육 QR코드 정보
 
     private List<MultipartFile> files; // 파일
 
-    private List<EduFileDTO> eduFiles = new ArrayList<>();
+    private List<String> eduFiles;
+
 
 //    private List<EduFile> eduFiles;
     //    private MultipartFile[] files;
@@ -93,6 +93,7 @@ public class EduDTO {
         edu.setEduWriter(this.eduWriter);
         return edu;
     }
+
 
 
 }

@@ -35,7 +35,7 @@ public class SpecialInspectionRepositoryTest {
         }
     }*/
 
-    @Test
+/*    @Test
     public void testSpecialDetailListByDangerAndMonth(){
         List<Object[]> result = specialInspectionRepository.specialDetailListByDanger(2023);
         for(Object[] res : result){
@@ -50,7 +50,8 @@ public class SpecialInspectionRepositoryTest {
         }
       
     }
-
+    */
+    /*
     @Test
     public void testSpecialCountList(){
         List<Object[]> result = specialInspectionRepository.specialCountList(2023);
@@ -60,6 +61,26 @@ public class SpecialInspectionRepositoryTest {
                 System.out.println("결과: " + month+ ",   " + count);
         }
 
+    }*/
+
+/*    @Test
+    public void testSpecialdanger(){
+        List<Object[]> result = specialInspectionRepository.specialListByCauseAndMonth(2023,8);
+        for(Object[] res : result){
+            String cause = (String)res[0];
+            Long count = (Long)res[1];
+            System.out.println("결과: " + cause + count);
+        }
+    }*/
+
+    @Test
+    public void testSpecialCause(){
+        List<Object[]> result = specialInspectionRepository.specialListByCauseAndMonth(2023,8);
+        for(Object[] res : result){
+            String cause = (String)res[0];
+            Long count = (Long)res[1];
+            System.out.println("결과: " + cause + count);
+        }
     }
 
 

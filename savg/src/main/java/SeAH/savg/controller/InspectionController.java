@@ -1,6 +1,5 @@
 package SeAH.savg.controller;
 
-import SeAH.savg.repository.SpecialInspectionRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 
 //기타 점검관련 사항 관리하는 컨트롤러

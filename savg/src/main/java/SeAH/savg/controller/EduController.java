@@ -18,11 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 
 //@Controller
@@ -41,6 +38,7 @@ public class EduController {
 
 
 
+
     public EduController(EduRepository eduRepository, EduService eduService, EduFileService eduFileService,
                          EduFileRepository eduFileRepository, MakeIdService makeIdService) {
         this.eduRepository = eduRepository;
@@ -48,6 +46,7 @@ public class EduController {
         this.eduFileService = eduFileService;
         this.eduFileRepository=eduFileRepository;
         this.makeIdService = makeIdService;
+
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -58,6 +57,25 @@ public class EduController {
 
     // 교육, 수시, 정기 카테고리 저장할 함수
     private String categoryType = "E";
+
+
+    //교육일지 목록 조회
+    @GetMapping("/edumain")
+    public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
+        List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
+
+        int i = 0;
+
+        List<EduDTO> eduDTOList = new ArrayList<>();
+
+        for (Edu edu : eduList) {
+            eduDTOList.add(eduService.getEduById(edu.getEduId()));
+            log.info("테스트"+eduDTOList.get(i).getEduFiles());
+        }
+
+        return ResponseEntity.ok(eduDTOList);
+    }
+
 
     //안전교육 일지 등록
     @PostMapping("/edureg")
@@ -102,20 +120,7 @@ public class EduController {
     }
 
 
-    //교육일지 목록 조회
-    @GetMapping("/edumain")
-    public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
-        List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
 
-        List<EduDTO> eduDTOList = new ArrayList<>();
-        for (Edu edu : eduList) {
-            eduDTOList.add(new EduDTO(edu));
-        }
-
-        return ResponseEntity.ok(eduDTOList);
-    }
-
-    
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
     public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
@@ -133,16 +138,10 @@ public class EduController {
     @PostMapping("/edudetails/{eduId}")
     public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO) {
         try {
-            System.out.println("이거?: "  + eduDTO.getEduContent());
-//            Edu edu = eduService.getEduById(eduId);
+
             eduDTO.setEduId(eduId);
-            Edu edu = eduDTO.toEntity();
+            eduService.update(eduDTO);
 
-            if (edu == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            eduRepository.save(edu);
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -162,6 +161,8 @@ public class EduController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    //  교육일지 삭제
 
 
     // 대시보드 (통계)
