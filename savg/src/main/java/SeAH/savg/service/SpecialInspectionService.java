@@ -124,7 +124,7 @@ public class SpecialInspectionService {
         String findId;          // 해당 설비를 가진 id를 저장할 함수
 
         // 설비에 해당하는 SpecialInspection 찾기
-        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacility(masterdataFacility);
+        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacilityOrderBySpeDateDesc(masterdataFacility);
         responseData.put("listOfFac", listOfFac);
 
         // 찾은 SpecialInspection의 id를 이용해 파일찾기
