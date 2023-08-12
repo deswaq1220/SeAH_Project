@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
@@ -36,9 +37,16 @@ public class SpeInsFormDTO {
 
     private List<MultipartFile> files;      // 파일
 
+    private List<SpecialFileFormDTO> speFiles = new ArrayList<>();
+
     public static ModelMapper modelMapper = new ModelMapper();
 
+    // DTO -> entity 변환
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
+
+   // 폼에서받은 DTO + 서비스에서 세팅된 데이터 세팅
+//    public SpecialInspection createSpeInsSet(){ return modelMapper.map(this, SpecialInspection.class); }
+
 
 
 }

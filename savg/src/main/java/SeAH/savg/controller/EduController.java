@@ -26,6 +26,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.20.252:3000")
+
 @Log4j2
 
 public class EduController {

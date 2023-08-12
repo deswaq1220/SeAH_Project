@@ -23,7 +23,8 @@ public class EmailController {
         this.mailSender = mailSender;
     }
 
-    //@CrossOrigin(origins = "http://localhost:3000")
+//    @CrossOrigin(origins = "http://192.168.202.1:3000") // 혜영
+//    @CrossOrigin(origins = "http://localhost:3000")
     @CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 
     @PostMapping("/api/send-email")
