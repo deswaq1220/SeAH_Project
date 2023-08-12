@@ -49,16 +49,36 @@ public class EduService {
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         List<EduFileDTO> eduFileDTOList = new ArrayList<>();
+
+        EduDTO eduDTO = new EduDTO(edu);
+        List<String> filesName = new ArrayList<>();
         for(EduFile file : eduFileList){
             EduFileDTO eduFileDTO = EduFileDTO.of(file);
             eduFileDTOList.add(eduFileDTO);
+            filesName.add(eduFileDTO.getEduFileOriName());
+
         }
-        EduDTO eduDTO = new EduDTO(edu);
-        eduDTO.setEduFiles(eduFileDTOList);
+        eduDTO.setEduFiles(filesName);
+
 
 
         return eduDTO;
     }
+
+    //파일 수정
+    public void update(EduDTO eduDTO)throws Exception{
+        Edu edu = eduDTO.toEntity();
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+
+        for(EduFile eduFile : eduFileList){
+            eduFileRepository.delete(eduFile);
+        }
+
+        eduFileService.uploadFile(eduDTO);
+
+        eduRepository.save(edu);
+    }
+
 
     //교육 삭제
     public void deleteEdu(String  eduId){
@@ -66,10 +86,10 @@ public class EduService {
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         for (EduFile eduFile : eduFileList) {
             eduFileRepository.delete(eduFile);
+            eduFileService.deleteFile(eduFile.getEduFileName());
         }
         eduRepository.deleteById(eduId);
     }
-
 
 
     //(관리자)
@@ -181,41 +201,6 @@ public class EduService {
 
 
 
-   //상세조회
-    public EduDTO getEduById(String eduId) {
-        Edu edu = eduRepository.findByEduId(eduId);
-
-        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
-
-        EduDTO eduDTO = new EduDTO(edu);
-        List<String> filesName = new ArrayList<>();
-        for(EduFile file : eduFileList){
-            EduFileDTO eduFileDTO = EduFileDTO.of(file);
-            eduFileDTOList.add(eduFileDTO);
-         filesName.add(eduFileDTO.getEduFileOriName());
-
-        }
-        eduDTO.setEduFiles(filesName);
-
-
-
-        return eduDTO;
-    }
-
-    //파일 수정
-    public void update(EduDTO eduDTO)throws Exception{
-        Edu edu = eduDTO.toEntity();
-        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-
-        for(EduFile eduFile : eduFileList){
-            eduFileRepository.delete(eduFile);
-        }
-
-        eduFileService.uploadFile(eduDTO);
-
-        eduRepository.save(edu);
-    }
 
 
 }
