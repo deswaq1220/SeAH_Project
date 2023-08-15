@@ -50,14 +50,11 @@ public class AttendanceController {
 
   ////관리자 관련
     //해당 교육일지에 따른 학생 출석 리스트 조회
-    @GetMapping("/list/{eduId}")
-    public ResponseEntity<?> showUserEduAttenList(@RequestParam("eduId") String eduId) {
-
-        List<Attendance> result = attendanceRepository.findAllByEduId(eduId);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-
-    }
+  @GetMapping("/list/{eduId}")
+  public ResponseEntity<?> showUserEduAttenList(@PathVariable("eduId") String eduId) {
+      List<Attendance> result = attendanceRepository.findAllByEduId(eduId);
+      return new ResponseEntity<>(result, HttpStatus.OK);
+  }
 
 }
 
