@@ -76,12 +76,6 @@ public class SpecialController {
 
 
 // --------------------------- 관리자
-  
-     // 관리자 : 전체 현황 조회
-    @GetMapping("/special/list")
-    public ResponseEntity<?> speList(){
-        return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
-    }
 
   // 관리자 : 전체 현황 조회
   @GetMapping("/special/status")
