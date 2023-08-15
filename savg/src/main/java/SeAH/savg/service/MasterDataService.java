@@ -1,7 +1,9 @@
 package SeAH.savg.service;
 
 import SeAH.savg.dto.MasterDataFormDTO;
+import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
+import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.MasterDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MasterDataService {
     private final MasterDataRepository masterDataRepository;
+    private final EmailRepository emailRepository;
 
-    // 기준정보 조회
-    @Transactional(readOnly = true)
-    public List<MasterData> findAll() {
-        List<MasterData> masterDataList = masterDataRepository.findAll();
-        return masterDataList;
+    // 기준정보(설비리스트) 조회
+    public List<MasterData> findAllFacilities() {
+        List<MasterData> facilityList = masterDataRepository.findAll();
+        return facilityList;
+    }
+
+    // 기준정보(이메일) 조회
+    public List<Email> findAllEmail() {
+        List<Email> emailList = emailRepository.findAll();
+        return emailList;
     }
 
     // 기준정보 등록

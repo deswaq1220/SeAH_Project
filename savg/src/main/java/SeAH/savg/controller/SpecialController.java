@@ -14,8 +14,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
@@ -176,6 +176,14 @@ public class SpecialController {
 
       return ResponseEntity.ok(statisticsList);
   }*/
+
+    /* 1~12월 내 발생한 수시점검 건수*/
+    @GetMapping("/special/statistics/yearcount")
+    public ResponseEntity<?> getSpecialCountByYear(@RequestParam("year") int year) {
+        int statisticsCount = specialInspectionRepository.specialCountByYear(year);
+
+        return ResponseEntity.ok(statisticsCount);
+    }
 }
 
 

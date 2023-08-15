@@ -23,15 +23,25 @@ public class MasterDataController {
     private final EmailService emailService;
 
 
-    // 기준정보 조회 + 이메일목록 조회
-    @GetMapping("/master")
-    public ResponseEntity<?> masterAndEmailForm(){
+    // 기준정보- 설비리스트 조회
+    @GetMapping("/master/viewfacilities")
+    public ResponseEntity<?> viewFacilityList(){
+
+        Map<String, Object> responseData = new HashMap<>();
+        List<MasterData> facilityList = masterDataService.findAllFacilities();
+
+        responseData.put("facilityList", facilityList);
+
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+    // 기준정보- 이메일목록 조회
+    @GetMapping("/master/viewemail")
+    public ResponseEntity<?> viewEmailList(){
         Map<String, Object> responseData = new HashMap<>();
 
-        List<MasterData> masterDataList = masterDataService.findAll();
-        List<Email> emailList = emailService.findAll();
+        List<Email> emailList = masterDataService.findAllEmail();
 
-        responseData.put("masterData", masterDataList);
         responseData.put("email", emailList);
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
