@@ -280,5 +280,26 @@ public class SpecialInspectionService {
         return resultList;
     }
 
+    // (차트용)수시점검 영역별 건수
+    public List<Map<String, Object>> setSpecialListByPartAndMonth(int year, int month){
+
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
+
+        List<Map<String, Object>> keyValueList = new ArrayList<>(); // 최종 List
+
+        for (Object[] row : statisticsList) {
+
+            String part = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("sort", part);
+            dataPoint.put("수시점검", count);
+            keyValueList.add(dataPoint);
+        }
+        return keyValueList;
+    }
+
+
 
 }

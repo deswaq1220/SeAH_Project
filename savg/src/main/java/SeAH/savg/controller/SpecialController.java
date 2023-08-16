@@ -14,8 +14,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
@@ -90,10 +90,25 @@ public class SpecialController {
      * ex : 주조 1건, 압출 2건 ...
      */
     @GetMapping("/special/statistics/partandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
+    public ResponseEntity<?> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
-        System.out.println("========================== 연도:" + year + "          월:" + month);
+
+        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByPartAndMonth(year, month);
+
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+    /* (엑셀용) 월간 수시점검 현황 통계 조회 - 점검영역별
+     * 형태: 파트(주조, 압출, 가공, 품질, 생산기술, 금형) + 점검건수 리스트
+     * ex : 주조 1건, 압출 2건 ...
+     */
+    @GetMapping("/special/statistics/partandmonthforexcel")
+    public ResponseEntity<?> getSpecialListByPartAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+
         List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
 
         return ResponseEntity.ok(statisticsList);
