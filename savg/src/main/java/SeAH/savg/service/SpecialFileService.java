@@ -1,5 +1,6 @@
 package SeAH.savg.service;
 
+import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,10 @@ public class SpecialFileService {
     private String speFileLocation;
 
     // 파일 등록
-    public List<SpecialFile> uploadFile(List<MultipartFile> files, String completeKey) throws Exception {
+    public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO, String completeKey) throws Exception {
         List<SpecialFile> uploadedFiles = new ArrayList<>();
 //        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-
+        List<MultipartFile> files = speInsFormDTO.getFiles();
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
             String makeSpeFileName = generateUniqueFileName(originalFilename, completeKey);

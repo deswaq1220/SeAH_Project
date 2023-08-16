@@ -10,6 +10,8 @@ import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,35 +37,63 @@ public class EduService {
     private final EduFileService eduFileService;
     private final EduFileRepository eduFileRepository;
 
+
     //교육 목록
     public List<Edu> getEduByYearAndMonth(int year, int month) {
         return eduRepository.findAllByYearAndMonth(year, month);
     }
 
+    //상세조회
+    public EduDTO getEduById(String eduId) {
+        Edu edu = eduRepository.findByEduId(eduId);
+
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
+
+        EduDTO eduDTO = new EduDTO(edu);
+        List<String> filesName = new ArrayList<>();
+        for(EduFile file : eduFileList){
+            EduFileDTO eduFileDTO = EduFileDTO.of(file);
+            eduFileDTOList.add(eduFileDTO);
+            filesName.add(eduFileDTO.getEduFileOriName());
+
+        }
+        eduDTO.setEduFiles(filesName);
+
+
+
+        return eduDTO;
+    }
+
+    //파일 수정
+    public void update(EduDTO eduDTO)throws Exception{
+        Edu edu = eduDTO.toEntity();
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+
+        for(EduFile eduFile : eduFileList){
+            eduFileRepository.delete(eduFile);
+        }
+
+        eduFileService.uploadFile(eduDTO);
+
+        eduRepository.save(edu);
+    }
+
+
+    //교육 삭제
+    public void deleteEdu(String  eduId){
+        Edu edu = eduRepository.findByEduId(eduId);
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+        for (EduFile eduFile : eduFileList) {
+            eduFileRepository.delete(eduFile);
+            eduFileService.deleteFile(eduFile.getEduFileName());
+        }
+        eduRepository.deleteById(eduId);
+    }
+
 
     //(관리자)
-    /*
-    // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회
-    public List<EduStatisticsDTO> showMonthEduTraineeStatics(edustate eduCategory, int month){
-        List<Object[]> results = eduRepository.selectMonthEduTraineeStatis(eduCategory, month);
-
-        List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
-
-        for(Object[] result : results){
-            EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
-            eduStatisticsDTO.setEduCategory((edustate)result[0]);
-            eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
-            eduStatisticsDTO.setEduSumTime((String) result[2]);
-            eduStatisticsDTO.setAttenName((String) result[3]);
-            eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
-            eduStatisticsDTO.setAttenDepartment((String) result[5]);
-
-            eduStatisticsDTOList.add(eduStatisticsDTO);
-        }
-        return eduStatisticsDTOList;
-    }
-  */
-    // 1-1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회
+    // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회
     public List<EduStatisticsDTO> showMonthEduTraineeStatics(edustate eduCategory, int year, int month, String department, String name) {
 
         List<Object[]> results;
@@ -127,26 +157,24 @@ public class EduService {
     }
 
     //3-1. 월별교육실행목록 조회하기(Paging, Sort 사용)
-    public Page<Object[]> getRunEduListByMonth(int year ,int month, int pageNumber, int pageSize) {
+/*    public Page<Object[]> getRunEduListByMonth(int year ,int month, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return eduRepository.selectRunMonthEduList(year ,month, pageable);
-    }
 
-    //3-2. 월별교육실행목록 조회하기(dropDown 사용 등)
-/*    public Page<Object[]> getRunEduListByMonthAndCategory(int year, int month, int pageNumber, int pageSize, String eduCategory) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-
-        try {
-            return eduRepository.runMonthEduListByCategory(month, edustate.valueOf(eduCategory), pageable);
-        } catch (IllegalArgumentException e) {
-            return eduRepository.selectRunMonthEduList(year,month, pageable);
-        }
     }*/
+
+    //3-1. 월별교육실행목록 조회하기(Paging, Sort 사용)
+
+
+
+
+    // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
 
     public List<Object[]> showMonthlyCategory(int year, int month, edustate eduCategory){
         return eduRepository.runMonthEduListByCategory(year, month, eduCategory);
 
     }
+
 
 /*
     // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
@@ -171,25 +199,8 @@ public class EduService {
     }
 */
 
-   //상세조회
-    public EduDTO getEduById(String eduId) {
-        Edu edu = eduRepository.findByEduId(eduId);
-
-        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
-        for(EduFile file : eduFileList){
-            EduFileDTO eduFileDTO = EduFileDTO.of(file);
-            eduFileDTOList.add(eduFileDTO);
-        }
-        EduDTO eduDTO = new EduDTO(edu);
-        eduDTO.setEduFiles(eduFileDTOList);
 
 
-        return eduDTO;
-    }
 
-//    public void update(EduDTO eduDTO)throws Exception{
-//        for()
-//    }
 
 }

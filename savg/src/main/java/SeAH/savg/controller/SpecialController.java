@@ -43,14 +43,21 @@ public class SpecialController {
       return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart), HttpStatus.OK);
   }
 
-  // 수시점검 저장
-  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
-  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
-                                  @PathVariable String masterdataFacility,
-                                  @RequestBody Map<String, Object> requestData) throws Exception {
-      return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, requestData), HttpStatus.CREATED);
-  }
+//  // 수시점검 저장
+//  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
+//  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
+//                                  @PathVariable String masterdataFacility,
+//                                  @RequestBody Map<String, Object> requesstData) throws Exception {
+//      return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, requestData), HttpStatus.CREATED);
+//  }
 
+ // 수시점검 저장 -- 파일
+ @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
+ public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
+                                 @PathVariable String masterdataFacility,
+                                 SpeInsFormDTO speInsFormDTO) throws Exception{
+  return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, speInsFormDTO), HttpStatus.CREATED);
+ }
 
 
  // 상세조회
@@ -68,12 +75,10 @@ public class SpecialController {
 
 
 
-
-
 // --------------------------- 관리자
 
   // 관리자 : 전체 현황 조회
-  @GetMapping("/special/list")
+  @GetMapping("/special/status")
   public ResponseEntity<?> speList() {
       return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
   }
@@ -176,6 +181,14 @@ public class SpecialController {
 
       return ResponseEntity.ok(statisticsList);
   }*/
+
+    /* 1~12월 내 발생한 수시점검 건수*/
+    @GetMapping("/special/statistics/yearcount")
+    public ResponseEntity<?> getSpecialCountByYear(@RequestParam("year") int year) {
+        int statisticsCount = specialInspectionRepository.specialCountByYear(year);
+
+        return ResponseEntity.ok(statisticsCount);
+    }
 }
 
 

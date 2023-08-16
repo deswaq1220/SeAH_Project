@@ -2,7 +2,6 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
-import SeAH.savg.entity.EduFile;
 import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;
@@ -50,11 +49,11 @@ public class EduDTO {
 
     @NotEmpty(message = "작성자를 입력하세요")
     private String eduWriter; //작성자
-    private String eduQr;    //교육 QR코드 정보
 
     private List<MultipartFile> files; // 파일
 
-    private List<EduFileDTO> eduFiles = new ArrayList<>();
+    private List<String> eduFiles;
+
 
 //    private List<EduFile> eduFiles;
     //    private MultipartFile[] files;
@@ -72,7 +71,6 @@ public class EduDTO {
             this.eduTarget = edu.getEduTarget();
             this.eduContent = edu.getEduContent();
             this.eduWriter = edu.getEduWriter();
-            this.eduQr = edu.getEduQr();
         }
     }
 
@@ -92,9 +90,9 @@ public class EduDTO {
         edu.setEduTarget(this.eduTarget);
         edu.setEduContent(this.eduContent);
         edu.setEduWriter(this.eduWriter);
-        edu.setEduQr(this.eduQr);
         return edu;
     }
+
 
 
 }

@@ -71,8 +71,6 @@ public class SpecialInspection {
     @Enumerated(EnumType.STRING)
     private SpeStatus speComplete;              // 완료여부
 
-//    @Column(nullable = false)
-//    private int speMasterdataId;            // qr로 넘어오는 설비id : 필요없을것같음 확인후 삭제
 
 
     public void updateSpe(SpeStatus speComplete){

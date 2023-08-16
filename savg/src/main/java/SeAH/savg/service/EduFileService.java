@@ -68,27 +68,6 @@ public class EduFileService {
     }
 
 
-    //파일업뎃
-//    public void updateFile(String fileName, EduDTO eduDTO) throws Exception {
-//        List<MultipartFile> files =  eduDTO.getFiles();
-//        deleteFile(fileName);
-//        uploadFile(eduDTO);
-//    }
-
-    public void updateFile(Long eduFileId, MultipartFile multipartFile)throws Exception{
-        if(!multipartFile.isEmpty()){
-            EduFile savedFile = eduFileRepository.findById(eduFileId).orElseThrow();
-
-            if(!StringUtils.isEmpty(savedFile.getEduFileName())){
-                deleteFile(savedFile.getEduFileName());
-            }
-
-            String originalFilename = multipartFile.getOriginalFilename();
-            String generateUniqueFileName = generateUniqueFileName(originalFilename);
-
-        }
-    }
-
 
     //파일삭제
     public void deleteFile(String fileName) {
