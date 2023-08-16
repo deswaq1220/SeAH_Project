@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -17,6 +19,15 @@ import java.util.Optional;
 public class MasterDataService {
     private final MasterDataRepository masterDataRepository;
     private final EmailRepository emailRepository;
+
+    //기준정보 영역 드롭다운 노출
+    public List<String> findSpecialPartList(){
+
+
+       List<String> specialPartList = masterDataRepository.partMenuList();
+
+        return specialPartList;
+    }
 
     // 기준정보(설비리스트) 조회
     public List<MasterData> findAllFacilities() {
