@@ -14,8 +14,8 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
@@ -76,14 +76,6 @@ public class SpecialController {
 
 
 // --------------------------- 관리자
-
-  // 관리자 : 전체 현황 조회
-  @GetMapping("/special/status")
-  public ResponseEntity<?> speList() {
-      return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
-  }
-
-
 
     //월간 수시점검 건수(완료, 미완료 모두 포함_)
     @GetMapping("/special/statistics/count")
