@@ -83,14 +83,6 @@ public class SpecialController {
         return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
     }
 
-  // 관리자 : 전체 현황 조회
-  @GetMapping("/special/status")
-  public ResponseEntity<?> speList() {
-      return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
-  }
-
-
-
     //월간 수시점검 건수(완료, 미완료 모두 포함_)
     @GetMapping("/special/statistics/count")
     public ResponseEntity<?> speCount(@RequestParam("yearmonth") String yearMonth){
