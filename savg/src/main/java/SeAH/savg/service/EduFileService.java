@@ -44,6 +44,7 @@ public class EduFileService {
         List<EduFile> uploadedFiles = new ArrayList<>();
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
         List<MultipartFile> files = eduDTO.getFiles();
+
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
             String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;

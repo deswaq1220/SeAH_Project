@@ -55,8 +55,8 @@ public class EduDTO {
 
     private List<String> eduFiles;
 
+    private List<EduFile> eduFileList = new ArrayList<>();
 
-//    private List<EduFile> eduFiles;
     //    private MultipartFile[] files;
     private static ModelMapper modelMapper = new ModelMapper();
 
