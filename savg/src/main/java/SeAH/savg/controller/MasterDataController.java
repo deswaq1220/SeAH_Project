@@ -20,8 +20,8 @@ import java.util.Map;
 @RestController
 //@Controller
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 public class MasterDataController {
 
     private final MasterDataRepository masterDataRepositor;
@@ -38,6 +38,15 @@ public class MasterDataController {
 
         responseData.put("specialPartList", specialPartList);
 
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
+
+    //기준정보 카테고리(영역) 선택 조회
+    @GetMapping("/master/sortbypart")
+    public ResponseEntity<?> sortByPart(@RequestParam("part") String part){
+
+        String plusPart = "["+part+"]";
+        List<String[]> responseData = masterDataService.sortByPart(plusPart);
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 

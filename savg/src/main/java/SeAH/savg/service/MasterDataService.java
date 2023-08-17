@@ -23,11 +23,19 @@ public class MasterDataService {
     //기준정보 영역 드롭다운 노출
     public List<String> findSpecialPartList(){
 
-
        List<String> specialPartList = masterDataRepository.partMenuList();
 
         return specialPartList;
     }
+
+    //기준정보 카테고리(영역) 선택 조회
+    public List<String[]> sortByPart(String part){
+
+        List<String[]> facilityListbyPart = masterDataRepository.sortByPart(part);
+
+        return facilityListbyPart;
+    }
+
 
     // 기준정보(설비리스트) 조회
     public List<MasterData> findAllFacilities() {
