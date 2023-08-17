@@ -4,7 +4,9 @@ import SeAH.savg.dto.EmailFormDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
+import SeAH.savg.entity.MasterDataDepartment;
 import SeAH.savg.entity.SpecialPart;
+import SeAH.savg.repository.MasterDataDepartmentRepository;
 import SeAH.savg.repository.MasterDataRepository;
 import SeAH.savg.service.EmailService;
 import SeAH.savg.service.MasterDataService;
@@ -24,11 +26,12 @@ import java.util.Map;
 //@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 public class MasterDataController {
 
-    private final MasterDataRepository masterDataRepositor;
+    private final MasterDataDepartmentRepository masterDataDepartmentRepository;
     private final MasterDataService masterDataService;
     private final EmailService emailService;
 
 
+    //------------------------------------------설비 관리
     // 기준정보- 영역 드롭다운으로 불러오기
     @GetMapping("/master/partdropdown")
     public ResponseEntity<?> viewPartList(){
@@ -102,4 +105,12 @@ public class MasterDataController {
 
 
 
+
+    //------------------------------------------부서 관리
+
+        //부서 목록 조회(화면에 전체 뿌리기)
+        @GetMapping("/master/department/view")
+        public ResponseEntity<?> viewDepartList(){
+            return new ResponseEntity<>(masterDataService.DepartList(), HttpStatus.OK);
+        }
 }
