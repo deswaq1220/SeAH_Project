@@ -4,7 +4,6 @@ import SeAH.savg.dto.EmailFormDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
-import SeAH.savg.entity.SpecialPart;
 import SeAH.savg.repository.MasterDataRepository;
 import SeAH.savg.service.EmailService;
 import SeAH.savg.service.MasterDataService;
@@ -20,8 +19,8 @@ import java.util.Map;
 @RestController
 //@Controller
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 public class MasterDataController {
 
     private final MasterDataRepository masterDataRepositor;

@@ -54,9 +54,13 @@ public class SpecialInspectionService {
         List<SpecialTrap> specialTrapList = specialTrapRepository.findAllOrderByTrapNum();
         responseData.put("specialTrapList", specialTrapList);
 
-        // 고정수신자, 파트관리자 이메일리스트
-        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
+        // 파트관리자 이메일리스트
+        List<Email> emailList = emailRepository.findByEmailPart(masterdataPart);
         responseData.put("emailList", emailList);
+
+        // 고정수신자 이메일리스트
+        List<Email> staticEmailList = emailRepository.findByMasterStatus(Y);
+        responseData.put("staticEmailList", staticEmailList);
 
         return responseData;
     }
