@@ -223,7 +223,6 @@ public class SpecialInspectionService {
     }
 
     //1~12월까지 월별 수시점검 위험분류 건수
-
    public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 
@@ -251,7 +250,7 @@ public class SpecialInspectionService {
 
 
 
-    // 1~12월까지 월별 수시점검 건수
+    // 1~12월까지 연간 수시점검 건수
      public List<Map<String, Object>> setSpecialCountList(int year){
         List<Object[]> statisticsList = specialInspectionRepository.specialCountList(year);
 
@@ -280,7 +279,7 @@ public class SpecialInspectionService {
         return resultList;
     }
 
-    // (차트용)수시점검 영역별 건수
+    // (차트용) 월간 수시점검 영역별 건수
     public List<Map<String, Object>> setSpecialListByPartAndMonth(int year, int month){
 
         List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
