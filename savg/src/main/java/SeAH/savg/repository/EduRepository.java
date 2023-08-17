@@ -21,8 +21,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
     @Query("SELECT e FROM Edu e WHERE YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month")
     List<Edu> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
 
-
-
+    
 
     ////관리자
     //1-1 월 필터링
@@ -82,6 +81,10 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "And a.attenDepartment = :department " +
             "AND a.attenName = :name")
     List<Object[]> eduTraineeStatisByNameAndDepart(@Param("eduCategory") edustate eduCategory , @Param("year") int year, @Param("month") int month, @Param("name") String name, @Param("department") String department);
+
+
+    // 1-7 이름 검색하여 월별로 카테고리별 총 교육시간 출력
+
 
 
     //2-1. 월별 교육시간 조회하기(월별 교육실시시간 총계)
