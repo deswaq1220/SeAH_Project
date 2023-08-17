@@ -43,13 +43,6 @@ public class SpecialController {
       return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart), HttpStatus.OK);
   }
 
-//  // 수시점검 저장
-//  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
-//  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
-//                                  @PathVariable String masterdataFacility,
-//                                  @RequestBody Map<String, Object> requesstData) throws Exception {
-//      return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, requestData), HttpStatus.CREATED);
-//  }
 
  // 수시점검 저장 -- 파일
  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
