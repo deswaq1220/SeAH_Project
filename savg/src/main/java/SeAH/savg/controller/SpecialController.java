@@ -2,6 +2,7 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.repository.SpecialInspectionRepository;
+import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,12 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
+ private final SpeicalFileRepository specialFileRepository;
 
  // ------------ 사용자 ------------------------------------------
 
@@ -44,7 +46,7 @@ public class SpecialController {
   }
 
 
- // 수시점검 저장 -- 파일
+ // 수시점검 저장
  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
                                  @PathVariable String masterdataFacility,
@@ -55,8 +57,13 @@ public class SpecialController {
 
  // 상세조회
  @GetMapping("/special/detail/{speId}")
- public ResponseEntity<?> speDetail(@PathVariable String speId) {
-  return new ResponseEntity<>(specialInspectionService.findSpeDetail(speId), HttpStatus.OK);
+ public ResponseEntity<Map<String, Object>> getSpecialDetail(@PathVariable String speId) {
+   Map<String, Object> detailMap = specialInspectionService.getSpecialDetail(speId);
+   if (detailMap != null) {
+    return new ResponseEntity<>(detailMap, HttpStatus.OK);
+   } else {
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   }
  }
 
 

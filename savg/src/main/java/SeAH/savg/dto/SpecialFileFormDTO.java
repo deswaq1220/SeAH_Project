@@ -3,9 +3,10 @@ package SeAH.savg.dto;
 import SeAH.savg.entity.SpecialFile;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class SpecialFileFormDTO {
     private String speFileName;       // 파일명
     private String speFileOriName;    // 원본 파일명
