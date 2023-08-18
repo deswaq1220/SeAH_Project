@@ -58,20 +58,20 @@ public class SpecialController {
  // 상세조회
  @GetMapping("/special/detail/{speId}")
  public ResponseEntity<Map<String, Object>> getSpecialDetail(@PathVariable String speId) {
-  Map<String, Object> detailMap = specialInspectionService.getSpecialDetail(speId);
-  if (detailMap != null) {
-   return new ResponseEntity<>(detailMap, HttpStatus.OK);
-  } else {
-   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-  }
+   Map<String, Object> detailMap = specialInspectionService.getSpecialDetail(speId);
+   if (detailMap != null) {
+    return new ResponseEntity<>(detailMap, HttpStatus.OK);
+   } else {
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   }
  }
 
 
-// // 완료처리(update)
-// @PostMapping("/special/detail/{speId}")
-// public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-//  return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
-// }
+ // 완료처리(update)
+ @PostMapping("/special/detail/{speId}")
+ public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+  return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
+ }
 
 
 
