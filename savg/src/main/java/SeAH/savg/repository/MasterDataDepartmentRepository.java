@@ -15,5 +15,8 @@ public interface MasterDataDepartmentRepository extends JpaRepository<MasterData
     //전체조회
     List<MasterDataDepartment> findAll();
 
+    //부서별 조회
+    
+
 
 }

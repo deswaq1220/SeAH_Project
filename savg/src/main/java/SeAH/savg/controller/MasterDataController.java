@@ -113,4 +113,6 @@ public class MasterDataController {
         public ResponseEntity<?> viewDepartList(){
             return new ResponseEntity<>(masterDataService.DepartList(), HttpStatus.OK);
         }
+
+
 }
