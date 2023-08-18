@@ -2,6 +2,7 @@ package SeAH.savg.service;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
+import SeAH.savg.dto.SpecialFileFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -132,10 +133,10 @@ public class SpecialInspectionService {
         responseData.put("listOfFac", listOfFac);
 
         // 찾은 SpecialInspection의 id를 이용해 파일찾기
-        List<SpecialFile> speFileOfFac = new ArrayList<>();
+        List<SpecialFileFormDTO> speFileOfFac = new ArrayList<>();
         for(SpecialInspection listOfFacId : listOfFac){
             findId = listOfFacId.getSpeId();        // id세팅
-            List<SpecialFile> files= specialFileRepository.findBySpecialInspection_SpeId(findId);
+            List<SpecialFileFormDTO> files= specialFileRepository.findBySpecialInspection_SpeId(findId);
             speFileOfFac.addAll(files);
         }
         responseData.put("speFileOfFac", speFileOfFac);
@@ -143,40 +144,49 @@ public class SpecialInspectionService {
     }
 
     // 수시점검 상세조회
-    @Transactional
-    public Map<String, Object> findSpeDetail(String speId){
-        Map<String, Object> responseData = new HashMap<>();
-        SpecialInspection speDetailFindId = specialInspectionRepository.findAllBySpeId(speId);
-        List<SpecialFile> speFileDetailFindIds = specialFileRepository.findBySpecialInspection_SpeId(speId);
+    public Map<String, Object> getSpecialDetail(String speId) {
+        Map<String, Object> detailMap = new HashMap<>();
+//        String uploadPath = "C:\\seah\\specialInspection"; // 이미지 파일이 저장된 경로
 
-        responseData.put("speDetailFindId", speDetailFindId);
-        responseData.put("speFileDetailFindIds", speFileDetailFindIds);
-
-        return responseData;
-    }
-
-
-
-    // 완료처리:업데이트
-    @Transactional
-    public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+        detailMap.put("specialData", special);
 
-        // 파일이 있으면 저장
-        if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            String completeKey = "완료";
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO, completeKey);
+        List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
 
-            for(SpecialFile specialFile : uploadFiles)
-                specialFile.setSpecialInspection(special);
+        if (!speFileDTOList.isEmpty()) {
+            List<String> imageUrls = new ArrayList<>();
+            for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
+                String imagePath = speFileDTO.getSpeFileUrl();
+                imageUrls.add(imagePath);
+            }
+            detailMap.put("imageUrls", imageUrls);
         }
 
 
-        special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
-        special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
-
-        return special;
+        return detailMap;
     }
+
+
+    // 완료처리:업데이트
+//    @Transactional
+//    public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+//        SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+//
+//        // 파일이 있으면 저장
+//        if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
+//            String completeKey = "완료";
+//            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO, completeKey);
+//
+//            for(SpecialFile specialFile : uploadFiles)
+//                specialFile.setSpecialInspection(special);
+//        }
+//
+//
+//        special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+//        special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
+//
+//        return special;
+//    }
 
 
 

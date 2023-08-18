@@ -1,21 +1,14 @@
 package SeAH.savg.controller;
 
 import SeAH.savg.dto.SpeInsFormDTO;
-import SeAH.savg.entity.SpecialFile;
-import SeAH.savg.entity.SpecialInspection;
 import SeAH.savg.repository.SpecialInspectionRepository;
+import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +20,7 @@ import java.util.Map;
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
+ private final SpeicalFileRepository specialFileRepository;
 
  // ------------ 사용자 ------------------------------------------
 
@@ -52,7 +46,7 @@ public class SpecialController {
   }
 
 
- // 수시점검 저장 -- 파일
+ // 수시점검 저장
  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
                                  @PathVariable String masterdataFacility,
@@ -63,47 +57,21 @@ public class SpecialController {
 
  // 상세조회
  @GetMapping("/special/detail/{speId}")
- public ResponseEntity<Map<String, Object>> speDetail(@PathVariable String speId) {
-  Map<String, Object> response = new HashMap<>();
-  Map<String, Object> speData = specialInspectionService.findSpeDetail(speId);
-
-  SpecialInspection speDetailFindId = (SpecialInspection) speData.get("speDetailFindId");
-  List<SpecialFile> speFileDetailFindIds = (List<SpecialFile>) speData.get("speFileDetailFindIds");
-
-  if (speFileDetailFindIds.isEmpty()) {
-   return ResponseEntity.notFound().build();
-  }
-
-  SpecialFile firstFile = speFileDetailFindIds.get(0);
-  String fileName = firstFile.getSpeFileOriName();
-  String filePath = firstFile.getSpeFileUrl(); // 파일 경로 가져오기
-
-  try {
-   Path fileAbsolutePath = Paths.get(filePath);
-   byte[] fileContent = Files.readAllBytes(fileAbsolutePath);
-
-   // 파일 MIME 타입 확인 및 URL 생성
-   String contentType = Files.probeContentType(fileAbsolutePath);
-   String base64EncodedImage = Base64.getEncoder().encodeToString(fileContent);
-   String imageUrl = "data:" + contentType + ";base64," + base64EncodedImage;
-
-   // JSON 응답 데이터 생성
-   response.put("speDetailFindId", speDetailFindId);
-   response.put("imageUrl", imageUrl);
-
-   return ResponseEntity.ok(response);
-  } catch (IOException e) {
-   e.printStackTrace();
-   return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+ public ResponseEntity<Map<String, Object>> getSpecialDetail(@PathVariable String speId) {
+  Map<String, Object> detailMap = specialInspectionService.getSpecialDetail(speId);
+  if (detailMap != null) {
+   return new ResponseEntity<>(detailMap, HttpStatus.OK);
+  } else {
+   return new ResponseEntity<>(HttpStatus.NOT_FOUND);
   }
  }
 
 
- // 완료처리(update)
- @PostMapping("/special/detail/{speId}")
- public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-  return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
- }
+// // 완료처리(update)
+// @PostMapping("/special/detail/{speId}")
+// public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+//  return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
+// }
 
 
 
