@@ -1,5 +1,6 @@
 package SeAH.savg.service;
 
+import SeAH.savg.dto.MasterDataDepartmentDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
@@ -8,13 +9,16 @@ import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.MasterDataDepartmentRepository;
 import SeAH.savg.repository.MasterDataRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.security.auth.message.AuthException;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class MasterDataService {
     private final MasterDataRepository masterDataRepository;
     private final MasterDataDepartmentRepository masterDataDepartmentRepository;
@@ -84,5 +88,92 @@ public class MasterDataService {
             return resultList;
         }
 
+        //부서별 목록 조회(카테고리용) -부서1 기준
+        public List<MasterDataDepartmentDTO> sortDepartList(String dept1){
+
+            List<MasterDataDepartmentDTO> resultList = masterDataDepartmentRepository.findByFirstDepartment(dept1);
+
+            resultList.sort(Comparator
+                                      .comparing((MasterDataDepartmentDTO dept) -> !dept.getFirstDepartment().equals(dept.getSecondDepartment()))
+            );
+            return resultList;
+        }
+
+        //부서 등록하기
+        @Transactional
+        public MasterDataDepartmentDTO saveDepart(MasterDataDepartmentDTO departmentDTO){
+
+            //성공
+            try {
+                //MasterDataDepartment entity = departmentDTO.toEntity(); //dto를 엔티티로 변환
+                MasterDataDepartment resultList = MasterDataDepartmentDTO.createMasterDepart(departmentDTO);
+                masterDataDepartmentRepository.save(resultList);
+
+            //실패
+            } catch (Exception e) {
+                e.printStackTrace();    //예외정보 출력
+                log.error("부서등록 에러발생:  ", e.getMessage()); //로그남김
+            }
+
+            return departmentDTO;
+        }
+
+        //부서 삭제하기
+       @Transactional
+       public void delDepart(String depart2){
+           try{
+            masterDataDepartmentRepository.deleteById(depart2);
+            System.out.println("삭제성공");
+           } catch (Exception e) {
+               log.error("삭제실패");
+           }
+       }
+
+    //부서 수정하기
+    @Transactional
+    public MasterDataDepartmentDTO updateDepart(String depart2, MasterDataDepartmentDTO departmentDTO){
+        try{
+
+            Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(depart2);
+
+            //변경값이 존재할 경우
+            if(target.isPresent()){
+
+                MasterDataDepartmentDTO targetDTO = MasterDataDepartmentDTO.of(target.get());
+                targetDTO.setSecondDepartment(departmentDTO.getSecondDepartment());
+                targetDTO.setFirstDepartment(departmentDTO.getFirstDepartment());
+
+                log.info(targetDTO);
+
+/*                MasterDataDepartment updatedEntity = targetDTO.toEntity();
+                log.info(updatedEntity);
+
+                // 수정된 엔티티를 저장
+                masterDataDepartmentRepository.save(updatedEntity);
+                log.info("수정 성공");
+            }*/
+
+
+/*                // Update the existing entity using @Builder constructor
+                MasterDataDepartment updatedEntity = MasterDataDepartment.builder()
+                        .firstDepartment(targetDTO.getFirstDepartment())
+                        .secondDepartment(targetDTO.getSecondDepartment()) // Set the @Id field value
+                        .build();*/
+
+                masterDataDepartmentRepository.save(updatedEntity);
+                log.info("수정 성공");
+            }
+
+
+
+
+
+            return departmentDTO;
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return departmentDTO;
+    }
 
 }

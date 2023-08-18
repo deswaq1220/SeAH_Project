@@ -1,23 +1,29 @@
 package SeAH.savg.entity;
 
+import SeAH.savg.dto.MasterDataDepartmentDTO;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Getter @ToString
+@NoArgsConstructor
 @Table(name="master_data_department")
 public class MasterDataDepartment {
 
-
-    @Id
-    private String secondDepartment;  // 부서명2
     @Column(nullable = false)
     private String firstDepartment;  // 부서명1
 
+    @Id
+    private String secondDepartment;  // 부서명2
+
+    @Builder
+    MasterDataDepartment(String firstDepartment, String secondDepartment) {
+        this.firstDepartment = firstDepartment;
+        this.secondDepartment = secondDepartment;
+    }
 
 }

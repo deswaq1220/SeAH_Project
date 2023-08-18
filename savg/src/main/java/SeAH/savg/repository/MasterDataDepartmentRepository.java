@@ -1,5 +1,6 @@
 package SeAH.savg.repository;
 
+import SeAH.savg.dto.MasterDataDepartmentDTO;
 import SeAH.savg.entity.MasterData;
 import SeAH.savg.entity.MasterDataDepartment;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,8 +16,8 @@ public interface MasterDataDepartmentRepository extends JpaRepository<MasterData
     //전체조회
     List<MasterDataDepartment> findAll();
 
-    //부서별 조회
-    
+    //부서별 조회 - (부서1 기준)
+    List<MasterDataDepartmentDTO> findByFirstDepartment(String depart1);
 
 
 }

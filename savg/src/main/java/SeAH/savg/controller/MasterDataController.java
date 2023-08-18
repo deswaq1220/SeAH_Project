@@ -1,6 +1,7 @@
 package SeAH.savg.controller;
 
 import SeAH.savg.dto.EmailFormDTO;
+import SeAH.savg.dto.MasterDataDepartmentDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
@@ -113,6 +114,39 @@ public class MasterDataController {
         public ResponseEntity<?> viewDepartList(){
             return new ResponseEntity<>(masterDataService.DepartList(), HttpStatus.OK);
         }
+
+        //부서별 목록 조회(카테고리용)
+        //부서1로 조회하는 기능
+        @GetMapping("/master/department/sort")
+        public ResponseEntity<List<MasterDataDepartmentDTO>> sortByDepart(@RequestParam("depart1") String depart1){
+            return new ResponseEntity<>(masterDataService.sortDepartList(depart1), HttpStatus.OK);
+        }
+
+        //부서 등록
+        @PostMapping("/master/department/reg")
+        public ResponseEntity<?> regDepart(@RequestBody MasterDataDepartmentDTO departmentDTO){
+
+            return new ResponseEntity<>(masterDataService.saveDepart(departmentDTO), HttpStatus.CREATED);
+        }
+
+        //부서 삭제
+        @PostMapping("/master/department/del{depart2}")
+        public ResponseEntity<?> delDepart(@PathVariable String depart2){
+
+            String Strdepart2 = "["+depart2+"]";
+            masterDataService.delDepart(Strdepart2);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+/*
+        //부서 수정
+        @PostMapping("")
+        public Res
+*/
+
+
+
 
 
 }
