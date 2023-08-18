@@ -124,17 +124,21 @@ public class EduService {
         List<Object[]> results;
 
         if ((department == null || department.isEmpty()) && (name == null || name.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())) {
-            results = eduRepository.selectMonthStatic(year,month); // 월에 따른 데이터 조회
+            results = eduRepository.selectMonthStatic(year,month); // 날짜
         } else if ((department == null || department.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())){
-            results = eduRepository.selectMonthAndName(year,month, name);
+            results = eduRepository.selectMonthAndName(year,month, name); //날짜 + 이름
+        } else if ((name == null || name.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())) {
+            results=eduRepository.selectMonthAndDepartment(year, month, department); // 날짜 + 부서
         } else if ((department == null || department.isEmpty()) && (name == null || name.isEmpty())) {
-            results = eduRepository.selectMonthEduTraineeStatis(eduCategory, year,month); // 카테고리에 따른 교육 참가자 조회
+            results = eduRepository.selectMonthEduTraineeStatis(eduCategory, year,month); // 월 + 카테고리
+        } else if((eduCategory == null || eduCategory.isEmpty())){
+            results = eduRepository.selectDepartName(year, month, department, name); // 부서+이름+날짜
         } else if ((department == null || department.isEmpty())) {
-            results = eduRepository.eduTraineeStatisByName(eduCategory, year,month, name); // 카테고리, 이름에 따른 참가자 조회
+            results = eduRepository.eduTraineeStatisByName(eduCategory, year,month, name); // 카테고리 + 이름
         } else if (name == null || name.isEmpty()) {
-            results = eduRepository.eduTraineeStatisByDepart(eduCategory, year,month, department); // 카테고리, 부서에 따른 참가자 조회
+            results = eduRepository.eduTraineeStatisByDepart(eduCategory, year,month, department); // 카테고리 + 부서
         } else {
-            results = eduRepository.eduTraineeStatisByNameAndDepart(eduCategory, year,month, name, department); // 카테고리, 부서, 이름에 따른 참가자 조회
+            results = eduRepository.eduTraineeStatisByNameAndDepart(eduCategory, year,month, name, department); // 카테고리+부서+이름
         }
         System.out.println(results.size());
 
