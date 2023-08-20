@@ -6,6 +6,7 @@ import SeAH.savg.dto.SpecialFileFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class SpecialInspectionService {
     private final SpecialDangerRepository specialDangerRepository;
     private final SpecialTrapRepository specialTrapRepository;
 
+    private ModelMapper modelMapper = new ModelMapper();
 
     // 수시점검 등록화면 조회
     @Transactional
@@ -169,6 +171,7 @@ public class SpecialInspectionService {
     // 완료처리:업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("-------------서비스 speDto: " +speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
 
         // 파일이 있으면 저장
@@ -179,8 +182,15 @@ public class SpecialInspectionService {
                 specialFile.setSpecialInspection(special);
         }
 
-        special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
-        special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
+        // 완료여부가 OK일 경우만 완료시간 세팅
+        if(speInsFormDTO.getSpeComplete() == OK){
+            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+        }
+
+        // dto -> entity 업데이트
+        modelMapper.map(speInsFormDTO, special);
+        // 저장(업데이트)
+        specialInspectionRepository.save(special);
 
         return special;
     }

@@ -16,7 +16,9 @@ public class EmailFormDTO {
 
 
     private static ModelMapper modelMapper = new ModelMapper();
-    public Email createEmail(){return modelMapper.map(this, Email.class);}
+    public Email creatEmail(){return modelMapper.map(this, Email.class);}
+
+
     public static EmailFormDTO or (Email email){
         return modelMapper.map(email, EmailFormDTO.class);
     }
