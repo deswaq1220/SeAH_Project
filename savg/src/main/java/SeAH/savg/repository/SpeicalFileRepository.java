@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface SpeicalFileRepository extends JpaRepository <SpecialFile, Long> {
+    // speId로 파일정보 찾기
     List<SpecialFileFormDTO> findBySpecialInspection_SpeId(String speId);
 
     // 오늘 날짜에 해당하는 파일 이름들을 조회

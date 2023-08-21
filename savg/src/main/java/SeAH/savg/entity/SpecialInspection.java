@@ -73,9 +73,4 @@ public class SpecialInspection {
 
 
 
-    public void updateSpe(SpeStatus speComplete){
-        this.speComplete = speComplete;
-//        this.speActDate = speActDate;
-    }
-
 }

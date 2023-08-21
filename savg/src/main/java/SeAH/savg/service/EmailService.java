@@ -4,8 +4,10 @@ import SeAH.savg.dto.EmailFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.repository.EmailRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
@@ -13,6 +15,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmailService {
     private final EmailRepository emailRepository;
+
+    private ModelMapper modelMapper = new ModelMapper();
+
 
     // 이메일 조회
     @Transactional(readOnly = true)
@@ -25,7 +30,7 @@ public class EmailService {
     @Transactional
     public Email saveEmail(EmailFormDTO emailFormDTO){
         // 이메일정보 등록
-         Email email = emailFormDTO.createEmail();
+         Email email = emailFormDTO.creatEmail();
          emailRepository.save(email);
 
          return email;
@@ -38,12 +43,9 @@ public class EmailService {
         Email email = emailRepository.findById(emailId).get();
 
         // 이메일 정보 수정
-        if(emailFormDTO.getEmailAdd() != null)
-            email.setEmailAdd(emailFormDTO.getEmailAdd());
-        if(emailFormDTO.getEmailPart() != null)
-            email.setEmailPart(emailFormDTO.getEmailPart());
-        if(emailFormDTO.getMasterStatus() != null)
-            email.setMasterStatus(emailFormDTO.getMasterStatus());
+        modelMapper.map(emailFormDTO, email);
+        // 저장
+        emailRepository.save(email);
 
         return email;
     }
