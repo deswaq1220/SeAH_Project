@@ -93,7 +93,7 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO);
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, NO);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
@@ -156,12 +156,20 @@ public class SpecialInspectionService {
         // 이미지 데이터
         List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
         if (!speFileDTOList.isEmpty()) {
-            List<String> imageUrls = new ArrayList<>();
+            List<String> compImageUrls = new ArrayList<>();         // 완료이미지 url
+            List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
+
             for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
                 String imagePath = speFileDTO.getSpeFileUrl();
-                imageUrls.add(imagePath);
+
+                if(speFileDTO.getIsComplete() == OK){            // 완료이미지 세팅
+                    compImageUrls.add(imagePath);
+                } else if (speFileDTO.getIsComplete() == NO){    // 미완료이미지 세팅
+                    noCompImageUrls.add(imagePath);
+                }
             }
-            detailMap.put("imageUrls", imageUrls);
+            detailMap.put("compImageUrls", compImageUrls);      // 완료이미지
+            detailMap.put("noCompImageUrls", noCompImageUrls);  // 미완료이미지
         }
 
         return detailMap;
@@ -176,7 +184,13 @@ public class SpecialInspectionService {
 
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO);
+            List<SpecialFile> uploadFiles;
+
+            if(speInsFormDTO.getSpeComplete() == OK){           // 완료처리일 경우
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, OK);
+            } else {                                            // 수정일 경우
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, NO);
+            }
 
             for(SpecialFile specialFile : uploadFiles)
                 specialFile.setSpecialInspection(special);

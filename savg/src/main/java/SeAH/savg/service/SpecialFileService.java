@@ -1,5 +1,6 @@
 package SeAH.savg.service;
 
+import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.repository.SpeicalFileRepository;
@@ -24,7 +25,7 @@ public class SpecialFileService {
     private String speFileLocation;
 
     // 파일 등록
-    public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO) throws Exception {
+    public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO, SpeStatus isComplete) throws Exception {
         List<SpecialFile> uploadedFiles = new ArrayList<>();
 
         List<MultipartFile> files = speInsFormDTO.getFiles();
@@ -41,6 +42,7 @@ public class SpecialFileService {
             specialFile.setSpeFileOriName(originalFilename);
             specialFile.setSpeFileUrl(fileUploadFullUrl);
             specialFile.setSpeFileName(makeSpeFileName);
+            specialFile.setIsComplete(isComplete);
             speicalFileRepository.save(specialFile); // 데이터베이스에 저장
 
             uploadedFiles.add(specialFile);
