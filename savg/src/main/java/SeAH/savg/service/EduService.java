@@ -10,19 +10,12 @@ import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static SeAH.savg.constant.edustate.*;
 
@@ -93,41 +86,7 @@ public class EduService {
 
 
     //(관리자)
-    // 1. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회
-    public List<EduStatisticsDTO> showMonthEduTraineeStatics(edustate eduCategory, int year, int month, String department, String name) {
-
-        List<Object[]> results;
-
-        if ((department == null || department.isEmpty()) && (name == null || name.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())) {
-            results = eduRepository.selectMonthStatic(year,month); // 월에 따른 데이터 조회
-        } else if ((department == null || department.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())){
-            results = eduRepository.selectMonthAndName(year,month, name);
-        } else if ((department == null || department.isEmpty()) && (name == null || name.isEmpty())) {
-            results = eduRepository.selectMonthEduTraineeStatis(eduCategory, year,month); // 카테고리에 따른 교육 참가자 조회
-        } else if ((name != null && !name.isEmpty()) && (department == null || department.isEmpty())) {
-            results = eduRepository.eduTraineeStatisByName(eduCategory, year,month, name); // 카테고리, 이름에 따른 참가자 조회
-        } else if ((department != null && !department.isEmpty()) && (name == null || name.isEmpty())) {
-            results = eduRepository.eduTraineeStatisByDepart(eduCategory, year,month, department); // 카테고리, 부서에 따른 참가자 조회
-        } else {
-            results = eduRepository.eduTraineeStatisByNameAndDepart(eduCategory, year,month, name, department); // 카테고리, 부서, 이름에 따른 참가자 조회
-        }
-
-        List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
-        for (Object[] result : results) {
-            EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
-            eduStatisticsDTO.setEduTitle((String) result[0]);
-            eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
-            eduStatisticsDTO.setEduSumTime((String) result[2]);
-            eduStatisticsDTO.setAttenName((String) result[3]);
-            eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
-            eduStatisticsDTO.setAttenDepartment((String) result[5]);
-
-            eduStatisticsDTOList.add(eduStatisticsDTO);
-        }
-        return eduStatisticsDTOList;
-    }
-
-    // 2. 월별교육통계 조회하기 - 교육 실행시간 조회
+    // 1. 월별교육통계 조회하기 - 교육 실행시간 조회
     // sumMonthlyEduTimeList = [CREW시간총계, MANAGE시간총계, DM시간총계, ETC시간총계, 전체시간총계]
     public List<Integer> showMonthEduTimeStatis(int year, int month){
 
@@ -156,50 +115,82 @@ public class EduService {
         return sumMonthlyEduTimeList;
     }
 
-    //3-1. 월별교육실행목록 조회하기(Paging, Sort 사용)
-/*    public Page<Object[]> getRunEduListByMonth(int year ,int month, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return eduRepository.selectRunMonthEduList(year ,month, pageable);
-
-    }*/
-
-    //3-1. 월별교육실행목록 조회하기(Paging, Sort 사용)
 
 
+    // 2. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회
+    public HashMap<String, List<Object>> showMonthEduTraineeStatics(edustate eduCategory, int year, int month, String department, String name) {
+        HashMap<String, List<Object>> showMonthEduTraineeStatics = new HashMap<>();
+
+        List<Object[]> results;
+
+        if ((department == null || department.isEmpty()) && (name == null || name.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())) {
+            results = eduRepository.selectMonthStatic(year,month); // 날짜
+        } else if ((department == null || department.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())){
+            results = eduRepository.selectMonthAndName(year,month, name); //날짜 + 이름
+        } else if ((name == null || name.isEmpty()) && (eduCategory == null || eduCategory.isEmpty())) {
+            results=eduRepository.selectMonthAndDepartment(year, month, department); // 날짜 + 부서
+        } else if ((department == null || department.isEmpty()) && (name == null || name.isEmpty())) {
+            results = eduRepository.selectMonthEduTraineeStatis(eduCategory, year,month); // 월 + 카테고리
+        } else if((eduCategory == null || eduCategory.isEmpty())){
+            results = eduRepository.selectDepartName(year, month, department, name); // 부서+이름+날짜
+        } else if ((department == null || department.isEmpty())) {
+            results = eduRepository.eduTraineeStatisByName(eduCategory, year,month, name); // 카테고리 + 이름
+        } else if (name == null || name.isEmpty()) {
+            results = eduRepository.eduTraineeStatisByDepart(eduCategory, year,month, department); // 카테고리 + 부서
+        } else {
+            results = eduRepository.eduTraineeStatisByNameAndDepart(eduCategory, year,month, name, department); // 카테고리+부서+이름
+        }
+
+        int sumCategories = 0;
+        List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
+        List<Integer> attenNameSumEduTimeList = new ArrayList<>(Collections.nCopies(5, 0));
+
+        for (Object[] result : results) {
+            EduStatisticsDTO eduStatisticsDTO = new EduStatisticsDTO();
+            eduStatisticsDTO.setEduTitle((String) result[0]);
+            eduStatisticsDTO.setEduStartTime((LocalDateTime) result[1]);
+            eduStatisticsDTO.setEduSumTime((String) result[2]);
+            eduStatisticsDTO.setAttenName((String) result[3]);
+            eduStatisticsDTO.setAttenEmployeeNumber((String) result[4]);
+            eduStatisticsDTO.setAttenDepartment((String) result[5]);
+
+
+            int eduSumTime = Integer.parseInt(eduStatisticsDTO.getEduSumTime());
+
+            sumCategories += eduSumTime;
+
+
+            if("[크루미팅]".equals(result[0])){
+                attenNameSumEduTimeList.set(1, attenNameSumEduTimeList.get(1)+Integer.parseInt((String)result[2]));
+            }else if("[DM미팅]".equals(result[0])){
+                attenNameSumEduTimeList.set(2, attenNameSumEduTimeList.get(2)+Integer.parseInt((String)result[2]));
+            }else if("[관리감독]".equals(result[0])){
+                attenNameSumEduTimeList.set(3, attenNameSumEduTimeList.get(3)+Integer.parseInt((String)result[2]));
+            }else{
+                attenNameSumEduTimeList.set(4, attenNameSumEduTimeList.get(4)+Integer.parseInt((String)result[2]));
+            }
+            eduStatisticsDTOList.add(eduStatisticsDTO);
+        }
+        attenNameSumEduTimeList.set(0, sumCategories);
+
+        // attenNameSumEduTimeList에는 [전체, 크루, dm, 관리감독, 기타] 카테고리별 합산 시간이 들어있음
+        System.out.println("전체: " + attenNameSumEduTimeList.get(0));
+        System.out.println("크루: " + attenNameSumEduTimeList.get(1));
+        System.out.println("dm: " + attenNameSumEduTimeList.get(2));
+        System.out.println("관리감독: " + attenNameSumEduTimeList.get(3));
+        System.out.println("기타: " + attenNameSumEduTimeList.get(4));
+        showMonthEduTraineeStatics.put("eduStatisticsDTO",new ArrayList<>(eduStatisticsDTOList));
+        showMonthEduTraineeStatics.put("attenNameSumEduTimeList", new ArrayList<>(attenNameSumEduTimeList));
+
+        return showMonthEduTraineeStatics;
+    }
 
 
     // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
-
     public List<Object[]> showMonthlyCategory(int year, int month, edustate eduCategory){
         return eduRepository.runMonthEduListByCategory(year, month, eduCategory);
 
     }
-
-
-/*
-    // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
-    public Long showMonthEduTimeStatis2(edustate eduCategory, int month){
-
-        List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
-        List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
-        Long eduSumTime = 0L;
-
-        for(Object[] result : results){
-            String time = (String)result[0];
-
-            try {
-                Long timeValue = Long.parseLong(time);
-                eduSumTime += timeValue;
-            } catch (NumberFormatException e) {
-                System.out.println("월별 교육 실행시간 조회: 합산할 수 없습니다(Long타입 아님)");
-            }
-
-        }
-        return eduSumTime;
-    }
-*/
-
-
 
 
 
