@@ -6,6 +6,7 @@ import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
 import SeAH.savg.repository.MasterDataDepartmentRepository;
+
 import SeAH.savg.service.EmailService;
 import SeAH.savg.service.MasterDataService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,6 @@ public class MasterDataController {
     // 기준정보- 영역 드롭다운으로 불러오기
     @GetMapping("/master/partdropdown")
     public ResponseEntity<?> viewPartList(){
-
         Map<String, Object> responseData = new HashMap<>();
         List<String> specialPartList = masterDataService.findSpecialPartList();
 
@@ -54,10 +54,8 @@ public class MasterDataController {
     // 기준정보- 설비리스트 조회
     @GetMapping("/master/viewfacilities")
     public ResponseEntity<?> viewFacilityList(){
-
         Map<String, Object> responseData = new HashMap<>();
         List<MasterData> facilityList = masterDataService.findAllFacilities();
-
         responseData.put("facilityList", facilityList);
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
@@ -67,9 +65,7 @@ public class MasterDataController {
     @GetMapping("/master/viewemail")
     public ResponseEntity<?> viewEmailList(){
         Map<String, Object> responseData = new HashMap<>();
-
         List<Email> emailList = masterDataService.findAllEmail();
-
         responseData.put("email", emailList);
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);

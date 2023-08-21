@@ -1,5 +1,6 @@
 package SeAH.savg.repository;
 
+import SeAH.savg.dto.SpecialFileFormDTO;
 import SeAH.savg.entity.SpecialFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -9,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface SpeicalFileRepository extends JpaRepository <SpecialFile, Long> {
-    List<SpecialFile> findBySpecialInspection_SpeId(String speId);
+    List<SpecialFileFormDTO> findBySpecialInspection_SpeId(String speId);
 
     // 오늘 날짜에 해당하는 파일 이름들을 조회
     @Query("SELECT s FROM SpecialFile s WHERE s.speFileName LIKE CONCAT('%', ?1, '%')")
