@@ -5,10 +5,7 @@ import SeAH.savg.dto.MasterDataDepartmentDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.MasterData;
-import SeAH.savg.entity.MasterDataDepartment;
-import SeAH.savg.entity.SpecialPart;
 import SeAH.savg.repository.MasterDataDepartmentRepository;
-import SeAH.savg.repository.MasterDataRepository;
 import SeAH.savg.service.EmailService;
 import SeAH.savg.service.MasterDataService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +29,7 @@ public class MasterDataController {
     private final EmailService emailService;
 
 
-    //------------------------------------------설비 관리
+    //------------------------------------------설비 관리  //나중에 viewDropdownPart로 메소드명 변경 필요
     // 기준정보- 영역 드롭다운으로 불러오기
     @GetMapping("/master/partdropdown")
     public ResponseEntity<?> viewPartList(){
@@ -115,6 +112,20 @@ public class MasterDataController {
             return new ResponseEntity<>(masterDataService.DepartList(), HttpStatus.OK);
         }
 
+        //부서별 목록 드롭다운으로 뿌리기
+        //부서1로 조회
+        @GetMapping("/master/departdropdown")
+        public ResponseEntity<?> viewDropdownDepart(){
+
+            Map<String, Object> responseData = new HashMap<>();
+            List<String> departmentList = masterDataDepartmentRepository.dropDownListByDepart();
+
+            responseData.put("departmentList", departmentList);
+
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
+        }
+
+
         //부서별 목록 조회(카테고리용)
         //부서1로 조회하는 기능
         @GetMapping("/master/department/sort")
@@ -130,7 +141,7 @@ public class MasterDataController {
         }
 
         //부서 삭제
-        @PostMapping("/master/department/del{depart2}")
+        @PostMapping("/master/department/del/{depart2}")
         public ResponseEntity<?> delDepart(@PathVariable String depart2){
 
             String Strdepart2 = "["+depart2+"]";
@@ -139,14 +150,15 @@ public class MasterDataController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
-/*
+
         //부서 수정
-        @PostMapping("")
-        public Res
-*/
+        @PostMapping("/master/department/update/{depart2}")
+        public ResponseEntity<?> updateDepart(@PathVariable String depart2,
+                                              @RequestBody MasterDataDepartmentDTO departmentDTO){
 
-
-
-
+            String Strdepart2 = "["+depart2+"]";
+            masterDataService.updateDepart(Strdepart2, departmentDTO);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
 
 }

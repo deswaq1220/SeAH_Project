@@ -129,51 +129,35 @@ public class MasterDataService {
            }
        }
 
-    //부서 수정하기
-    @Transactional
-    public MasterDataDepartmentDTO updateDepart(String depart2, MasterDataDepartmentDTO departmentDTO){
-        try{
+        //부서 수정하기
+        @Transactional
+        public MasterDataDepartmentDTO updateDepart(String depart2, MasterDataDepartmentDTO departmentDTO){ //depart2: 수정해야하는 값, departmentDTO: 수정 값
+            try{
 
-            Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(depart2);
+                Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(depart2);
 
-            //변경값이 존재할 경우
-            if(target.isPresent()){
+                //변경값이 존재할 경우
+                if(target.isPresent()){
 
-                MasterDataDepartmentDTO targetDTO = MasterDataDepartmentDTO.of(target.get());
-                targetDTO.setSecondDepartment(departmentDTO.getSecondDepartment());
-                targetDTO.setFirstDepartment(departmentDTO.getFirstDepartment());
+                    String firstDepartment = departmentDTO.getFirstDepartment();
+                    String secondDepartment = departmentDTO.getSecondDepartment();
 
-                log.info(targetDTO);
+                    masterDataDepartmentRepository.updateDepartment(depart2, firstDepartment, secondDepartment);
 
-/*                MasterDataDepartment updatedEntity = targetDTO.toEntity();
-                log.info(updatedEntity);
+                    log.info("수정 성공");
 
-                // 수정된 엔티티를 저장
-                masterDataDepartmentRepository.save(updatedEntity);
-                log.info("수정 성공");
-            }*/
+                  //변경값이 없을 경우
+                } else{
+                    log.info("수정 실패");
+                }
 
 
-/*                // Update the existing entity using @Builder constructor
-                MasterDataDepartment updatedEntity = MasterDataDepartment.builder()
-                        .firstDepartment(targetDTO.getFirstDepartment())
-                        .secondDepartment(targetDTO.getSecondDepartment()) // Set the @Id field value
-                        .build();*/
+                return departmentDTO;
 
-                masterDataDepartmentRepository.save(updatedEntity);
-                log.info("수정 성공");
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
-
-
-
-
-
-            return departmentDTO;
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
+            return null;
         }
-        return departmentDTO;
-    }
 
 }

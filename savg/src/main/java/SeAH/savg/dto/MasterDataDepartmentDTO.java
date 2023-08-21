@@ -24,9 +24,11 @@ public class MasterDataDepartmentDTO {
     }
 
     public MasterDataDepartment toEntity() {
-        return modelMapper.map(this, MasterDataDepartment.class);
+        return MasterDataDepartment.builder()
+                .firstDepartment(this.firstDepartment)
+                .secondDepartment(this.secondDepartment) // 직접 기본키 값을 설정
+                .build();
     }
-
 
 
     public static MasterDataDepartment createMasterDepart(MasterDataDepartmentDTO departmentDTO) {

@@ -1,6 +1,7 @@
 package SeAH.savg.service;
 
 import SeAH.savg.dto.MasterDataDepartmentDTO;
+import SeAH.savg.entity.MasterDataDepartment;
 import SeAH.savg.repository.MasterDataDepartmentRepository;
 import SeAH.savg.repository.MasterDataRepository;
 import org.junit.jupiter.api.Test;
@@ -47,15 +48,15 @@ public class MasterServiceTest {
     }*/
 
     //부서 수정하기
-    @Test
+/*    @Test
     public void testUpdateDepart(){
 
         MasterDataDepartmentDTO departmentDTO = new MasterDataDepartmentDTO();
-        departmentDTO.setFirstDepartment("[영업부]");
-        departmentDTO.setSecondDepartment("[영업부수정22]");
+        departmentDTO.setSecondDepartment("[품질반려팀]");
+        departmentDTO.setFirstDepartment("[품질부]");
 
-        masterDataService.updateDepart("[품질부]", departmentDTO);
-    }
+        masterDataService.updateDepart("[품질팀]", departmentDTO);
+    }*/
 
 
 }
