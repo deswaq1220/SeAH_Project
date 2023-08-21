@@ -12,7 +12,6 @@ import javax.persistence.Id;
 @Getter @ToString
 public class SpecialDanger {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String dangerMenu;       // 위험분류
 
     private int dangerNum;           // 순서

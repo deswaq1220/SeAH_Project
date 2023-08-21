@@ -30,8 +30,5 @@ public class Attendance {
     @Column(nullable = false)
     private LocalDateTime attenTime; //출석일자
 
-    //@ManyToOne(fetch = FetchType.EAGER)
-    //@JoinColumn(name = "edu_id")
-    //private Edu edu;
 
 }
