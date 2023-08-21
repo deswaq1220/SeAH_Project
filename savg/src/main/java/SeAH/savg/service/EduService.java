@@ -140,7 +140,6 @@ public class EduService {
         } else {
             results = eduRepository.eduTraineeStatisByNameAndDepart(eduCategory, year,month, name, department); // 카테고리+부서+이름
         }
-        System.out.println(results.size());
 
         int sumCategories = 0;
         List<EduStatisticsDTO> eduStatisticsDTOList = new ArrayList<>();
@@ -175,7 +174,6 @@ public class EduService {
         attenNameSumEduTimeList.set(0, sumCategories);
 
         // attenNameSumEduTimeList에는 [전체, 크루, dm, 관리감독, 기타] 카테고리별 합산 시간이 들어있음
-        System.out.println("타이틀");
         System.out.println("전체: " + attenNameSumEduTimeList.get(0));
         System.out.println("크루: " + attenNameSumEduTimeList.get(1));
         System.out.println("dm: " + attenNameSumEduTimeList.get(2));
@@ -193,30 +191,6 @@ public class EduService {
         return eduRepository.runMonthEduListByCategory(year, month, eduCategory);
 
     }
-
-
-/*
-    // 4. 월별교육통계 조회하기 - 각 카테고리별 교육 목록 조회
-    public Long showMonthEduTimeStatis2(edustate eduCategory, int month){
-
-        List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
-        List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
-        Long eduSumTime = 0L;
-
-        for(Object[] result : results){
-            String time = (String)result[0];
-
-            try {
-                Long timeValue = Long.parseLong(time);
-                eduSumTime += timeValue;
-            } catch (NumberFormatException e) {
-                System.out.println("월별 교육 실행시간 조회: 합산할 수 없습니다(Long타입 아님)");
-            }
-
-        }
-        return eduSumTime;
-    }
-*/
 
 
 

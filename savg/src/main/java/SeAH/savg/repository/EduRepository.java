@@ -22,7 +22,6 @@ public interface EduRepository extends JpaRepository<Edu, String> {
     List<Edu> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
 
 
-
     ////관리자 교육 통계
     //1-1 날짜 필터링
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
@@ -42,7 +41,6 @@ public interface EduRepository extends JpaRepository<Edu, String> {
     List<Object[]> selectMonthAndName(@Param("year") int year, @Param("month") int month, @Param("name") String name);
 
     //1-3 부서+날짜
-
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a " +
@@ -62,7 +60,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
 
 
- //1-4 교육분류+부서+날짜
+ //1-5 교육분류+부서+날짜
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a " +
@@ -71,7 +69,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "AND YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month AND a.attenDepartment = :department")
     List<Object[]> eduTraineeStatisByDepart(@Param("eduCategory") edustate eduCategory ,@Param("year") int year, @Param("month") int month, @Param("department") String department);
 
-    //부서+이름+날짜
+    //1-6 부서+이름+날짜
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a " +
@@ -79,7 +77,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "WHERE YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month AND a.attenDepartment = :department AND a.attenName = :name")
     List<Object[]> selectDepartName(@Param("year") int year, @Param("month") int month, @Param("department") String department, @Param("name") String name);
 
-    //1-5 교육분류+이름+날짜
+    //1-7 교육분류+이름+날짜
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a " +
@@ -88,7 +86,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "AND YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month AND a.attenName = :name")
     List<Object[]> eduTraineeStatisByName(@Param("eduCategory") edustate eduCategory ,@Param("year") int year, @Param("month") int month, @Param("name") String name);
 
-    //1-6 교육분류+부서+이름+날짜
+    //1-8 교육분류+부서+이름+날짜
     @Query("SELECT e.eduTitle, e.eduStartTime, e.eduSumTime, a.attenName, a.attenEmployeeNumber, a.attenDepartment " +
             "FROM Edu e " +
             "JOIN Attendance a " +
@@ -98,8 +96,6 @@ public interface EduRepository extends JpaRepository<Edu, String> {
             "And a.attenDepartment = :department " +
             "AND a.attenName = :name")
     List<Object[]> eduTraineeStatisByNameAndDepart(@Param("eduCategory") edustate eduCategory , @Param("year") int year, @Param("month") int month, @Param("name") String name, @Param("department") String department);
-
-
 
 
 
