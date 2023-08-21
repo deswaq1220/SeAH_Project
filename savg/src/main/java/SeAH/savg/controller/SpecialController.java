@@ -2,6 +2,7 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.repository.SpecialInspectionRepository;
+import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,12 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
+ private final SpeicalFileRepository specialFileRepository;
 
  // ------------ 사용자 ------------------------------------------
 
@@ -43,15 +45,8 @@ public class SpecialController {
       return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart), HttpStatus.OK);
   }
 
-//  // 수시점검 저장
-//  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
-//  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
-//                                  @PathVariable String masterdataFacility,
-//                                  @RequestBody Map<String, Object> requesstData) throws Exception {
-//      return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, requestData), HttpStatus.CREATED);
-//  }
 
- // 수시점검 저장 -- 파일
+ // 수시점검 저장
  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
                                  @PathVariable String masterdataFacility,
@@ -62,8 +57,13 @@ public class SpecialController {
 
  // 상세조회
  @GetMapping("/special/detail/{speId}")
- public ResponseEntity<?> speDetail(@PathVariable String speId) {
-  return new ResponseEntity<>(specialInspectionService.findSpeDetail(speId), HttpStatus.OK);
+ public ResponseEntity<Map<String, Object>> getSpecialDetail(@PathVariable String speId) {
+   Map<String, Object> detailMap = specialInspectionService.getSpecialDetail(speId);
+   if (detailMap != null) {
+    return new ResponseEntity<>(detailMap, HttpStatus.OK);
+   } else {
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   }
  }
 
 
@@ -76,12 +76,6 @@ public class SpecialController {
 
 
 // --------------------------- 관리자
-  
-     // 관리자 : 전체 현황 조회
-    @GetMapping("/special/list")
-    public ResponseEntity<?> speList(){
-        return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
-    }
 
     //월간 수시점검 건수(완료, 미완료 모두 포함_)
     @GetMapping("/special/statistics/count")
@@ -96,10 +90,25 @@ public class SpecialController {
      * ex : 주조 1건, 압출 2건 ...
      */
     @GetMapping("/special/statistics/partandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
+    public ResponseEntity<?> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
-        System.out.println("========================== 연도:" + year + "          월:" + month);
+
+        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByPartAndMonth(year, month);
+
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+    /* (엑셀용) 월간 수시점검 현황 통계 조회 - 점검영역별
+     * 형태: 파트(주조, 압출, 가공, 품질, 생산기술, 금형) + 점검건수 리스트
+     * ex : 주조 1건, 압출 2건 ...
+     */
+    @GetMapping("/special/statistics/partandmonthforexcel")
+    public ResponseEntity<?> getSpecialListByPartAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+
         List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
 
         return ResponseEntity.ok(statisticsList);
@@ -179,6 +188,14 @@ public class SpecialController {
 
       return ResponseEntity.ok(statisticsList);
   }*/
+
+    /* 1~12월 내 발생한 수시점검 건수*/
+    @GetMapping("/special/statistics/yearcount")
+    public ResponseEntity<?> getSpecialCountByYear(@RequestParam("year") int year) {
+        int statisticsCount = specialInspectionRepository.specialCountByYear(year);
+
+        return ResponseEntity.ok(statisticsCount);
+    }
 }
 
 

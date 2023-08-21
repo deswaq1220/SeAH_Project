@@ -97,8 +97,13 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
 
 
     //연
+    //연간(1~12월) 총 수시점검 건수
+    @Query("SELECT COUNT(s) " +
+            "FROM SpecialInspection s " +
+            "WHERE YEAR(s.speDate) = :year ")
+    int specialCountByYear(@Param("year") int year);
 
-    //전체 월별 수시점검 건수
+    //전체 월별(1~12월) 수시점검 건수
     @Query("SELECT MONTH(s.speDate), COALESCE(COUNT(s), 0) " +
             "FROM SpecialInspection s " +
             "WHERE YEAR(s.speDate) = :year " +

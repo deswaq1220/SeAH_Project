@@ -2,6 +2,7 @@ package SeAH.savg.service;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
+import SeAH.savg.dto.SpecialFileFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -54,9 +55,13 @@ public class SpecialInspectionService {
         List<SpecialTrap> specialTrapList = specialTrapRepository.findAllOrderByTrapNum();
         responseData.put("specialTrapList", specialTrapList);
 
-        // 고정수신자, 파트관리자 이메일리스트
-        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
+        // 파트관리자 이메일리스트
+        List<Email> emailList = emailRepository.findByEmailPart(masterdataPart);
         responseData.put("emailList", emailList);
+
+        // 고정수신자 이메일리스트
+        List<Email> staticEmailList = emailRepository.findByMasterStatus(Y);
+        responseData.put("staticEmailList", staticEmailList);
 
         return responseData;
     }
@@ -86,11 +91,11 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-            String completeKey = "미완료";
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, completeKey);
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
+
         return special;
     }
 
@@ -128,10 +133,10 @@ public class SpecialInspectionService {
         responseData.put("listOfFac", listOfFac);
 
         // 찾은 SpecialInspection의 id를 이용해 파일찾기
-        List<SpecialFile> speFileOfFac = new ArrayList<>();
+        List<SpecialFileFormDTO> speFileOfFac = new ArrayList<>();
         for(SpecialInspection listOfFacId : listOfFac){
             findId = listOfFacId.getSpeId();        // id세팅
-            List<SpecialFile> files= specialFileRepository.findBySpecialInspection_SpeId(findId);
+            List<SpecialFileFormDTO> files= specialFileRepository.findBySpecialInspection_SpeId(findId);
             speFileOfFac.addAll(files);
         }
         responseData.put("speFileOfFac", speFileOfFac);
@@ -139,18 +144,26 @@ public class SpecialInspectionService {
     }
 
     // 수시점검 상세조회
-    @Transactional
-    public Map<String, Object> findSpeDetail(String speId){
-        Map<String, Object> responseData = new HashMap<>();
-        SpecialInspection speDetailFindId = specialInspectionRepository.findAllBySpeId(speId);
-        List<SpecialFile> speFileDetailFindIds = specialFileRepository.findBySpecialInspection_SpeId(speId);
+    public Map<String, Object> getSpecialDetail(String speId) {
+        Map<String, Object> detailMap = new HashMap<>();
 
-        responseData.put("speDetailFindId", speDetailFindId);
-        responseData.put("speFileDetailFindIds", speFileDetailFindIds);
+        // 수시점검 데이터
+        SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+        detailMap.put("specialData", special);
 
-        return responseData;
+        // 이미지 데이터
+        List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+        if (!speFileDTOList.isEmpty()) {
+            List<String> imageUrls = new ArrayList<>();
+            for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
+                String imagePath = speFileDTO.getSpeFileUrl();
+                imageUrls.add(imagePath);
+            }
+            detailMap.put("imageUrls", imageUrls);
+        }
+
+        return detailMap;
     }
-
 
 
     // 완료처리:업데이트
@@ -160,13 +173,11 @@ public class SpecialInspectionService {
 
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            String completeKey = "완료";
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO, completeKey);
+            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO);
 
             for(SpecialFile specialFile : uploadFiles)
                 specialFile.setSpecialInspection(special);
         }
-
 
         special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
         special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
@@ -223,7 +234,6 @@ public class SpecialInspectionService {
     }
 
     //1~12월까지 월별 수시점검 위험분류 건수
-
    public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 
@@ -251,7 +261,7 @@ public class SpecialInspectionService {
 
 
 
-    // 1~12월까지 월별 수시점검 건수
+    // 1~12월까지 연간 수시점검 건수
      public List<Map<String, Object>> setSpecialCountList(int year){
         List<Object[]> statisticsList = specialInspectionRepository.specialCountList(year);
 
@@ -279,6 +289,27 @@ public class SpecialInspectionService {
 
         return resultList;
     }
+
+    // (차트용) 월간 수시점검 영역별 건수
+    public List<Map<String, Object>> setSpecialListByPartAndMonth(int year, int month){
+
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
+
+        List<Map<String, Object>> keyValueList = new ArrayList<>(); // 최종 List
+
+        for (Object[] row : statisticsList) {
+
+            String part = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("sort", part);
+            dataPoint.put("수시점검", count);
+            keyValueList.add(dataPoint);
+        }
+        return keyValueList;
+    }
+
 
 
 }

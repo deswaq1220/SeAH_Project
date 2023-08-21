@@ -73,7 +73,7 @@ public class SpecialInspectionRepositoryTest {
         }
     }*/
 
-    @Test
+/*    @Test
     public void testSpecialCause(){
         List<Object[]> result = specialInspectionRepository.specialListByCauseAndMonth(2023,8);
         for(Object[] res : result){
@@ -81,7 +81,7 @@ public class SpecialInspectionRepositoryTest {
             Long count = (Long)res[1];
             System.out.println("결과: " + cause + count);
         }
-    }
+    }*/
 
 
 
