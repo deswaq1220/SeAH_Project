@@ -9,10 +9,10 @@ import javax.persistence.Id;
 
 @Entity
 @Getter @ToString
-public class RegularInspectionKind {
+public class RegularInspectionName {
 
     @Id
-    private String regularSpeKind;       // 정기점검 구분
+    private String regularInsName;       // 정기점검 구분
 
     @Column(nullable = false)
     private int regularSpeNum;           // 순서
