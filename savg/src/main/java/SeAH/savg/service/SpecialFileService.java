@@ -30,11 +30,16 @@ public class SpecialFileService {
 
         List<MultipartFile> files = speInsFormDTO.getFiles();
         for (MultipartFile file : files) {
-            String originalFilename = file.getOriginalFilename();
-            String makeSpeFileName = fileService.uploadFile(speFileLocation, originalFilename, file.getBytes());
-            String fileUploadFullUrl = "/images/specialInspection/" + makeSpeFileName;
+            byte[] resizedImageData = fileService.resizeImageToByteArray(file);
+
+            String originalFilename = file.getOriginalFilename();  // 원래파일명
+            String makeSpeFileName = fileService.makeFileName(speFileLocation, originalFilename, resizedImageData); // 파일명
+            String fileUploadFullUrl = "/images/specialInspection/" + makeSpeFileName;  // 업로드 url
+
+
 
             System.out.println("파일경로: " + fileUploadFullUrl);
+
 
             // 파일 정보 생성 및 저장
             SpecialFile specialFile = new SpecialFile();
@@ -54,35 +59,6 @@ public class SpecialFileService {
 
 
 
-
-//    // 파일 등록
-//    public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO) throws Exception {
-//        List<SpecialFile> uploadedFiles = new ArrayList<>();
-////        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-//        List<MultipartFile> files = speInsFormDTO.getFiles();
-//        for (MultipartFile file : files) {
-//            String originalFilename = file.getOriginalFilename();
-//            String makeSpeFileName = generateUniqueFileName(originalFilename);
-//            String fileUploadFullUrl = speFileLocation + File.separator + makeSpeFileName;
-//
-//            System.out.println("파일경로: " + fileUploadFullUrl);
-//            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-//            fos.write(file.getBytes());
-//            fos.close();
-//
-//            // 파일 정보 생성 및 저장
-//            SpecialFile specialFile = new SpecialFile();
-//
-//            specialFile.setSpeFileOriName(originalFilename);
-//            specialFile.setSpeFileUrl(fileUploadFullUrl);
-//            specialFile.setSpeFileName(makeSpeFileName);
-//            speicalFileRepository.save(specialFile); // 데이터베이스에 저장
-//
-//            uploadedFiles.add(specialFile);
-//        }
-//
-//        return uploadedFiles;
-//    }
 
 
 
