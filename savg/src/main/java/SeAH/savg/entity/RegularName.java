@@ -9,7 +9,7 @@ import javax.persistence.Id;
 
 @Entity
 @Getter @ToString
-public class RegularInspectionName {
+public class RegularName {
 
     @Id
     private String regularInsName;       // 정기점검 구분
