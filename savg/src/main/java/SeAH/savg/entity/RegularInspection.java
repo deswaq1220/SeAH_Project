@@ -14,9 +14,8 @@ import java.time.LocalDateTime;
 public class RegularInspection {
 
     @Id
-    private String speId;                    // id
+    private String regularId;                    // id
 
-    //지금은 참조키가 아님
     @Column(nullable = false)
     private String regularInsName;          // 관찰 점검종류(또는 이름)   참조테이블: RegularName
 
