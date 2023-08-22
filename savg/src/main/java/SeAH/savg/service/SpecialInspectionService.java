@@ -6,6 +6,7 @@ import SeAH.savg.dto.SpecialFileFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,7 @@ public class SpecialInspectionService {
     private final SpecialDangerRepository specialDangerRepository;
     private final SpecialTrapRepository specialTrapRepository;
 
+    private ModelMapper modelMapper = new ModelMapper();
 
     // 수시점검 등록화면 조회
     @Transactional
@@ -91,7 +93,7 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO);
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, NO);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
@@ -154,12 +156,20 @@ public class SpecialInspectionService {
         // 이미지 데이터
         List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
         if (!speFileDTOList.isEmpty()) {
-            List<String> imageUrls = new ArrayList<>();
+            List<String> compImageUrls = new ArrayList<>();         // 완료이미지 url
+            List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
+
             for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
                 String imagePath = speFileDTO.getSpeFileUrl();
-                imageUrls.add(imagePath);
+
+                if(speFileDTO.getIsComplete() == OK){            // 완료이미지 세팅
+                    compImageUrls.add(imagePath);
+                } else if (speFileDTO.getIsComplete() == NO){    // 미완료이미지 세팅
+                    noCompImageUrls.add(imagePath);
+                }
             }
-            detailMap.put("imageUrls", imageUrls);
+            detailMap.put("compImageUrls", compImageUrls);      // 완료이미지
+            detailMap.put("noCompImageUrls", noCompImageUrls);  // 미완료이미지
         }
 
         return detailMap;
@@ -169,18 +179,32 @@ public class SpecialInspectionService {
     // 완료처리:업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("-------------서비스 speDto: " +speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
 
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO);
+            List<SpecialFile> uploadFiles;
+
+            if(speInsFormDTO.getSpeComplete() == OK){           // 완료처리일 경우
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, OK);
+            } else {                                            // 수정일 경우
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, NO);
+            }
 
             for(SpecialFile specialFile : uploadFiles)
                 specialFile.setSpecialInspection(special);
         }
 
-        special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
-        special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
+        // 완료여부가 OK일 경우만 완료시간 세팅
+        if(speInsFormDTO.getSpeComplete() == OK){
+            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+        }
+
+        // dto -> entity 업데이트
+        modelMapper.map(speInsFormDTO, special);
+        // 저장(업데이트)
+        specialInspectionRepository.save(special);
 
         return special;
     }

@@ -14,13 +14,14 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
- private final SpeicalFileRepository specialFileRepository;
 
  // ------------ 사용자 ------------------------------------------
 
@@ -67,13 +68,18 @@ public class SpecialController {
  }
 
 
- // 완료처리(update)
+ // 완료처리 / 수정(update)
  @PostMapping("/special/detail/{speId}")
  public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
   return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
  }
 
-
+// -------------------------- 공통
+    // 수시저검 등록된 전체 현황
+    @GetMapping("/master/spcial/list")
+    public ResponseEntity<?> speFullList() {
+        return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
+    }
 
 // --------------------------- 관리자
 

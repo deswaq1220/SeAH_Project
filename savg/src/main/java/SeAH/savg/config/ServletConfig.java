@@ -9,7 +9,7 @@ public class ServletConfig {
     @Bean
     public CommonsMultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        resolver.setMaxUploadSize(10485760); // 최대 업로드 크기 설정 (10MB)
+//        resolver.setMaxUploadSize(10485760); // 최대 업로드 크기 설정 (10MB)
         return resolver;
     }
 }

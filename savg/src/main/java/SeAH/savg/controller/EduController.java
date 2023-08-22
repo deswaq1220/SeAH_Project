@@ -19,13 +19,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 //@Controller
 @RestController
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "http://172.20.20.252:3000") //세아
+//@CrossOrigin(origins = "http://172.20.20.252:3000") //세아
 
 @Log4j2
 
@@ -163,8 +165,6 @@ public class EduController {
         }
     }
 
-    //  교육일지 삭제
-
 
     // 대시보드 (통계)
     //1. 월별 교육실행시간 통계 조회하기 (3000/edustatics)
@@ -175,7 +175,7 @@ public class EduController {
     }
 
 
-    // 1-1. 월별 교육실행리스트 통계 조회하기 (3000/edustatics)
+    // 1-1. 월별 교육 리스트 통계 조회하기 (3000/edustatics)
     @GetMapping("/edustatistics/getmonthlyedulist")
     public ResponseEntity<List<Object[]>> viewMonthlyCategory(@RequestParam int year,
                                                               @RequestParam int month,
@@ -203,8 +203,8 @@ public class EduController {
 
 
     // 2. 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명) (3000/edustatics/atten)
-    @GetMapping("/edustatistics/getmonth") //나중에 주소를 /edu/statistics/getmonth 등으로 바꿔야 할듯
-    public ResponseEntity<List<EduStatisticsDTO>> viewMonthEduStatis(@RequestParam(name = "eduCategory", required = false) edustate eduCategory,
+    @GetMapping("/edustatistics/atten")
+    public ResponseEntity<HashMap<String,List<Object>>> viewMonthEduStatis(@RequestParam(name = "eduCategory", required = false) edustate eduCategory,
                                                                      @RequestParam(name = "year") int year,
                                                                      @RequestParam(name = "month") int month,
                                                                      @RequestParam(name = "department", defaultValue = "") String department,
@@ -217,7 +217,7 @@ public class EduController {
             };
         };
 
-        List<EduStatisticsDTO> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, year, month, department, name);
+        HashMap<String,List<Object>> statisticsList = eduService.showMonthEduTraineeStatics(eduCategory, year, month, department, name);
         return ResponseEntity.ok(statisticsList);
 
     }
