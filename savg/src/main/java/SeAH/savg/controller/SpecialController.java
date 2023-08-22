@@ -2,7 +2,6 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.repository.SpecialInspectionRepository;
-import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,11 +69,14 @@ public class SpecialController {
  }
 
 // -------------------------- 공통
+
+
     // 수시저검 등록된 전체 현황
     @GetMapping("/master/spcial/list")
     public ResponseEntity<?> speFullList() {
         return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
     }
+
 
 // --------------------------- 관리자
 

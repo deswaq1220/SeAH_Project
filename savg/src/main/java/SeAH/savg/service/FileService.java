@@ -63,11 +63,14 @@ public class FileService {
   // 새 사이즈
   int newWidth = 0;
   int newHeight = 0;
-  if(originalImg.getHeight() > originalImg.getHeight()){  // 세로이미지이면
+  if(originalImg.getHeight() < originalImg.getWidth()) {   // 가로이미지이면
+    newWidth = 640;
+    newHeight = 480;
+  } else if(originalImg.getHeight() > originalImg.getWidth()){  // 세로이미지이면
     newWidth = 480;
     newHeight = 640;
-  } else {                       // 가로이미지이면
-    newWidth = 640;
+  } else {  // 정방형이면
+    newWidth = 480;
     newHeight = 480;
   }
 
