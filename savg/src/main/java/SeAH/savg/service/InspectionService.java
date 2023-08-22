@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,31 +22,37 @@ public class InspectionService {
         List<Object[]> regularCountList = regularInspectionRepository.regularCountList(year);
         List<Object[]> specialCountList = specialInspectionRepository.specialCountList(year);
 
-
-
-       /* List<Map<Integer, Long>> regularDataPoints = new ArrayList<>();*/
         Map<Integer, Long> regularCountListMap = new HashMap<>();
-        for(Object[] regularData : regularCountList){
-
+        for (Object[] regularData : regularCountList) {
             Integer month = (Integer) regularData[0];
             Long count = (Long) regularData[1];
             regularCountListMap.put(month, count);
+            System.out.println("체크" + regularCountListMap);
         }
 
+        Map<Integer, Long> specialCountListMap = new HashMap<>();
+        for (Object[] specialData : specialCountList) {
+            Integer month = (Integer) specialData[0];
+            Long count = (Long) specialData[1];
+            specialCountListMap.put(month, count);
+            System.out.println("체크" + specialCountListMap);
+        }
 
         List<Map<String, Object>> resultList = new ArrayList<>();
-        for(Object[] specialData : specialCountList){
+        Set<Integer> allMonths = new HashSet<>(); //Set은 중복된 값을 허용하지 않는 자료구조
+        allMonths.addAll(regularCountListMap.keySet());
+        allMonths.addAll(specialCountListMap.keySet());
 
-            Integer month = (Integer)specialData[0];
-            Long regularCount = regularCountListMap.getOrDefault(month, 0L);//정기점검 건수
-            Long specialCount = (Long)specialData[1];  //수시점검 건수
+        for (Integer month : allMonths) {
+            Long regularCount = regularCountListMap.getOrDefault(month, 0L);
+            Long specialCount = specialCountListMap.getOrDefault(month, 0L);
 
-            Map<String, Object> finalDate = new HashMap<>();
-            finalDate.put("month", month);
-            finalDate.put("정기점검", regularCount);
-            finalDate.put("수시점검", specialCount);
+            Map<String, Object> finalData = new HashMap<>();
+            finalData.put("month", month);
+            finalData.put("정기점검", regularCount);
+            finalData.put("수시점검", specialCount);
 
-            resultList.add(finalDate);
+            resultList.add(finalData);
         }
 
         return resultList;
