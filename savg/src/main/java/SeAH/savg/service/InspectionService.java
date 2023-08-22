@@ -14,36 +14,43 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 @Log4j2
-public class RegularInspectionService {
+public class InspectionService {
 
     private final RegularInspectionRepository regularInspectionRepository;
+    private final SpecialInspectionRepository specialInspectionRepository;
 
 
     //(lineChart) 1~12월까지 연간 수시점검 건수
-    public List<Map<String, Object>> setRegularCountList(int year){
-        List<Object[]> statisticsList = regularInspectionRepository.regularCountList(year);
+    public List<Map<String, Object>> setCountList(int year){
+        List<Object[]> regularCountList = regularInspectionRepository.regularCountList(year);
+        List<Object[]> specialCountList = specialInspectionRepository.specialCountList(year);
 
-        List<Map<String, Object>> dataPoints = new ArrayList<>();
 
-        for(Object[] row : statisticsList){
 
-            Integer month = (Integer) row[0];
-            Long count = (Long) row[1];
+       /* List<Map<Integer, Long>> regularDataPoints = new ArrayList<>();*/
+        Map<Integer, Long> regularCountListMap = new HashMap<>();
+        for(Object[] regularData : regularCountList){
 
-            Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("month", month);
-            dataPoint.put("y", count);
-
-            dataPoints.add(dataPoint);
+            Integer month = (Integer) regularData[0];
+            Long count = (Long) regularData[1];
+            regularCountListMap.put(month, count);
         }
 
-        Map<String, Object> finalDate = new HashMap<>();
-        finalDate.put("id", "정기점검");
-        finalDate.put("data", dataPoints);
 
         List<Map<String, Object>> resultList = new ArrayList<>();
-        resultList.add(finalDate);
+        for(Object[] specialData : specialCountList){
 
+            Integer month = (Integer)specialData[0];
+            Long regularCount = regularCountListMap.getOrDefault(month, 0L);//정기점검 건수
+            Long specialCount = (Long)specialData[1];  //수시점검 건수
+
+            Map<String, Object> finalDate = new HashMap<>();
+            finalDate.put("month", month);
+            finalDate.put("정기점검", regularCount);
+            finalDate.put("수시점검", specialCount);
+
+            resultList.add(finalDate);
+        }
 
         return resultList;
     }
