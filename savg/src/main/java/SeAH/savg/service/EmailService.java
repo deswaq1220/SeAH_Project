@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static SeAH.savg.dto.SpeInsStatisticsDTO.modelMapper;
+
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -35,15 +37,14 @@ public class EmailService {
     @Transactional
     public Email updateEmail(EmailFormDTO emailFormDTO, Long emailId){
         // 이메일 정보 가져오기
-        Email email = emailRepository.findById(emailId).get();
+        Email email = emailRepository.findById(emailId).orElseThrow();
 
         // 이메일 정보 수정
-        if(emailFormDTO.getEmailAdd() != null)
-            email.setEmailAdd(emailFormDTO.getEmailAdd());
-        if(emailFormDTO.getEmailPart() != null)
-            email.setEmailPart(emailFormDTO.getEmailPart());
-        if(emailFormDTO.getMasterStatus() != null)
-            email.setMasterStatus(emailFormDTO.getMasterStatus());
+        modelMapper.map(emailFormDTO, email);
+        email.setEmailId(emailId);
+
+        // 저장
+        emailRepository.save(email);
 
         return email;
     }
