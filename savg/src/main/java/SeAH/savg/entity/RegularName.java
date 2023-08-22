@@ -15,6 +15,6 @@ public class RegularName {
     private String regularInsName;       // 정기점검 구분
 
     @Column(nullable = false)
-    private int regularSpeNum;           // 순서
+    private int regularNum;           // 순서
 
 }
