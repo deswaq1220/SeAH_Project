@@ -13,8 +13,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.message.AuthException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -55,6 +56,14 @@ public class MasterDataService {
             List<Email> emailList = emailRepository.findAll();
             return emailList;
         }
+
+
+        // 기준정보(이메일) 삭제
+        @Transactional
+        public void deleteEmail(Long emailId){
+            System.out.println("서비스 이메일 아이디"+ emailId);
+            emailRepository.deleteById(emailId);
+    }
 
         // 기준정보 등록
         @Transactional

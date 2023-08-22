@@ -72,10 +72,36 @@ public class SpecialController {
 
 
     // 수시저검 등록된 전체 현황
-    @GetMapping("/master/spcial/list")
+    @GetMapping("/frequentinspection")
     public ResponseEntity<?> speFullList() {
-        return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
+        return new ResponseEntity<>(specialInspectionService.getPartAndFacilityData(), HttpStatus.OK);
     }
+
+    // 수시점검 전체현황 검색
+//   @GetMapping("/frequentinspection")
+//   public ResponseEntity<?> speFullList(@RequestParam (required = false) String spePart,
+//                                        @RequestParam (required = false) String speFacility,
+//                                        @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speStartDate,
+//                                        @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speEndDate,
+//                                        @RequestParam (required = false) SpeStatus speComplete,
+//                                        @RequestParam (required = false) String spePerson,
+//                                        @RequestParam (required = false) String speEmpNum
+//   ) {
+//    Map<String, Object> responseData = new HashMap<>();
+//
+//    // 날짜 변환
+//    LocalDateTime speStartDateTime = null;
+//    LocalDateTime speEndDateTime = null;
+//    if(speStartDate != null && speEndDate != null){
+//     speStartDateTime =  LocalDateTime.of(speStartDate, LocalTime.MIN);
+//     speEndDateTime =  LocalDateTime.of(speEndDate, LocalTime.MAX);
+//    }
+//
+//    Map<String, Object> searchSpeList = specialInspectionService.searchList(spePart, speFacility, speStartDateTime, speEndDateTime, speComplete, spePerson, speEmpNum);
+//    responseData.put("searchSpeList", searchSpeList);
+//
+//    return new ResponseEntity<>(responseData, HttpStatus.OK);
+//   }
 
 
 // --------------------------- 관리자
