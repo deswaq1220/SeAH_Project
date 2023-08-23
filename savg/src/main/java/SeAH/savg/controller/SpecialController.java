@@ -17,7 +17,6 @@ import java.util.Map;
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
 //@CrossOrigin(origins = "http://localhost:3000")
 @CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
-
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;

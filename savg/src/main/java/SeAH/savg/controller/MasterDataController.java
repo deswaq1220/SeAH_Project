@@ -20,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 public class MasterDataController {
 
 
