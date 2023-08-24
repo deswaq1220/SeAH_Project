@@ -5,8 +5,10 @@ import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.dto.SpecialFileFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -261,52 +263,53 @@ public class SpecialInspectionService {
 
 
     // 저장된 영역, 설비 리스트
-    public Map<String, Object> getPartAndFacilityData(){
+    public Map<String, Object> getPartAndFacilityDataAndAllList(){
         Map<String, Object> responseData = new HashMap<>();
         List<SpecialPart> specialPartList = specialPartRepository.findAllOrderByPartNum();        // 영역 리스트
         List<MasterData> facilityList = masterDataRepository.findAllOrderBymasterdataId();             // 설비 리스트
-
-
+        List<SpecialInspection> specialList = specialInspectionRepository.findAll(Sort.by(Sort.Direction.DESC, "speId"));
         responseData.put("specialPartList", specialPartList);
         responseData.put("facilityList", facilityList);
+        responseData.put("specialList", specialList);
 
         return responseData;
     }
 
 
+
     // 수시점검 전체조회 검색
-//    public Map<String, Object> searchList(String spePart, String speFacility, LocalDateTime speStartDateTime,
-//                                          LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum){
-//        Map<String, Object> searchSpeList = new HashMap<>();
-//        QSpecialInspection qSpecialInspection = QSpecialInspection.specialInspection;
-//        BooleanBuilder builder = new BooleanBuilder();
-//
-//        if (spePart != null) {
-//            builder.and(qSpecialInspection.spePart.eq(spePart));
-//        }
-//        if (speFacility != null) {
-//            builder.and(qSpecialInspection.speFacility.eq(speFacility));
-//        }
-//        if (speStartDateTime != null && speEndDateTime != null) {
-//            builder.and(qSpecialInspection.speDate.between(speStartDateTime, speEndDateTime));
-//        }
-//        if (speComplete != null) {
-//            builder.and(qSpecialInspection.speComplete.eq(speComplete));
-//        }
-//        if (spePerson != null) {
-//            builder.and(qSpecialInspection.spePerson.eq(spePerson));
-//        }
-//        if (speEmpNum != null) {
-//            builder.and(qSpecialInspection.speEmpNum.eq(speEmpNum));
-//        }
-//        Sort sort = Sort.by(Sort.Direction.DESC, "speId");
-//        List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
-//        List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.of(searchSpeData);
-//
-//        searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
-//        return searchSpeList;
-//
-//    }
+    public Map<String, Object> searchList(String spePart, String speFacility, LocalDateTime speStartDateTime,
+                                          LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum){
+        Map<String, Object> searchSpeList = new HashMap<>();
+        QSpecialInspection qSpecialInspection = QSpecialInspection.specialInspection;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (spePart != null) {
+            builder.and(qSpecialInspection.spePart.eq(spePart));
+        }
+        if (speFacility != null) {
+            builder.and(qSpecialInspection.speFacility.eq(speFacility));
+        }
+        if (speStartDateTime != null && speEndDateTime != null) {
+            builder.and(qSpecialInspection.speDate.between(speStartDateTime, speEndDateTime));
+        }
+        if (speComplete != null) {
+            builder.and(qSpecialInspection.speComplete.eq(speComplete));
+        }
+        if (spePerson != null) {
+            builder.and(qSpecialInspection.spePerson.eq(spePerson));
+        }
+        if (speEmpNum != null) {
+            builder.and(qSpecialInspection.speEmpNum.eq(speEmpNum));
+        }
+        Sort sort = Sort.by(Sort.Direction.DESC, "speId");
+        List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
+        List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.of(searchSpeData);
+
+        searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
+        return searchSpeList;
+
+    }
 
     //1~12월까지 월별 수시점검 위험분류 건수
    public List<Map<String,Object>> specialDetailListByDanger(int year){
