@@ -37,7 +37,7 @@ public class RegularInspection {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RegStatus regularContent;           // 점검내용: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
+    private RegStatus regularCheck;           // 점검내용: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
 
 
 

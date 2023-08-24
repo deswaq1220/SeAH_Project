@@ -1,6 +1,6 @@
 package SeAH.savg.repository;
 
-import SeAH.savg.entity.RegularName;
+import SeAH.savg.entity.RegularInspection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RegularInspectionRepository extends JpaRepository<RegularName, String> {
+public interface RegularInspectionRepository extends JpaRepository<RegularInspection, String> {
 
 
     //연간
