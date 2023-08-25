@@ -257,6 +257,28 @@ public class SpecialInspectionService {
         return responseData;
     }
 
+    //월간 수시점검 위험원인 건수(기타값 포함)
+    public List<Object[]> specialDetailListByCauseAndMonth(int year, int month){
+        List<Object[]> specialList = specialInspectionRepository.specialListByCauseAndMonth(year, month);
+        System.out.println("입력리스트"+ specialList);
+
+
+        //'기타(직접입력)'에 값 수정: 통계로 보여줄 때 기타(직접입력)으로 보여주기 위함.
+        Long allValue = specialInspectionRepository.specialCountByCauseAndMonth(year, month);//모든값
+        Long otherExcluedallValue = specialInspectionRepository.specialCountOtherExcludedByCauseAndMonth(year, month); //모든값-예외값
+
+        //기타 수정값 넣기
+        for (Object[] value : specialList) {
+            if ("기타(직접입력)".equals(value[0])) { // 값이 기타(직접입력)이면
+                value[1] = allValue - otherExcluedallValue; // 두 번째 값 수정
+                break; // 수정 후 루프 종료
+            }
+        }
+        System.out.println(specialList);
+        return specialList;
+    }
+
+
     //1~12월까지 월별 수시점검 위험분류 건수
    public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
