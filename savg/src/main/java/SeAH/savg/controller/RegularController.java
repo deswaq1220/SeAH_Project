@@ -1,15 +1,20 @@
 package SeAH.savg.controller;
 
+import SeAH.savg.dto.RegularDTO;
+import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
+import SeAH.savg.service.MakeIdService;
 import SeAH.savg.service.RegularInspectionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import SeAH.savg.service.MakeIdService;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +27,7 @@ public class RegularController {
 
     private final RegularInspectionRepository regularInspectionRepository;
     private final RegularInspectionService regularInspectionService;
+    private final MakeIdService makeIdService;
 
    //--------------------------------------통계 관련
 
@@ -43,4 +49,51 @@ public class RegularController {
             List<Map<String, Object>> statisticsList = regularInspectionService.regularDetailListByName(year);
             return ResponseEntity.ok(statisticsList);
         }*/
+
+
+    //정기점검 항목 리스트
+    @GetMapping("/regularname")
+    public ResponseEntity<Map<String, Object>> regularNameListSelect() {
+        Map<String, Object> responseData = new HashMap<>();
+        List<String> regularNameList = regularInspectionService.selectRegularName();
+        responseData.put("regularNameList", regularNameList);
+
+        return ResponseEntity.ok(responseData);
+    }
+
+    //정기점검 항목에 따른 체크리스트 세팅
+    @GetMapping("/regularcheck")
+    public ResponseEntity<Map<String, List<String>>> regularcheck(@RequestParam int regularNum) {
+        Map<String, List<String>> responseData = new HashMap<>();
+
+        List<String> checklist = regularInspectionService.selectRegularListByNum(regularNum);
+        responseData.put("checklist", checklist);
+
+        return ResponseEntity.ok(responseData);
+    }
+
+    //정기점검 등록
+    @PostMapping("/regular/new")
+    public ResponseEntity<String> createRegularInspection(@RequestBody RegularDetailDTO regularDetailDTO, @RequestBody RegularDTO regularDTO) {
+        regularInspectionService.createRegular(regularDetailDTO, regularDTO);
+        return ResponseEntity.ok("정기점검 등록 성공");
+    }
+
+
+    //정기점검 목록 조회
+    @GetMapping("/regularlist")
+    public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month){
+        List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
+
+        List<RegularDTO> regularDTOList = new ArrayList<>();
+        for (RegularInspection regularInspection : regularInspectionList){
+            regularDTOList.add(regularInspectionService.getRegularById(regularInspection.getRegularId()));
+        }
+        return ResponseEntity.ok(regularDTOList);
+
+
+    }
+
+
+
 }

@@ -34,30 +34,4 @@ public class RegularInspection {
     @Column(nullable = false)
     private String regularPart;                 // 점검구역(영역)
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RegStatus regularContent;           // 점검내용: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
-
-
-
-    /*필요한 경우 주석 제거*/
-/*
-    @Column(nullable = false)
-    private String speActContent;           // 개선대책
-
-    @Column(nullable = false)
-    private String speActPerson;             // 담당자 이름
-
-    @Column(nullable = false)
-    private String speActEmail;             // 담당자 이메일
-
-    @Column
-    private LocalDateTime speActDate;          // 점검완료일
-
-    @Enumerated(EnumType.STRING)
-    private SpeStatus speComplete;              // 완료여부
-*/
-
-
-
 }
