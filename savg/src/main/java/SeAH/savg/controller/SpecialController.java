@@ -27,32 +27,33 @@ public class SpecialController {
 
 
   // 월별 수시점검현황: 수시점검 qr찍고 첫번째 페이지
-  @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
+  @GetMapping("/special/{masterdataPart}/{masterdataId}")
   public ResponseEntity<?> speMonthly() {
       return new ResponseEntity<>(specialInspectionService.findSpeMonthly(), HttpStatus.OK);
   }
 
 
   // 설비별 현황 조회: 수시점검 qr찍고 두번째 페이지
-  @GetMapping("/special/list/{masterdataPart}/{masterdataFacility}")
-  public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility) {
-      return new ResponseEntity<>(specialInspectionService.findListOfFac(masterdataFacility), HttpStatus.OK);
+  @GetMapping("/special/list/{masterdataPart}/{masterdataId}")
+  public ResponseEntity<?> speListOfFac(@PathVariable String masterdataId) {
+      return new ResponseEntity<>(specialInspectionService.findListOfFac(masterdataId), HttpStatus.OK);
   }
 
 
   // 수시점검 저장화면(조회)
-  @GetMapping("/special/new/{masterdataPart}/{masterdataFacility}")
-  public ResponseEntity<?> speForm(@PathVariable String masterdataPart) {    // @PathVariable String masterdataFacility로 파라미터 받아서 해도될것같은디
-      return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart), HttpStatus.OK);
+  @GetMapping("/special/new/{masterdataPart}/{masterdataId}")
+  public ResponseEntity<?> speForm(@PathVariable String masterdataPart,
+                                   @PathVariable String masterdataId) {
+      return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart, masterdataId), HttpStatus.OK);
   }
 
 
  // 수시점검 저장
- @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
+ @PostMapping("/special/new/{masterdataPart}/{masterdataId}")
  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
-                                 @PathVariable String masterdataFacility,
+                                 @PathVariable String masterdataId,
                                  SpeInsFormDTO speInsFormDTO) throws Exception{
-  return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, speInsFormDTO), HttpStatus.CREATED);
+  return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataId, speInsFormDTO), HttpStatus.CREATED);
  }
 
 
@@ -77,14 +78,14 @@ public class SpecialController {
 // -------------------------- 공통
 
 
-    // 수시저검 등록된 전체 현황
-    @GetMapping("/frequentinspection")
-    public ResponseEntity<?> speFullList() {
-        return new ResponseEntity<>(specialInspectionService.getPartAndFacilityDataAndAllList(), HttpStatus.OK);
-    }
+//    // 수시저검 등록된 전체 현황
+//    @GetMapping("/frequentinspection")
+//    public ResponseEntity<?> speFullList() {
+//        return new ResponseEntity<>(specialInspectionService.getPartAndFacilityDataAndAllList(), HttpStatus.OK);
+//    }
 
     // 수시점검 전체현황 검색
-   @PostMapping("/frequentinspection")
+   @GetMapping("/frequentinspection")
    public ResponseEntity<?> speFullList(@RequestParam (required = false) String spePart,
                                         @RequestParam (required = false) String speFacility,
                                         @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speStartDate,
@@ -101,8 +102,6 @@ public class SpecialController {
        System.out.println("spePerson: "+spePerson);
        System.out.println("speEmpNum: "+speEmpNum);
 
-
-
     Map<String, Object> responseData = new HashMap<>();
 
     // 날짜 변환
@@ -115,6 +114,9 @@ public class SpecialController {
 
     Map<String, Object> searchSpeList = specialInspectionService.searchList(spePart, speFacility, speStartDateTime, speEndDateTime, speComplete, spePerson, speEmpNum);
     responseData.put("searchSpeList", searchSpeList);
+
+    Map<String, Object> searchPartAndFacList = specialInspectionService.getPartAndFacilityDataList();
+    responseData.put("searchPartAndFacList", searchPartAndFacList);
 
     return new ResponseEntity<>(responseData, HttpStatus.OK);
    }

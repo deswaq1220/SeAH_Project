@@ -1,5 +1,6 @@
 package SeAH.savg.service;
 
+import SeAH.savg.Exception.DuplicateCodeException;
 import SeAH.savg.dto.MasterDataDepartmentDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
@@ -65,14 +66,21 @@ public class MasterDataService {
             emailRepository.deleteById(emailId);
     }
 
-        // 기준정보 등록
+        // 기준정보 등록 : 영역당 설비
         @Transactional
-        public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO){
-            MasterData masterData = MasterData.createMaster(masterDataFormDTO);
-            System.out.println(masterData);
-            masterDataRepository.save(masterData);
+        public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO) {
+            String frontCode = String.valueOf(masterDataFormDTO.getMasterdataId());
 
-            return masterData;
+            if (masterDataRepository.existsByMasterdataId(frontCode)) {
+                // 이미 존재하는 코드이므로 오류 메시지를 반환하거나 예외를 던지는 등의 처리가 필요합니다.
+                throw new DuplicateCodeException("기존 코드 정보와 중복됩니다. 다른 코드를 사용하세요.");
+            } else {
+                MasterData masterData = MasterData.createMaster(masterDataFormDTO);
+                System.out.println(masterData);
+                masterDataRepository.save(masterData);
+                return masterData;
+            }
+
         }
 
         // 기준정보 삭제

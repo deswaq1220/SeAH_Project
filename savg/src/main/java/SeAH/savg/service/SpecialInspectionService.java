@@ -43,8 +43,13 @@ public class SpecialInspectionService {
 
     // 수시점검 등록화면 조회
     @Transactional
-    public Map<String, Object> findCreateMenu(String masterdataPart){
+    public Map<String, Object> findCreateMenu(String masterdataPart, String masterdataId){
         Map<String, Object> responseData = new HashMap<>();
+        // 설비명
+        MasterData idToFacilityData = masterDataRepository.findByMasterdataId(masterdataId);
+        String idToFacility = idToFacilityData.getMasterdataFacility();
+        responseData.put("facilityName", idToFacility);
+
         // 위험분류
         List<SpecialDanger> specialDangerList = specialDangerRepository.findAllOrderByDangerNum();
         responseData.put("specialDangerList", specialDangerList);
@@ -80,12 +85,16 @@ public class SpecialInspectionService {
 
     // 수시점검 저장
     @Transactional
-    public SpecialInspection speCreate(String masterdataPart, String masterdataFacility, SpeInsFormDTO speInsFormDTO) throws Exception {
+    public SpecialInspection speCreate(String masterdataPart, String masterdataId, SpeInsFormDTO speInsFormDTO) throws Exception {
         // speIsFormDTO 나머지 데이터 세팅
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));             // id
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
-        speInsFormDTO.setSpeFacility(masterdataFacility);                       // 설비
+
+        MasterData idToFacilityData = masterDataRepository.findByMasterdataId(masterdataId);   // 설비
+        String idToFacility = idToFacilityData.getMasterdataFacility();
+        speInsFormDTO.setSpeFacility(idToFacility);
+
         SpeStatus.deadLineCal(speInsFormDTO);                                               // 위험도에 따른 완료요청기한
 
         speInsFormDTO.createSpeIns();
@@ -130,12 +139,17 @@ public class SpecialInspectionService {
 
     // 수시점검 설비별 조회
     @Transactional(readOnly = true)
-    public Map<String, Object> findListOfFac(String masterdataFacility){
+    public Map<String, Object> findListOfFac(String masterdataId){
         Map<String, Object> responseData = new HashMap<>();
         String findId;          // 해당 설비를 가진 id를 저장할 함수
 
+        // 설비 id에 해당하는 설비명 찾기
+        MasterData idToFacilityData = masterDataRepository.findByMasterdataId(masterdataId);
+        String idToFacility = idToFacilityData.getMasterdataFacility();
+        responseData.put("facilityName", idToFacility);
+
         // 설비에 해당하는 SpecialInspection 찾기
-        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacilityOrderBySpeDateDesc(masterdataFacility);
+        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacilityOrderBySpeDateDesc(idToFacility);
         responseData.put("listOfFac", listOfFac);
 
         // 찾은 SpecialInspection의 id를 이용해 파일찾기
@@ -263,14 +277,13 @@ public class SpecialInspectionService {
 
 
     // 저장된 영역, 설비 리스트
-    public Map<String, Object> getPartAndFacilityDataAndAllList(){
+    public Map<String, Object> getPartAndFacilityDataList(){
         Map<String, Object> responseData = new HashMap<>();
         List<SpecialPart> specialPartList = specialPartRepository.findAllOrderByPartNum();        // 영역 리스트
         List<MasterData> facilityList = masterDataRepository.findAllOrderBymasterdataId();             // 설비 리스트
-        List<SpecialInspection> specialList = specialInspectionRepository.findAll(Sort.by(Sort.Direction.DESC, "speId"));
+
         responseData.put("specialPartList", specialPartList);
         responseData.put("facilityList", facilityList);
-        responseData.put("specialList", specialList);
 
         return responseData;
     }

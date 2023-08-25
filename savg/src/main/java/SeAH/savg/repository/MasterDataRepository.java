@@ -11,6 +11,9 @@ import java.util.List;
 @Repository
 public interface MasterDataRepository extends JpaRepository<MasterData, Integer> {
 
+    // 설비코드와 중복된 코드가 있는지 확인
+    boolean existsByMasterdataId(String masterdataId);
+
     @Query("SELECT s.partMenu FROM SpecialPart s order by s.partNum asc")
     List<String> partMenuList();
 
@@ -21,4 +24,7 @@ public interface MasterDataRepository extends JpaRepository<MasterData, Integer>
     // 설비찾기 : id로 정렬
     @Query("SELECT md FROM MasterData md ORDER BY md.masterdataId")
     List<MasterData> findAllOrderBymasterdataId();
+
+    // 설비코드에 해당하는 설비 찾기
+    MasterData findByMasterdataId(String masterdataId);
 }
