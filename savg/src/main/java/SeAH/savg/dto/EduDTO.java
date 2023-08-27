@@ -4,6 +4,7 @@ import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,9 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class EduDTO {
-    private Long eduId;
+    private String eduId;
     private edustate eduCategory;
     private String eduTitle;
     private String eduInstructor; //강사
@@ -74,20 +75,6 @@ public class EduDTO {
     // 생성자 추가
     public EduDTO() {}
 
-    // Edu 엔티티를 EduDTO로 변환하는 생성자
-    public EduDTO(Edu edu) {
-        this.eduId = edu.getEduId();
-        this.eduCategory = edu.getEduCategory();
-        this.eduTitle = edu.getEduTitle();
-        this.eduInstructor = edu.getEduInstructor();
-        this.eduPlace = edu.getEduPlace();
-        this.eduStartTime = edu.getEduStartTime();
-//        this.eduEndTime = edu.getEduEndTime();
-        this.eduSumTime = edu.getEduSumTime(); // LocalDateTime을 문자열로 변환하여 저장
-        this.eduTarget = edu.getEduTarget();
-        this.eduContent = edu.getEduContent();
-        this.eduWriter = edu.getEduWriter();
-    }
 
 
 

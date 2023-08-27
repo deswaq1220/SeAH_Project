@@ -11,9 +11,6 @@ import java.time.LocalDateTime;
 @Entity @Table(name = "special_inspection")
 @Getter @Setter @ToString
 public class SpecialInspection {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long speId;                     // id
 
     @Id
     private String speId;                    // id

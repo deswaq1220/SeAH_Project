@@ -1,5 +1,6 @@
 package SeAH.savg.service;
 
+import SeAH.savg.repository.EduRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.AopInvocationException;
@@ -12,7 +13,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class MakeIdService {
     public final SpecialInspectionRepository specialInspectionRepository;
-//    public final EduRepository eduRepository;
+    public final EduRepository eduRepository;
 //    public final RegularInspectionRepository regularInspectionRepository;
 
     private String makingId = "";   // id 저장할 변수
@@ -32,9 +33,10 @@ public class MakeIdService {
             }
 //            else if(categoryType.equals("R")){     // 정기점검
 //                categoryRepository = regularInspectionRepository.findAllByMaxSeq(todayYearAndMonth);
-//            } else if(categoryType.equals("E")){     // 안전교육
-//                categoryRepository = eduRepository.findAllByMaxSeq(todayYearAndMonth);
 //            }
+        else if(categoryType.equals("E")){     // 안전교육
+                categoryRepository = eduRepository.findAllByMaxSeq(todayYearAndMonth);
+            }
 
             seqNumber = categoryRepository;
             seqNumber++;

@@ -5,12 +5,12 @@ import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
@@ -43,7 +43,6 @@ public class SpecialController {
     @GetMapping("/special/list/{masterdataFacility}")
     public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility){
         specialInspectionService.findListOfFac(masterdataFacility);
-        System.out.println("수시점검 컨트롤러 out 111111111111111111111111");
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
