@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
@@ -161,14 +162,15 @@ public class EduService {
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         List<EduFileDTO> eduFileDTOList = new ArrayList<>();
         EduDTO eduDTO = new EduDTO(edu);
-        List<String> filesName = new ArrayList<>();
+
+        List<MultipartFile> multipartFileList = new ArrayList<>();
+
         for(EduFile file : eduFileList){
             EduFileDTO eduFileDTO = EduFileDTO.of(file);
             eduFileDTOList.add(eduFileDTO);
-         filesName.add(eduFileDTO.getEduFileOriName());
-
+            multipartFileList.add(eduFileService.fileUpload(file.getEduFileName()));
         }
-        eduDTO.setEduFiles(filesName);
+        eduDTO.setFiles();
 
 
 

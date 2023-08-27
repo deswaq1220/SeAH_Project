@@ -78,6 +78,11 @@ public class EduFileService {
         }
     }
 
+    public File fileUpload(String fileName) {
+        String filePath = eduFileLocation + "/" + fileName;
+        File uploadedFile = new File(filePath);
+       return uploadedFile;
+    }
     //파일명설정 : 오늘날짜_원본파일명 조합
     private String generateUniqueFileName(String originalFilename) {
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
