@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter @Setter
 public class SpeInsFormDTO {
-    private Long speId;                     // id
+    private String speId;                     // id
     private LocalDateTime speDate;          // 점검일
     private String spePerson;               // 점검자
     private String speEmail;                // 점검자 이메일(조치완료시 회신)

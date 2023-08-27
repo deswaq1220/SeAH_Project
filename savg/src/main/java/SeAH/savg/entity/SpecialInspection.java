@@ -10,9 +10,12 @@ import java.time.LocalDateTime;
 @Entity @Table(name = "special_inspection")
 @Getter @Setter
 public class SpecialInspection {
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long speId;                     // id
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long speId;                     // id
+    private String speId;                    // id
 
     @Column(nullable = false)
     private LocalDateTime speDate;          // 점검일

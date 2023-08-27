@@ -22,6 +22,7 @@ public class SpecialInspectionService {
     private final SpecialInspectionRepository specialInspectionRepository;
     private final EmailRepository emailRepository;
     private final SpecialFileService specialFileService;
+    private final MakeIdService makeIdService;
 
 
     // 수시점검 등록화면 조회 : 프론트연결용
@@ -47,9 +48,14 @@ public class SpecialInspectionService {
         return emailList;
     }
 
+    // 교육, 수시, 정기 카테고리 저장할 함수
+    private String categoryType = "S";
+
     // 수시점검 저장
     @Transactional
     public SpecialInspection speCreate(SpeInsFormDTO speInsFormDTO) throws Exception {
+        // pk(speId) 설정
+        speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));
         // 점검일 세팅
         speInsFormDTO.setSpeDate(LocalDateTime.now());
         // 위험도에 따른 완료요청기한 세팅
@@ -65,8 +71,24 @@ public class SpecialInspectionService {
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
-
-
         return special;
     }
+
+//    private String makingId = "";   // id 저장할 변수
+//    private String previousYearAndMonth = "";      // 이전 todayYearAndMonth 저장할 변수
+//    private int seqNumber = 0;
+//    public String makeId(){
+//        String todayYearAndMonth = new SimpleDateFormat("yyMM").format(new Date());
+//        // 이전 todayYearAndMonth 현재 비교해서 바뀌었을 경우 sequenceNumber를 0으로 초기화
+//        if(!(todayYearAndMonth.equals(previousYearAndMonth))) { seqNumber = 0; }
+//
+//        // seqNumber가 10 이하이면 00, 01 .... : 앞에 0 붙여주기
+//        if(seqNumber<10) { makingId = "S" + todayYearAndMonth + "-0" + seqNumber;  }
+//        else { makingId = "S" + todayYearAndMonth + "-" + seqNumber; }
+//
+//        System.out.println("여기 todayYearAndMonth : " + todayYearAndMonth);
+//        seqNumber++;
+//        previousYearAndMonth = todayYearAndMonth;
+//        return makingId;
+//    }
 }
