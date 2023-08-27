@@ -21,11 +21,6 @@ public class MasterData {
     @Column(nullable = false)
     private String masterdataFacility;       // 설비
 
-    /*
-    private String qrName;                   // qr 파일명
-    private String qrOriName;                // qr 원본파일명
-    private String qrUrl;                    // qr 파일 조회 경로
-    */
 
     @Builder
     MasterData(int masterdataId, String masterdataPart, String masterdataFacility) {

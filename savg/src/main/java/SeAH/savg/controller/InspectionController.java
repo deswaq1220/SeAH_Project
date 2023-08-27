@@ -1,5 +1,7 @@
 package SeAH.savg.controller;
 
+import SeAH.savg.service.InspectionService;
+import SeAH.savg.service.RegularInspectionService;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 
@@ -24,6 +26,8 @@ import java.util.Map;
 public class InspectionController {
 
     private final SpecialInspectionService specialInspectionService;
+    private final RegularInspectionService regularInspectionService;
+    private final InspectionService inspectionService;
 
 
 
@@ -32,12 +36,20 @@ public class InspectionController {
      * ex : 수시점검: 1월, 7건 2월 1건...
      *      정기점검: 1월, 2건 2월 1건...
      */
+/*    @GetMapping("/statistics/inspectioncount")
+    public ResponseEntity<List<Map<String, Object>>> getInspectionCountList(@RequestParam("year") int year){
+        List<Map<String, Object>> specialStatisticsList = specialInspectionService.setSpecialCountList(year);
+        List<Map<String, Object>> regularStatisticsList = regularInspectionService.setRegularCountList(year);
+        specialStatisticsList.addAll(regularStatisticsList);
+
+        return new ResponseEntity<>(specialStatisticsList, HttpStatus.OK);
+    }*/
+
     @GetMapping("/statistics/inspectioncount")
-    public ResponseEntity<List<Map<String, Object>>> getSpecialCountList(@RequestParam("year") int year){
-        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialCountList(year);
+    public ResponseEntity<List<Map<String, Object>>> getInspectionCountList(@RequestParam("year") int year){
+        List<Map<String, Object>> specialStatisticsList = inspectionService.setCountList(year);
 
-        return new ResponseEntity<>(statisticsList, HttpStatus.OK);
+        return new ResponseEntity<>(specialStatisticsList, HttpStatus.OK);
     }
-
 
 }

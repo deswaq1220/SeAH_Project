@@ -12,8 +12,8 @@ import javax.persistence.*;
 @Setter
 @ToString
 public class SpecialPart {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String partMenu; //영역분류
 
     @Column(nullable = false)

@@ -2,9 +2,11 @@ package SeAH.savg.service;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.dto.SpeInsFormDTO;
+import SeAH.savg.dto.SpecialFileFormDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,7 @@ public class SpecialInspectionService {
     private final SpecialDangerRepository specialDangerRepository;
     private final SpecialTrapRepository specialTrapRepository;
 
+    private ModelMapper modelMapper = new ModelMapper();
 
     // 수시점검 등록화면 조회
     @Transactional
@@ -54,9 +57,13 @@ public class SpecialInspectionService {
         List<SpecialTrap> specialTrapList = specialTrapRepository.findAllOrderByTrapNum();
         responseData.put("specialTrapList", specialTrapList);
 
-        // 고정수신자, 파트관리자 이메일리스트
-        List<Email> emailList = emailRepository.findByEmailPartOrMasterStatus(masterdataPart, Y);
+        // 파트관리자 이메일리스트
+        List<Email> emailList = emailRepository.findByEmailPart(masterdataPart);
         responseData.put("emailList", emailList);
+
+        // 고정수신자 이메일리스트
+        List<Email> staticEmailList = emailRepository.findByMasterStatus(Y);
+        responseData.put("staticEmailList", staticEmailList);
 
         return responseData;
     }
@@ -69,34 +76,15 @@ public class SpecialInspectionService {
 
     // 수시점검 저장
     @Transactional
-    public SpecialInspection speCreate(String masterdataPart, String masterdataFacility, Map<String, Object> requestData) throws Exception {
-        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();                      // SpeInsFormDTO 세팅
+    public SpecialInspection speCreate(String masterdataPart, String masterdataFacility, SpeInsFormDTO speInsFormDTO) throws Exception {
+        // speIsFormDTO 나머지 데이터 세팅
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));             // id
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
-        speInsFormDTO.setSpePerson((String) requestData.get("spePerson"));      // 점검자
-        speInsFormDTO.setSpeEmpNum((String) requestData.get("speEmpNum"));      // 사원번호
-        speInsFormDTO.setSpeEmail((String) requestData.get("speEmail"));        // 점검자 이메일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
         speInsFormDTO.setSpeFacility(masterdataFacility);                       // 설비
-        speInsFormDTO.setSpeDanger((String) requestData.get("speDanger"));      // 위험분류
-        speInsFormDTO.setSpeInjure((String) requestData.get("speInjure"));      // 부상부위
-        speInsFormDTO.setSpeCause((String) requestData.get("speCause"));        // 위험원인
-        speInsFormDTO.setSpeTrap((String) requestData.get("speTrap"));          // 실수함정
-        speInsFormDTO.setSpeTrap((String) requestData.get("speTrap"));          // 실수함정
-        // 위험성평가 형변환
-        SpeStatus spsRisk = SpeStatus.valueOf((String) requestData.get("speRiskAssess"));
-        speInsFormDTO.setSpeRiskAssess(spsRisk);                                     // 위험성평가
-
-        speInsFormDTO.setSpeContent((String) requestData.get("speContent"));                // 점검내용
-        speInsFormDTO.setSpeActContent((String) requestData.get("speActContent"));          // 개선대책
-        speInsFormDTO.setSpeActPerson((String) requestData.get("speActPerson"));            // 조치자
-        speInsFormDTO.setSpeActEmail((String) requestData.get("speActEmail"));              // 조치자 이메일
         SpeStatus.deadLineCal(speInsFormDTO);                                               // 위험도에 따른 완료요청기한
-        // 완료여부 형변환
-        SpeStatus spsComp = SpeStatus.valueOf((String) requestData.get("speComplete"));
-        speInsFormDTO.setSpeComplete(spsComp);              // 완료여부
 
-
+        speInsFormDTO.createSpeIns();
 
         // 수시점검 저장
         SpecialInspection special = speInsFormDTO.createSpeIns();
@@ -105,11 +93,11 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-            String completeKey = "미완료";
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO.getFiles(), completeKey);
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, NO);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
+
         return special;
     }
 
@@ -143,14 +131,14 @@ public class SpecialInspectionService {
         String findId;          // 해당 설비를 가진 id를 저장할 함수
 
         // 설비에 해당하는 SpecialInspection 찾기
-        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacility(masterdataFacility);
+        List<SpecialInspection> listOfFac = specialInspectionRepository.findAllBySpeFacilityOrderBySpeDateDesc(masterdataFacility);
         responseData.put("listOfFac", listOfFac);
 
         // 찾은 SpecialInspection의 id를 이용해 파일찾기
-        List<SpecialFile> speFileOfFac = new ArrayList<>();
+        List<SpecialFileFormDTO> speFileOfFac = new ArrayList<>();
         for(SpecialInspection listOfFacId : listOfFac){
             findId = listOfFacId.getSpeId();        // id세팅
-            List<SpecialFile> files= specialFileRepository.findBySpecialInspection_SpeId(findId);
+            List<SpecialFileFormDTO> files= specialFileRepository.findBySpecialInspection_SpeId(findId);
             speFileOfFac.addAll(files);
         }
         responseData.put("speFileOfFac", speFileOfFac);
@@ -158,40 +146,71 @@ public class SpecialInspectionService {
     }
 
     // 수시점검 상세조회
-    @Transactional
-    public Map<String, Object> findSpeDetail(String speId){
-        Map<String, Object> responseData = new HashMap<>();
-        SpecialInspection speDetailFindId = specialInspectionRepository.findAllBySpeId(speId);
-        List<SpecialFile> speFileDetailFindIds = specialFileRepository.findBySpecialInspection_SpeId(speId);
+    public Map<String, Object> getSpecialDetail(String speId) {
+        Map<String, Object> detailMap = new HashMap<>();
 
-        responseData.put("speDetailFindId", speDetailFindId);
-        responseData.put("speFileDetailFindIds", speFileDetailFindIds);
+        // 수시점검 데이터
+        SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+        detailMap.put("specialData", special);
 
-        return responseData;
+        // 이미지 데이터
+        List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+        if (!speFileDTOList.isEmpty()) {
+            List<String> compImageUrls = new ArrayList<>();         // 완료이미지 url
+            List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
+
+            for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
+                String imagePath = speFileDTO.getSpeFileUrl();
+
+                if(speFileDTO.getIsComplete() == OK){            // 완료이미지 세팅
+                    compImageUrls.add(imagePath);
+                } else if (speFileDTO.getIsComplete() == NO){    // 미완료이미지 세팅
+                    noCompImageUrls.add(imagePath);
+                }
+            }
+            detailMap.put("compImageUrls", compImageUrls);      // 완료이미지
+            detailMap.put("noCompImageUrls", noCompImageUrls);  // 미완료이미지
+        }
+
+        return detailMap;
     }
-
 
 
     // 완료처리:업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("-------------서비스 speDto: " +speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
 
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            String completeKey = "완료";
-            List<SpecialFile> uploadFiles = specialFileService.uploadFile(speInsFormDTO.getFiles(), completeKey);
+            List<SpecialFile> uploadFiles;
+
+            if(speInsFormDTO.getSpeComplete() == OK){           // 완료처리일 경우
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, OK);
+            } else {                                            // 수정일 경우
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, NO);
+            }
 
             for(SpecialFile specialFile : uploadFiles)
                 specialFile.setSpecialInspection(special);
         }
 
+        // 완료여부가 OK일 경우만 완료시간 세팅
+        if(speInsFormDTO.getSpeComplete() == OK){
+            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+        }
 
-        special.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
-        special.updateSpe(speInsFormDTO.getSpeComplete());  // 완료세팅
+        // dto -> entity 업데이트
+        modelMapper.map(speInsFormDTO, special);
+        // 저장(업데이트)
+        specialInspectionRepository.save(special);
 
         return special;
     }
+
+
+
 
 // ----------------------------------------------------------------------------------------------------------
 
@@ -238,8 +257,29 @@ public class SpecialInspectionService {
         return responseData;
     }
 
-    //1~12월까지 월별 수시점검 위험분류 건수
+    //월간 수시점검 위험원인 건수(기타값 포함)
+    public List<Object[]> specialDetailListByCauseAndMonth(int year, int month){
+        List<Object[]> specialList = specialInspectionRepository.specialListByCauseAndMonth(year, month);
+        System.out.println("입력리스트"+ specialList);
 
+
+        //'기타(직접입력)'에 값 수정: 통계로 보여줄 때 기타(직접입력)으로 보여주기 위함.
+        Long allValue = specialInspectionRepository.specialCountByCauseAndMonth(year, month);//모든값
+        Long otherExcluedallValue = specialInspectionRepository.specialCountOtherExcludedByCauseAndMonth(year, month); //모든값-예외값
+
+        //기타 수정값 넣기
+        for (Object[] value : specialList) {
+            if ("기타(직접입력)".equals(value[0])) { // 값이 기타(직접입력)이면
+                value[1] = allValue - otherExcluedallValue; // 두 번째 값 수정
+                break; // 수정 후 루프 종료
+            }
+        }
+        System.out.println(specialList);
+        return specialList;
+    }
+
+
+    //1~12월까지 월별 수시점검 위험분류 건수
    public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 
@@ -267,7 +307,7 @@ public class SpecialInspectionService {
 
 
 
-    // 1~12월까지 월별 수시점검 건수
+    // 1~12월까지 연간 수시점검 건수
      public List<Map<String, Object>> setSpecialCountList(int year){
         List<Object[]> statisticsList = specialInspectionRepository.specialCountList(year);
 
@@ -295,6 +335,27 @@ public class SpecialInspectionService {
 
         return resultList;
     }
+
+    // (차트용) 월간 수시점검 영역별 건수
+    public List<Map<String, Object>> setSpecialListByPartAndMonth(int year, int month){
+
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
+
+        List<Map<String, Object>> keyValueList = new ArrayList<>(); // 최종 List
+
+        for (Object[] row : statisticsList) {
+
+            String part = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("sort", part);
+            dataPoint.put("수시점검", count);
+            keyValueList.add(dataPoint);
+        }
+        return keyValueList;
+    }
+
 
 
 }

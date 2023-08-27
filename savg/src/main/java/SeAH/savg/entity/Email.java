@@ -3,11 +3,12 @@ package SeAH.savg.entity;
 import SeAH.savg.constant.MasterStatus;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity @Table(name = "email")
-@Getter @Setter
+@Getter @Setter @ToString
 public class Email {
     @Id
     @Column(name = "email_id", nullable = false)
@@ -26,5 +27,6 @@ public class Email {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private MasterStatus masterStatus = MasterStatus.N;        // 고정수신여부 : Y / N
+
 
 }

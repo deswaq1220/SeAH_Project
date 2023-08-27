@@ -6,9 +6,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.modelmapper.ModelMapper;
+import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
@@ -29,16 +31,24 @@ public class SpeInsFormDTO {
     private String speActContent;           // 개선대책
     private String speActPerson;            // 조치자 이름
     private String speActEmail;             // 조지차 이메일
-    private String speActDate;              // 점검완료일
+    @Nullable
+    private LocalDateTime speActDate;       // 점검완료일
     private LocalDateTime speDeadline;      // 완료요청기한
     private SpeStatus speComplete;          // 완료여부
 
 
     private List<MultipartFile> files;      // 파일
 
+    private List<SpecialFileFormDTO> speFiles = new ArrayList<>();
+
     public static ModelMapper modelMapper = new ModelMapper();
 
+    // DTO -> entity 변환
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
+
+   // 폼에서받은 DTO + 서비스에서 세팅된 데이터 세팅
+//    public SpecialInspection createSpeInsSet(){ return modelMapper.map(this, SpecialInspection.class); }
+
 
 
 }

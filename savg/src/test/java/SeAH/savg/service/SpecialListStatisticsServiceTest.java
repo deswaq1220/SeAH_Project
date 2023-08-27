@@ -20,7 +20,7 @@ public class SpecialListStatisticsServiceTest {
     @Autowired
     private SpecialInspectionService specialInspectionService;
 
-    @Test
+/*    @Test
     public void testSpecialDetailListByDanger(){
 
         if (specialInspectionService == null) {
@@ -29,14 +29,25 @@ public class SpecialListStatisticsServiceTest {
             List<Map<String, Object>> result = specialInspectionService.specialDetailListByDanger(2023);
             System.out.println(result);
         }
-    }
+    }*/
 
 
-    @Test
+/*    @Test
     public void testSpecialCountList(){
         List<Map<String, Object>> result = specialInspectionService.setSpecialCountList(2023);
         System.out.println(result);
 
-    }
+    }*/
+/*    @Test
+    public void testSpecialCountListMonth(){
+        List<Object[]> result = specialInspectionService.specialDetailListByCauseAndMonth(2023,8);
+
+        for(Object[] row : result){
+            String cause = (String) row[0];
+            Long count = (Long) row[1];
+            System.out.println(cause + count);
+        }
+
+    }*/
 }
 

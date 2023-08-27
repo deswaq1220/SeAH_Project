@@ -1,5 +1,6 @@
 package SeAH.savg.entity;
 
+import SeAH.savg.constant.SpeStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -16,6 +17,8 @@ public class SpecialFile {
     private String speFileName;       // 파일명
     private String speFileOriName;    // 원본 파일명
     private String speFileUrl;        // 파일 조회 경로
+    @Enumerated(EnumType.STRING)
+    private SpeStatus isComplete;     // 완료여부
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "spe_id")

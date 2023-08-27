@@ -13,9 +13,11 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
+
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;
@@ -43,43 +45,45 @@ public class SpecialController {
       return new ResponseEntity<>(specialInspectionService.findCreateMenu(masterdataPart), HttpStatus.OK);
   }
 
-  // 수시점검 저장
-  @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
-  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
-                                  @PathVariable String masterdataFacility,
-                                  @RequestBody Map<String, Object> requestData) throws Exception {
-      return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, requestData), HttpStatus.CREATED);
-  }
 
+ // 수시점검 저장
+ @PostMapping("/special/new/{masterdataPart}/{masterdataFacility}")
+ public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
+                                 @PathVariable String masterdataFacility,
+                                 SpeInsFormDTO speInsFormDTO) throws Exception{
+  return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataFacility, speInsFormDTO), HttpStatus.CREATED);
+ }
 
 
  // 상세조회
  @GetMapping("/special/detail/{speId}")
- public ResponseEntity<?> speDetail(@PathVariable String speId) {
-  return new ResponseEntity<>(specialInspectionService.findSpeDetail(speId), HttpStatus.OK);
+ public ResponseEntity<Map<String, Object>> getSpecialDetail(@PathVariable String speId) {
+   Map<String, Object> detailMap = specialInspectionService.getSpecialDetail(speId);
+   if (detailMap != null) {
+    return new ResponseEntity<>(detailMap, HttpStatus.OK);
+   } else {
+    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+   }
  }
 
 
- // 완료처리(update)
+ // 완료처리 / 수정(update)
  @PostMapping("/special/detail/{speId}")
  public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
   return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
  }
 
+// -------------------------- 공통
 
 
-
-
-// --------------------------- 관리자
-  
-     // 관리자 : 전체 현황 조회
-    @GetMapping("/special/list")
-    public ResponseEntity<?> speList(){
+    // 수시저검 등록된 전체 현황
+    @GetMapping("/master/spcial/list")
+    public ResponseEntity<?> speFullList() {
         return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
     }
 
 
-
+// --------------------------- 관리자
 
     //월간 수시점검 건수(완료, 미완료 모두 포함_)
     @GetMapping("/special/statistics/count")
@@ -94,10 +98,25 @@ public class SpecialController {
      * ex : 주조 1건, 압출 2건 ...
      */
     @GetMapping("/special/statistics/partandmonth")
-    public ResponseEntity<List<Object[]>> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
+    public ResponseEntity<?> getSpecialListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
-        System.out.println("========================== 연도:" + year + "          월:" + month);
+
+        List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByPartAndMonth(year, month);
+
+
+        return ResponseEntity.ok(statisticsList);
+    }
+
+    /* (엑셀용) 월간 수시점검 현황 통계 조회 - 점검영역별
+     * 형태: 파트(주조, 압출, 가공, 품질, 생산기술, 금형) + 점검건수 리스트
+     * ex : 주조 1건, 압출 2건 ...
+     */
+    @GetMapping("/special/statistics/partandmonthforexcel")
+    public ResponseEntity<?> getSpecialListByPartAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+
         List<Object[]> statisticsList = specialInspectionRepository.specialListByPartAndMonth(year, month);
 
         return ResponseEntity.ok(statisticsList);
@@ -134,13 +153,26 @@ public class SpecialController {
    * 형태: 위험원인(설비원인,작업방법,점검불량,정비불량,지식부족,불안전한 행동,기타(직접입력)) + 점검건수 리스트
    * ex : 설비원인 1건, 작업방법 2건 ...
    */
-  @GetMapping("/special/statistics/causeandmonth")
+/*  @GetMapping("/special/statistics/causeandmonth")
   public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("yearmonth") String yearMonth) {
       int year = Integer.parseInt(yearMonth.substring(0, 4));
       int month = Integer.parseInt(yearMonth.substring(5, 7));
       List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonth(year, month);
       return ResponseEntity.ok(statisticsList);
-  }
+  }*/
+
+
+    /* 월간 수시점검 현황 통계 조회 - 위험원인별(0건까지 나옴) - 기타값 포함
+     * 형태: 위험원인(설비원인,작업방법,점검불량,정비불량,지식부족,불안전한 행동,기타(직접입력)) + 점검건수 리스트
+     * ex : 설비원인 1건, 작업방법 2건 ...
+     */
+    @GetMapping("/special/statistics/causeandmonth")
+    public ResponseEntity<List<Object[]>> getgetSpecialListBySpecauseAndMonth(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+        List<Object[]> statisticsList = specialInspectionService.specialDetailListByCauseAndMonth(year, month);
+        return ResponseEntity.ok(statisticsList);
+    }
 
 
 
@@ -177,6 +209,14 @@ public class SpecialController {
 
       return ResponseEntity.ok(statisticsList);
   }*/
+
+    /* 1~12월 내 발생한 수시점검 건수*/
+    @GetMapping("/special/statistics/yearcount")
+    public ResponseEntity<?> getSpecialCountByYear(@RequestParam("year") int year) {
+        int statisticsCount = specialInspectionRepository.specialCountByYear(year);
+
+        return ResponseEntity.ok(statisticsCount);
+    }
 }
 
 
