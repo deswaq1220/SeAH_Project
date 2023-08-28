@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface RegularCheckRepository extends JpaRepository<RegularInspectionCheck, String> {
 
 
-    RegularInspectionCheck
+/*    RegularInspectionCheck*/
 
 }

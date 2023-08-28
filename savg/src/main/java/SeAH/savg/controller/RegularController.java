@@ -4,6 +4,7 @@ import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.RegularInspectionRepository;
+import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.MakeIdService;
 import SeAH.savg.service.RegularInspectionService;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class RegularController {
 
     private final RegularInspectionRepository regularInspectionRepository;
+    private final RegularStatisticsRepository regularStatisticsRepository;
     private final RegularInspectionService regularInspectionService;
     private final MakeIdService makeIdService;
 
@@ -37,14 +39,14 @@ public class RegularController {
             int year = Integer.parseInt(yearMonth.substring(0, 4));
             int month = Integer.parseInt(yearMonth.substring(5, 7));
 
-            int statisticsCount = regularInspectionRepository.regularCountByMonth(year, month);
+            int statisticsCount = regularStatisticsRepository.regularCountByMonth(year, month);
             return ResponseEntity.ok(statisticsCount);
         }
 
         //연간 정기점검 건수
         @GetMapping("/regular/statistics/yearcount")
         public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
-            int statisticsCount = regularInspectionRepository.regularCountByYear(year);
+            int statisticsCount = regularStatisticsRepository.regularCountByYear(year);
             return ResponseEntity.ok(statisticsCount);
         }
 
@@ -91,7 +93,7 @@ public class RegularController {
 
 
     //정기점검 목록 조회
-    @GetMapping("/regularlist")
+/*    @GetMapping("/regularlist")
     public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month){
         List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
 
@@ -102,7 +104,7 @@ public class RegularController {
         return ResponseEntity.ok(regularDTOList);
 
 
-    }
+    }*/
 
 
 
