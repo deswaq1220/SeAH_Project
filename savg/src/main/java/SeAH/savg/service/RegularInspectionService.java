@@ -12,17 +12,21 @@ import SeAH.savg.repository.RegularInspectionBadRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class RegularInspectionService {
 
-    private final RegularStatisticsRepository regularStatisticsRepository;
     private final RegularInspectionRepository regularInspectionRepository;
+    private final RegularStatisticsRepository regularStatisticsRepository;
     private final RegularInspectionBadRepository regularInspectionBadRepository;
     private final RegularCheckRepository regularCheckRepository;
 
@@ -112,5 +116,23 @@ public class RegularInspectionService {
 
     }*/
 
+//----------------------------------------------------통계 관련
+    //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건
+    public List<Map<String, Object>> RegularCntByCheckAndMonth(int year, int month, String regularInsName){
+        List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonthSortName(year, month, regularInsName);
 
+        List<Map<String, Object>> finalData = new ArrayList<>();
+        for(Object[] row : data){
+            RegStatus regularCheck = (RegStatus) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> middleData = new HashMap<>();
+            middleData.put("id", regularCheck);
+            middleData.put("label", regularCheck);
+            middleData.put("value", count);
+
+            finalData.add(middleData);
+        }
+        return finalData;
+    }
 }

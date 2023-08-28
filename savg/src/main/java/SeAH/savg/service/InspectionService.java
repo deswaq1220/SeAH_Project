@@ -14,6 +14,7 @@ import java.util.*;
 @Log4j2
 public class InspectionService {
 
+    private final RegularInspectionRepository regularInspectionRepository;
     private final RegularStatisticsRepository regularStatisticsRepository;
     private final SpecialInspectionRepository specialInspectionRepository;
 
