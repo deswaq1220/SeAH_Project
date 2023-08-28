@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +92,14 @@ public class RegularInspectionService {
         return regularNameList;
     }
 
+    //정기점검 영역 불러오기
+    public List<String> selectRegularPart(){
+        List<String> regularPartList = regularInspectionRepository.regularPartList();
+        return regularPartList;
+    }
+
+
+
     //정기점검 항목에 맞는 체크리스트 세팅
     public List<String> selectRegularListByNum(int regularNum) {
         List<String> regularNameList = regularInspectionRepository.regularInsNameList();
@@ -150,7 +159,6 @@ public class RegularInspectionService {
             regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
             regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
             regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-            regularInspectionBadEntity.setRegularDate(regularDetailDTO.getRegularDate());
             regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
             regularInspectionBadEntity.setRegularComplete(regularDetailDTO.getRegularCheck());
             regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
@@ -166,9 +174,30 @@ public class RegularInspectionService {
 
     //상세조회
     public RegularDetailDTO getRegularById(String regularId) {
-        RegularInspectionCheck regularInspectionCheck = regularCheckRepository.
+        List<Object[]> result = regularCheckRepository.getRegularInspectionDetail(regularId);
+        if (result.isEmpty()) {
+            return null;
+        }
 
+        RegularDetailDTO regularDetailDTO = new RegularDetailDTO();
+        Object[] data = result.get(0);
+
+        //불량일때
+        RegularInspectionBad bad = (RegularInspectionBad) data[1];
+        regularDetailDTO.setRegularActContent(bad.getRegularActContent());
+        regularDetailDTO.setRegularActPerson(bad.getRegularActPerson());
+        regularDetailDTO.setRegularActEmail(bad.getRegularActEmail());
+
+        //양호, N/A
+        RegularInspection inspection = (RegularInspection) data[0];
+        regularDetailDTO.setRegularInsName(inspection.getRegularInsName());
+        regularDetailDTO.setRegularDate(inspection.getRegularDate());
+        regularDetailDTO.setRegularPerson(inspection.getRegularPerson());
+        regularDetailDTO.setRegularEmpNum(inspection.getRegularEmpNum());
+        regularDetailDTO.setRegularEmail(inspection.getRegularEmail());
+        regularDetailDTO.setRegularPart(inspection.getRegularPart());
+
+        return regularDetailDTO;
     }
-
 
 }

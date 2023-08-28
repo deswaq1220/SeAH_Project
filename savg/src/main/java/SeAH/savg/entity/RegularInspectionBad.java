@@ -25,16 +25,15 @@ public class RegularInspectionBad {
     private String regularActEmail;             // 담당자 이메일
 
     @Column
-    private LocalDateTime regularDate;          // 점검일
-
-    @Column
     private LocalDateTime regularActDate;          // 점검완료일
 
     @Enumerated(EnumType.STRING)
     private RegStatus regularComplete;              // 완료여부
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "regular_check_id")                    //정기점검 id
+    @JoinColumn(name = "regular_check_id")                    //정기점검 체크 id
     private RegularInspectionCheck regularInspectionCheck;
+
+
 
 }

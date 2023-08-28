@@ -61,6 +61,16 @@ public class RegularController {
         return ResponseEntity.ok(responseData);
     }
 
+    //정기점검 영역 리스트(주조, 영역 등)
+    @GetMapping("/regularpart")
+    public ResponseEntity<Map<String, Object>> regularPartListSelect(){
+        Map<String, Object> responseData = new HashMap<>();
+        List<String> regularPartList = regularInspectionService.selectRegularPart();
+        responseData.put("regularPartList", regularPartList);
+
+        return ResponseEntity.ok(responseData);
+    }
+
     //정기점검 항목에 따른 체크리스트 세팅
     @GetMapping("/regularcheck")
     public ResponseEntity<Map<String, List<String>>> regularcheck(@RequestParam int regularNum) {
@@ -82,16 +92,30 @@ public class RegularController {
 
     //정기점검 목록 조회
     @GetMapping("/regularlist")
-    public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month){
+    public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month) {
         List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
 
         List<RegularDTO> regularDTOList = new ArrayList<>();
-        for (RegularInspection regularInspection : regularInspectionList){
-            regularDTOList.add(regularInspectionService.getRegularById(regularInspection.getRegularId()));
+        for (RegularInspection regularInspection : regularInspectionList) {
+            RegularDTO regularDTO = new RegularDTO();
+            regularDTO.setRegularId(regularInspection.getRegularId());
+            regularDTO.setRegularInsName(regularInspection.getRegularInsName());
+            regularDTO.setRegularDate(regularInspection.getRegularDate());
+            regularDTO.setRegularPart(regularInspection.getRegularPart());
+            regularDTOList.add(regularDTO);
         }
+
         return ResponseEntity.ok(regularDTOList);
+    }
 
-
+    //정기점검 상세조회
+    @GetMapping("/regular/detail/{regularId}")
+    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable String regularId){
+        RegularDetailDTO regularDetailDTO = regularInspectionService.getRegularById(regularId);
+        if (regularDetailDTO == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(regularDetailDTO);
     }
 
 
