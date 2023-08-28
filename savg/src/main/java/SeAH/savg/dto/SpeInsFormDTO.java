@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
+@NoArgsConstructor
 public class SpeInsFormDTO {
     private String speId;                     // id
     private LocalDateTime speDate;          // 점검일
@@ -43,11 +44,26 @@ public class SpeInsFormDTO {
 
 
     public SpeInsFormDTO(String speId, LocalDateTime speDate, String spePerson, String speEmpNum, String speEmail, String spePart, String speFacility, String speDanger, String speInjure, String speCause, String speTrap, SpeStatus speRiskAssess, String speContent, String speActContent, String speActPerson, String speActEmail, LocalDateTime speActDate, LocalDateTime speDeadline, SpeStatus speComplete) {
+        this.speId = speId;
+        this.speDate = speDate;
+        this.spePerson = spePerson;
+        this.speEmpNum = speEmpNum;
+        this.speEmail = speEmail;
+        this.spePart = spePart;
+        this.speFacility = speFacility;
+        this.speDanger = speDanger;
+        this.speInjure = speInjure;
+        this.speCause = speCause;
+        this.speTrap = speTrap;
+        this.speRiskAssess = speRiskAssess;
+        this.speContent = speContent;
+        this.speActContent = speActContent;
+        this.speActPerson = speActPerson;
+        this.speActEmail = speActEmail;
+        this.speActDate = speActDate;
+        this.speDeadline = speDeadline;
+        this.speComplete = speComplete;
     }
-
-//    public SpeInsFormDTO(String speId, LocalDateTime speDate, String spePerson, String speEmpNum, String spePart, String speFacility, String speDanger, String speInjure, String speCause, String speTrap, SpeStatus speComplete, String speContent, String speActContent, String speActPerson, String speActEmail, LocalDateTime speActDate, LocalDateTime speDeadline, SpeStatus speComplete1) {
-//    }
-
     // DTO -> entity 변환
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
 

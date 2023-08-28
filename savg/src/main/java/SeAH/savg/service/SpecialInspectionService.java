@@ -315,11 +315,13 @@ public class SpecialInspectionService {
         if (speEmpNum != null) {
             builder.and(qSpecialInspection.speEmpNum.eq(speEmpNum));
         }
+
         Sort sort = Sort.by(Sort.Direction.DESC, "speId");
         List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
         List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.of(searchSpeData);
-
         searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
+        System.out.println("서비스 검색 확인:"+searchSpeDataDTOList);
+
         return searchSpeList;
 
     }

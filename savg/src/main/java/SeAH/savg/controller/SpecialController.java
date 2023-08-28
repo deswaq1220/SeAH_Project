@@ -86,18 +86,19 @@ public class SpecialController {
 
     // 수시점검 전체현황 검색
    @GetMapping("/frequentinspection")
-   public ResponseEntity<?> speFullList(@RequestParam (required = false) String spePart,
-                                        @RequestParam (required = false) String speFacility,
-                                        @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speStartDate,
-                                        @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speEndDate,
-                                        @RequestParam (required = false) SpeStatus speComplete,
-                                        @RequestParam (required = false) String spePerson,
-                                        @RequestParam (required = false) String speEmpNum
+   public ResponseEntity<?> speFullList(@RequestParam (value = "spePart", required = false) String spePart,
+                                        @RequestParam (value = "speFacility",required = false) String speFacility,
+                                        @RequestParam (value = "speStartDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speStartDate,
+                                        @RequestParam (value = "speEndDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speEndDate,
+                                        @RequestParam (value = "speComplete",required = false) SpeStatus speComplete,
+                                        @RequestParam (value = "spePerson",required = false) String spePerson,
+                                        @RequestParam (value = "speEmpNum",required = false) String speEmpNum
    ) {
        System.out.println("컨트롤러 들어왔다");
        System.out.println("spePart: "+spePart);
        System.out.println("speFacility: "+speFacility);
        System.out.println("speStartDate: "+speStartDate);
+       System.out.println("speEndDate: "+speEndDate);
        System.out.println("speComplete: "+speComplete);
        System.out.println("spePerson: "+spePerson);
        System.out.println("speEmpNum: "+speEmpNum);
