@@ -25,6 +25,16 @@ public class RegularController {
 
    //--------------------------------------통계 관련
 
+        //월간 정기점검 건수
+        @GetMapping("/regular/statistics/monthcount")
+        public ResponseEntity<?> getRegularCountByMonth(@RequestParam("yearmonth") String yearMonth){
+            int year = Integer.parseInt(yearMonth.substring(0, 4));
+            int month = Integer.parseInt(yearMonth.substring(5, 7));
+
+            int statisticsCount = regularInspectionRepository.regularCountByMonth(year, month);
+            return ResponseEntity.ok(statisticsCount);
+        }
+
         //연간 정기점검 건수
         @GetMapping("/regular/statistics/yearcount")
         public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
