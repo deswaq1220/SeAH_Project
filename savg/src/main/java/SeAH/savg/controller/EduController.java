@@ -63,8 +63,9 @@ public class EduController {
 
 
     //교육일지 목록 조회
-    @GetMapping("/edumain")
+    @GetMapping("/eduMain")
     public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
+        log.info("에듀메인");
         List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
 
         int i = 0;

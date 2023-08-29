@@ -2,6 +2,7 @@ package SeAH.savg.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RequiredArgsConstructor        //TokenProvider 객체를 주입받기 위함
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     public static final String AUTHORIZATION_HEADER = "Authorization";      //HTTP 요청 헤더에서 인증정보 전달하기위함
     public static final String BEARER_PREFIX = "Bearer ";       //JWT 토큰을 HTTP 요청 헤더에서 구분하기 위한 접두사
@@ -25,9 +27,11 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // Request Header 에서 토큰을 꺼냄
         String jwt = resolveToken(request);
+        log.info("리퀘스트 : " + request.getAuthType());
 
         // validateToken 으로 토큰 유효성 검사
         // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
+        log.info(jwt);
         TokenStatus.StatusCode tokenStatusCode = tokenProvider.validateToken(jwt);
         if (StringUtils.hasText(jwt)) {
             if (tokenStatusCode == TokenStatus.StatusCode.OK) {
@@ -49,6 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
     // Request Header 에서 토큰 정보를 꺼내오기
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);  //Authorization 헤더 값을 가져옴 이값은 bearerToken 변수에 저장
+        log.info("리솔브 토큰 : " + bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7);
         }

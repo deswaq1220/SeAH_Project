@@ -42,10 +42,9 @@ public class TokenProvider {
 
     // @Value는 `springframework.beans.factory.annotation.Value` jwt.secret 프로퍼티 값을 주입받기 위해 사용
     //     * @param secretKey
-    public TokenProvider() {
-//        byte[] keyBytes = Decoders.BASE64.decode(secretKey);        //BASE64 디코딩 수행시 사용
-        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);        //키를생성
-        System.out.println("키 생성이다!!: " + key); // 키 출력
+    public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);        //BASE64 디코딩 수행시 사용
+        this.key = Keys.hmacShaKeyFor(keyBytes);        //키를생성
     }   //생성자를 통해 secretKey 값을 받아와 디코딩하고, 그 결과로 HMAC-SHA키를 생성하여 key 에할당하는 역할을 함 토큰의 암호화 및 복호화에 사용
 
 
@@ -115,6 +114,7 @@ public class TokenProvider {
             log.info("잘못된 JWT 서명입니다");
             return TokenStatus.StatusCode.UNAUTHORIZED;
         } catch (IllegalArgumentException e) {
+            log.info("확인용 : " + token);
             log.info("JWT 토큰이 잘못되었습니다.");
             return TokenStatus.StatusCode.UNKNOWN;
         }
