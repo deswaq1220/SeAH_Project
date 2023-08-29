@@ -7,6 +7,7 @@ import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.MakeIdService;
 import SeAH.savg.service.RegularInspectionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,19 +38,42 @@ public class RegularController {
             return ResponseEntity.ok(statisticsCount);
         }
 
-        //(pieChart) 월간 정기점검 체크리스트
+        //(pieChart) 월간 정기점검 위험성평가분석 데이터 값
         @GetMapping("/regular/statistics/checkvaluecount")
-        public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth,
-                                                              @RequestParam("regularInsName") String regularInsName){
+        public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth){
             String[] yearMonthParts = yearMonth.split("-");
             int year = Integer.parseInt(yearMonthParts[0]);
             int month = Integer.parseInt(yearMonthParts[1]);
             System.out.println(year);
             System.out.println(month);
 
-            List<Map<String, Object>> statisticsCount  = regularInspectionService.RegularCntByCheckAndMonth(year, month, regularInsName);
+            List<Map<String, Object>> statisticsCount  = regularInspectionService.RegularCntByCheckAndMonth(year, month);
             return ResponseEntity.ok(statisticsCount);
         }
+        @GetMapping("/regular/statistics/checkvaluecountsort")
+        public ResponseEntity<?> getRegularCntByCheckAndMonthSort(@RequestParam("yearmonth") String yearMonth,
+                                                              @RequestParam("regularinsname") String regularInsName){
+            String[] yearMonthParts = yearMonth.split("-");
+            int year = Integer.parseInt(yearMonthParts[0]);
+            int month = Integer.parseInt(yearMonthParts[1]);
+            System.out.println(year);
+            System.out.println(month);
+
+            List<Map<String, Object>> statisticsCount  = regularInspectionService.RegularCntByCheckAndMonthSort(year, month, regularInsName);
+            return ResponseEntity.ok(statisticsCount);
+        }
+
+        //(pieChart) 월간 정기점검 위험성평가분석 드롭다운
+        @GetMapping("/regular/statistics/namedropdown")
+        public ResponseEntity<?> viewDropdownRegularNameList(){
+            Map<String, Object> responseData = new HashMap<>();
+            List<String> regularNameList = regularInspectionService.RegularNameList();
+
+            responseData.put("regularNameList", regularNameList);
+
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
+        }
+
 
         //연간 정기점검 건수
         @GetMapping("/regular/statistics/yearcount")

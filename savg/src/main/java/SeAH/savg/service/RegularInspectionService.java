@@ -118,7 +118,26 @@ public class RegularInspectionService {
 
 //----------------------------------------------------통계 관련
     //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건
-    public List<Map<String, Object>> RegularCntByCheckAndMonth(int year, int month, String regularInsName){
+    public List<Map<String, Object>> RegularCntByCheckAndMonth(int year, int month){
+        List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonth(year, month);
+
+        List<Map<String, Object>> finalData = new ArrayList<>();
+        for(Object[] row : data){
+            RegStatus regularCheck = (RegStatus) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> middleData = new HashMap<>();
+            middleData.put("id", regularCheck);
+            middleData.put("label", regularCheck);
+            middleData.put("value", count);
+
+            finalData.add(middleData);
+        }
+        return finalData;
+    }
+
+    //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건 - sort
+    public List<Map<String, Object>> RegularCntByCheckAndMonthSort(int year, int month, String regularInsName){
         List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonthSortName(year, month, regularInsName);
 
         List<Map<String, Object>> finalData = new ArrayList<>();
@@ -134,5 +153,13 @@ public class RegularInspectionService {
             finalData.add(middleData);
         }
         return finalData;
+    }
+
+    //(pieChart) 월간 정기점검 체크 값 드롭다운 생성
+    public List<String> RegularNameList(){
+
+        List<String> specialPartList = regularStatisticsRepository.RegularNameList();
+
+        return specialPartList;
     }
 }

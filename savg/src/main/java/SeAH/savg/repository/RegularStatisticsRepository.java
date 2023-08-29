@@ -19,24 +19,24 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
     int regularCountByMonth(@Param("year") int year, @Param("month") int month);
 
 
-    //(pieChart) 월간 양호,불량,NA 건수 표시(구분(양호,불량,NA),값)
+    //(pieChart) 월간 양호,불량,NA 건수 표시(구분(양호,불량,NA),값) - 전체
     @Query("SELECT c.regularCheck, COUNT(c) " +
             "FROM RegularInspectionCheck c " +
-            "LEFT JOIN RegularInspection i " +
-            "ON YEAR(i.regularDate) = :year AND MONTH(i.regularDate) = :month " +
-            "AND i.regularInsName = :regularInsName " +
+            "WHERE YEAR(c.regularInspection.regularDate) = :year AND MONTH(c.regularInspection.regularDate) = :month " +
             "GROUP BY c.regularCheck")
     List<Object[]>regularCntByCheckAndMonth(@Param("year") int year, @Param("month") int month);
 
     //(pieChart) 월간 점검카테고리(Sort)에 따른 양호,불량,NA 건수 표시(구분(양호,불량,NA),값)
     @Query("SELECT c.regularCheck, COUNT(c) " +
             "FROM RegularInspectionCheck c " +
-            "LEFT JOIN RegularInspection i " +
-            "ON YEAR(i.regularDate) = :year AND MONTH(i.regularDate) = :month " +
-            "AND i.regularInsName = :regularInsName " +
+            "WHERE YEAR(c.regularInspection.regularDate) = :year AND MONTH(c.regularInspection.regularDate) = :month " +
+            "AND c.regularInspection.regularInsName = :regularinsname " +
             "GROUP BY c.regularCheck")
-    List<Object[]>regularCntByCheckAndMonthSortName(@Param("year") int year, @Param("month") int month, @Param("regularInsName") String regularInsName);
+    List<Object[]>regularCntByCheckAndMonthSortName(@Param("year") int year, @Param("month") int month, @Param("regularinsname") String regularInsName);
 
+    //(pieChart) 월간 점검 드롭다운 생성하기
+    @Query("SELECT n.regularInsName FROM RegularName n ORDER BY n.regularNum asc")
+    List<String> RegularNameList();
 
 
     //연간
