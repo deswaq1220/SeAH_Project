@@ -13,6 +13,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import SeAH.savg.exception.RoleNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;

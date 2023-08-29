@@ -1,10 +1,7 @@
 package SeAH.savg.advice;
 
 import SeAH.savg.dto.response.Response;
-import SeAH.savg.exception.LoginFailureException;
-import SeAH.savg.exception.MemberEmailAlreadyExistsException;
-import SeAH.savg.exception.MemberNicknameAlreadyExistsException;
-import SeAH.savg.exception.MemberNotFoundException;
+import SeAH.savg.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -59,5 +56,17 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Response roleNotFoundException() { // 7
         return Response.failure(-1008, "요청한 권한 등급을 찾을 수 없습니다.");
+    }
+
+    @ExceptionHandler(AuthenticationEntryPointException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response authenticationEntryPoint() {
+        return Response.failure(-1001, "인증되지 않은 사용자입니다.");
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Response accessDeniedException() {
+        return Response.failure(-1002, "접근이 거부되었습니다.");
     }
 }

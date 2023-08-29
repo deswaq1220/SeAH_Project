@@ -22,11 +22,11 @@ public class TokenService {
     @Value("${jwt.key.refresh}") // 4
     private String refreshKey;
 
-    public String createAccessToken(String subject) {
-        return jwtHandler.createToken(accessKey, subject, accessTokenMaxAgeSeconds);
-    }
-
-    public String createRefreshToken(String subject) {
-        return jwtHandler.createToken(refreshKey, subject, refreshTokenMaxAgeSeconds);
-    }
+//    public String createAccessToken(String subject) {
+//        return jwtHandler.createToken(accessKey, subject, accessTokenMaxAgeSeconds);
+//    }
+//
+//    public String createRefreshToken(String subject) {
+//        return jwtHandler.createToken(refreshKey, subject, refreshTokenMaxAgeSeconds);
+//    }
 }
