@@ -130,7 +130,7 @@ public class EduController {
     @GetMapping("/edudetails/{eduId}")
     public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
         EduDTO eduDTO = eduService.getEduById(eduId);
-        log.info(eduDTO.getEduFileList().get(0).getEdu());
+
 
         if (eduDTO == null) {
             return ResponseEntity.notFound().build();
@@ -143,12 +143,7 @@ public class EduController {
     @PostMapping("/edudetails/{eduId}")
     public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO) {
         try {
-            System.out.println("여기-------------------------------------------");
-            for(int i =0; i<eduDTO.getEduFileList().size(); i++){
-                System.out.println("파일");
-                System.out.println(eduDTO.getEduFileList().get(i).getEduFileId());
-                System.out.println(eduDTO.getEduFileList().get(i).getEduFileOriName());
-            }
+
             eduDTO.setEduId(eduId);
             eduService.update(eduDTO);
 
