@@ -19,8 +19,16 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
     int regularCountByMonth(@Param("year") int year, @Param("month") int month);
 
 
+    //(pieChart) 월간 양호,불량,NA 건수 표시(구분(양호,불량,NA),값)
+    @Query("SELECT c.regularCheck, COUNT(c) " +
+            "FROM RegularInspectionCheck c " +
+            "LEFT JOIN RegularInspection i " +
+            "ON YEAR(i.regularDate) = :year AND MONTH(i.regularDate) = :month " +
+            "AND i.regularInsName = :regularInsName " +
+            "GROUP BY c.regularCheck")
+    List<Object[]>regularCntByCheckAndMonth(@Param("year") int year, @Param("month") int month);
 
-    //월별 점검카테고리에 따른 양호,불량,NA 건수 표시(구분(양호,불량,NA),값)
+    //(pieChart) 월간 점검카테고리(Sort)에 따른 양호,불량,NA 건수 표시(구분(양호,불량,NA),값)
     @Query("SELECT c.regularCheck, COUNT(c) " +
             "FROM RegularInspectionCheck c " +
             "LEFT JOIN RegularInspection i " +
@@ -28,6 +36,8 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
             "AND i.regularInsName = :regularInsName " +
             "GROUP BY c.regularCheck")
     List<Object[]>regularCntByCheckAndMonthSortName(@Param("year") int year, @Param("month") int month, @Param("regularInsName") String regularInsName);
+
+
 
     //연간
     //(LineChart) 1~12월 총 수시점검 건수
