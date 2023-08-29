@@ -19,6 +19,7 @@ import static SeAH.savg.dto.response.Response.success;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class SignController {
     private final SignService signService;
 
@@ -34,6 +35,7 @@ public class SignController {
     @PostMapping("/api/sign-in")
     @ResponseStatus(HttpStatus.OK)
     public Response signIn(@Valid @RequestBody SignInRequest req) {
+        System.out.println("확인용");
         return success(signService.signIn(req));
     }
 

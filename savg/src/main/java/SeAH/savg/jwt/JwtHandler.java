@@ -1,6 +1,7 @@
 package SeAH.savg.jwt;
 
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -8,11 +9,13 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class JwtHandler {
 
     private String type = "Bearer ";
 
     public String createToken(String key, Map<String, Object> privateClaims, long maxAgeSeconds) {
+        log.info("jwt핸들러 : " + maxAgeSeconds);
         Date now = new Date();
         return type + Jwts.builder()
                 .addClaims(privateClaims)
