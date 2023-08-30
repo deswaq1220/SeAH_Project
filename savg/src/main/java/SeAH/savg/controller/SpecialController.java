@@ -197,7 +197,7 @@ public class SpecialController {
      * ex : 설비원인 1건, 작업방법 2건 ...
      */
     @GetMapping("/admin/special/statistics/causeandmonth")
-    public ResponseEntity<List<Object[]>> getgetSpecialListBySpecauseAndMonth(@RequestParam("yearmonth") String yearMonth) {
+    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
         List<Object[]> statisticsList = specialInspectionService.specialDetailListByCauseAndMonth(year, month);
