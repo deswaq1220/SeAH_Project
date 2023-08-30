@@ -231,39 +231,6 @@ public class SpecialInspectionService {
 
 
 
-
-// ----------------------------------------------------------------------------------------------------------
-
-
-    //월간 수시점검 현황 통계 조회 - 위험분류별(그래프용-지금 안씀)
-    public List<Map<String, Object>> setSpecialListByDangerAndMonth(int year, int month){
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
-
-        List<Map<String, Object>> dataPoints = new ArrayList<>();
-
-        for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
-
-            String dangerType = (String) row[0];
-            Long count = (Long) row[1];
-
-            Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("x", dangerType);
-            dataPoint.put("y", count);
-
-            dataPoints.add(dataPoint);
-        }
-
-        Map<String, Object> finalDate = new HashMap<>();   //Map형태:
-        finalDate.put("id", "수시점검");
-        finalDate.put("data", dataPoints);
-
-        List<Map<String, Object>> resultList = new ArrayList<>();
-        resultList.add(finalDate);
-
-
-        return resultList;
-    }
-
     // 수시점검 전체 조회
 //    @Transactional(readOnly = true)
 //    public Map<String, Object> findSpeAll(){
@@ -326,6 +293,41 @@ public class SpecialInspectionService {
         return searchSpeList;
 
     }
+
+
+
+// ----------------------------------------------------------------------------------------------------------
+
+
+    //월간 수시점검 현황 통계 조회 - 위험분류별(그래프용-지금 안씀)
+    public List<Map<String, Object>> setSpecialListByDangerAndMonth(int year, int month){
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
+
+        List<Map<String, Object>> dataPoints = new ArrayList<>();
+
+        for(Object[] row : statisticsList){             // List+Map 형태: dataPoints = x: 협착, y: 1 .....
+
+            String dangerType = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("x", dangerType);
+            dataPoint.put("y", count);
+
+            dataPoints.add(dataPoint);
+        }
+
+        Map<String, Object> finalDate = new HashMap<>();   //Map형태:
+        finalDate.put("id", "수시점검");
+        finalDate.put("data", dataPoints);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        resultList.add(finalDate);
+
+
+        return resultList;
+    }
+
 
     //1~12월까지 월별 수시점검 위험분류 건수
    public List<Map<String,Object>> specialDetailListByDanger(int year){
