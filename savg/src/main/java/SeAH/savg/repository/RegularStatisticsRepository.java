@@ -18,6 +18,12 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
             "WHERE YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month")
     int regularCountByMonth(@Param("year") int year, @Param("month") int month);
 
+    //월간 영역별 점검 건수(0건인 것들도 함께 나옴)- 하는 중
+/*    @Query("SELECT p.partMenu, COUNT(s.spePart) " +
+            "FROM SpecialPart p " +
+            "LEFT JOIN SpecialInspection s ON s.spePart = p.partMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY p.partMenu")
+    List<Object[]> regularListByPartAndMonth(@Param("year") int year, @Param("month") int month);*/
 
     //(pieChart) 월간 양호,불량,NA 건수 표시(구분(양호,불량,NA),값) - 전체
     @Query("SELECT c.regularCheck, COUNT(c) " +
