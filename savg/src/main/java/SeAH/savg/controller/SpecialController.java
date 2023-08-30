@@ -2,7 +2,6 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.SpeInsFormDTO;
 import SeAH.savg.repository.SpecialInspectionRepository;
-import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.SpecialInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -72,11 +71,14 @@ public class SpecialController {
  }
 
 // -------------------------- 공통
+
+
     // 수시저검 등록된 전체 현황
     @GetMapping("/master/spcial/list")
     public ResponseEntity<?> speFullList() {
         return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
     }
+
 
 // --------------------------- 관리자
 
@@ -148,13 +150,26 @@ public class SpecialController {
    * 형태: 위험원인(설비원인,작업방법,점검불량,정비불량,지식부족,불안전한 행동,기타(직접입력)) + 점검건수 리스트
    * ex : 설비원인 1건, 작업방법 2건 ...
    */
-  @GetMapping("/special/statistics/causeandmonth")
+/*  @GetMapping("/special/statistics/causeandmonth")
   public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonth(@RequestParam("yearmonth") String yearMonth) {
       int year = Integer.parseInt(yearMonth.substring(0, 4));
       int month = Integer.parseInt(yearMonth.substring(5, 7));
       List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonth(year, month);
       return ResponseEntity.ok(statisticsList);
-  }
+  }*/
+
+
+    /* 월간 수시점검 현황 통계 조회 - 위험원인별(0건까지 나옴) - 기타값 포함
+     * 형태: 위험원인(설비원인,작업방법,점검불량,정비불량,지식부족,불안전한 행동,기타(직접입력)) + 점검건수 리스트
+     * ex : 설비원인 1건, 작업방법 2건 ...
+     */
+    @GetMapping("/special/statistics/causeandmonth")
+    public ResponseEntity<List<Object[]>> getgetSpecialListBySpecauseAndMonth(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+        List<Object[]> statisticsList = specialInspectionService.specialDetailListByCauseAndMonth(year, month);
+        return ResponseEntity.ok(statisticsList);
+    }
 
 
 

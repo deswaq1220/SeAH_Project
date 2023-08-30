@@ -34,7 +34,7 @@ public class EmailController {
 //            helper.setTo(emailData.getRecipient());
             helper.setTo(emailData.getRecipients().toArray(new String[0]));
             helper.setSubject(emailData.getSubject());
-            helper.setText(emailData.getContent());
+            helper.setText(emailData.getContent(),true);
 
             mailSender.send(message);
             return ResponseEntity.ok().body(new ResponseMessage("Email sent successfully."));

@@ -45,7 +45,7 @@ public class RegularInspectionService {
             Long count = (Long) row[1];
 
             Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put("x", month);
+            dataPoint.put("month", month);
             dataPoint.put("y", count);
 
             dataPoints.add(dataPoint);
