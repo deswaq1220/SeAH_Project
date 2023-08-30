@@ -2,6 +2,7 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.MakeIdService;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +105,8 @@ public class RegularController {
 
 
     //정기점검 항목 리스트
-    @GetMapping("/regularname")
+
+    @GetMapping("/user/regularname")
     public ResponseEntity<Map<String, Object>> regularNameListSelect() {
         Map<String, Object> responseData = new HashMap<>();
         List<String> regularNameList = regularInspectionService.selectRegularName();
@@ -112,8 +115,21 @@ public class RegularController {
         return ResponseEntity.ok(responseData);
     }
 
+    //정기점검 영역 리스트(주조, 영역 등)
+
+    @GetMapping("/user/regularpart")
+    public ResponseEntity<Map<String, Object>> regularPartListSelect(){
+        Map<String, Object> responseData = new HashMap<>();
+        List<String> regularPartList = regularInspectionService.selectRegularPart();
+        responseData.put("regularPartList", regularPartList);
+
+        return ResponseEntity.ok(responseData);
+    }
+
+
     //정기점검 항목에 따른 체크리스트 세팅
-    @GetMapping("/regularcheck")
+
+    @GetMapping("/user/regularcheck")
     public ResponseEntity<Map<String, List<String>>> regularcheck(@RequestParam int regularNum) {
         Map<String, List<String>> responseData = new HashMap<>();
 
@@ -124,7 +140,7 @@ public class RegularController {
     }
 
     //정기점검 등록
-    @PostMapping("/regular/new")
+    @PostMapping("/user/regular/new")
     public ResponseEntity<String> createRegularInspection(@RequestBody RegularDetailDTO regularDetailDTO, @RequestBody RegularDTO regularDTO) {
         regularInspectionService.createRegular(regularDetailDTO, regularDTO);
         return ResponseEntity.ok("정기점검 등록 성공");
@@ -132,18 +148,35 @@ public class RegularController {
 
 
     //정기점검 목록 조회
-/*    @GetMapping("/regularlist")
-    public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month){
+
+    @GetMapping("/user/regularlist")
+    public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month) {
         List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
 
         List<RegularDTO> regularDTOList = new ArrayList<>();
-        for (RegularInspection regularInspection : regularInspectionList){
-            regularDTOList.add(regularInspectionService.getRegularById(regularInspection.getRegularId()));
+        for (RegularInspection regularInspection : regularInspectionList) {
+            RegularDTO regularDTO = new RegularDTO();
+            regularDTO.setRegularId(regularInspection.getRegularId());
+            regularDTO.setRegularInsName(regularInspection.getRegularInsName());
+            regularDTO.setRegularDate(regularInspection.getRegularDate());
+            regularDTO.setRegularPart(regularInspection.getRegularPart());
+            regularDTOList.add(regularDTO);
         }
+
         return ResponseEntity.ok(regularDTOList);
+    }
 
 
-    }*/
+    //정기점검 상세조회
+    @GetMapping("/user/regular/detail/{regularId}")
+    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable String regularId){
+        RegularDetailDTO regularDetailDTO = regularInspectionService.getRegularById(regularId);
+        if (regularDetailDTO == null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(regularDetailDTO);
+    }
+
 
 
 

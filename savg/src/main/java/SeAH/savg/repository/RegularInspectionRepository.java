@@ -1,6 +1,7 @@
 package SeAH.savg.repository;
 
 import SeAH.savg.entity.RegularInspection;
+import SeAH.savg.entity.RegularName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +21,12 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
     //정기점검 항목 불러오기(중대재해, 작업장 일반.. 등등)
     @Query("SELECT r.regularInsName FROM RegularName r ORDER BY r.regularNum")
     List<String> regularInsNameList();
+
+    //정기점검 항목 불러오기(주조/압출 등 )
+    @Query("SELECT rp.partMenu FROM RegularPart rp ORDER BY rp.partNum")
+    List<String> regularPartList();
+
+
 
     //정기점검 항목에 따른 체크리스트 불러오기
     @Query("SELECT r.r1List FROM RegularList1 r")

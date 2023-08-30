@@ -26,6 +26,7 @@ import java.util.Map;
 
 //@Controller
 @RestController
+@RequestMapping("/admin")
 //@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.20.252:3000") //세아
 
@@ -73,7 +74,7 @@ public class EduController {
 
         for (Edu edu : eduList) {
             eduDTOList.add(eduService.getEduById(edu.getEduId()));
-            log.info("테스트"+eduDTOList.get(i).getEduFiles());
+
         }
 
         return ResponseEntity.ok(eduDTOList);
@@ -124,15 +125,17 @@ public class EduController {
 
 
 
+
+
     //상세 페이지
     @GetMapping("/edudetails/{eduId}")
     public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
         EduDTO eduDTO = eduService.getEduById(eduId);
 
+
         if (eduDTO == null) {
             return ResponseEntity.notFound().build();
         }
-
 
         return ResponseEntity.ok(eduDTO);
     }
@@ -144,7 +147,6 @@ public class EduController {
 
             eduDTO.setEduId(eduId);
             eduService.update(eduDTO);
-
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {

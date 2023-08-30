@@ -16,7 +16,8 @@ public class RegularDTO {
     private LocalDateTime regularDate;          // 관찰일
     private String regularPerson;               // 관찰자
     private String regularEmpNum;               // 관찰자 사원번호
-    private String regularPart;                 // 점검구역(영역)
+    private String regularPart;                 // 점검구역(주조, 압출 등)
+    private String regularInsName;             //점검항목(중대재해, LOTO 등 )
 
     public static ModelMapper modelMapper = new ModelMapper();
 

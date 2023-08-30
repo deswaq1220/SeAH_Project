@@ -41,7 +41,6 @@ public class RegularDetailDTO {
             regularInspectionBad.setRegularActContent(this.regularActContent);
             regularInspectionBad.setRegularActPerson(this.regularActPerson);
             regularInspectionBad.setRegularActEmail(this.regularActEmail);
-            regularInspectionBad.setRegularDate(this.regularDate);
             regularInspectionBad.setRegularActDate(this.regularActDate);
             regularInspectionBad.setRegularComplete(this.regularCheck);
             regularInspectionBad.setRegularInspectionCheck(regularInspectionBad.getRegularInspectionCheck());
