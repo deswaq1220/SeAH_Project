@@ -32,8 +32,8 @@ public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";   //사용자 권한(authorities) 식별하는데 사용
     private static final String BEARER_TYPE = "bearer";     // 토큰유형 지정시 사용 Oauth 2.0 인증 프로토콜에서 사용되는 토큰 유형
 
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;       // 30분 액세스토큰
-//    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 30;       // 30초 액세스토큰
+//    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;       // 30분 액세스토큰
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 500 * 10;       // 30초 액세스토큰
 
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7; // 7일 리프레쉬토큰
 
@@ -108,6 +108,7 @@ public class TokenProvider {
             return TokenStatus.StatusCode.OK;
         } catch (ExpiredJwtException e) {
             log.info("만료된 JWT 토큰입니다.");
+
             return TokenStatus.StatusCode.EXPIRED;
         } catch (UnsupportedJwtException | io.jsonwebtoken.security.SecurityException |
                  MalformedJwtException e) {

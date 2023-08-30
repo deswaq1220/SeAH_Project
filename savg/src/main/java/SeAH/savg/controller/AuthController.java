@@ -65,6 +65,8 @@ public class AuthController {
     // 토큰 갱신
     @PostMapping("/refresh")
     public ResponseEntity<TokenDto> refresh(@RequestBody TokenRequestDto tokenRequestDto) {
+        log.info("컨트롤러 : " + tokenRequestDto.getRefreshToken());
+        log.info("제발ㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ");
         return ResponseEntity.ok(authService.refresh(tokenRequestDto));
     }
 

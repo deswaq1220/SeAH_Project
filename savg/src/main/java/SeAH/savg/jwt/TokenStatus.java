@@ -1,9 +1,11 @@
 package SeAH.savg.jwt;
 
+import SeAH.savg.service.AuthService;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static SeAH.savg.jwt.TokenStatus.StatusCode.*;
 
@@ -11,6 +13,7 @@ import static SeAH.savg.jwt.TokenStatus.StatusCode.*;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class TokenStatus {
+
     public enum StatusCode {
         OK,
         EXPIRED,
@@ -33,6 +36,7 @@ public class TokenStatus {
             return new TokenStatus(UNAUTHORIZED);
         }
         if (EXPIRED.equals(status)) {
+
             return new TokenStatus(EXPIRED);
         }
         return new TokenStatus(UNKNOWN);

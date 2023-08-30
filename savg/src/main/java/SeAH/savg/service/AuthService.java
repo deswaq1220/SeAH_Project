@@ -48,14 +48,14 @@ public class AuthService {
         return tokenProvider.generateTokenDto(authentication);
     }
 
-    public TokenDto refresh(TokenRequestDto tokenRequestDto) {
+    public  TokenDto refresh(TokenRequestDto tokenRequestDto) {
 
         //Refresh Token 검증
-        log.info(tokenRequestDto.getRefreshToken());
+        log.info("여기는 들어오나? " + tokenRequestDto.getRefreshToken());
         TokenStatus.StatusCode tokenStatusCode = tokenProvider.validateToken(tokenRequestDto.getRefreshToken());
-        if (tokenStatusCode != TokenStatus.StatusCode.OK) {
-            throw new RuntimeException("유효하지 않은 리프레시 토큰입니다.");
-        }
+//        if (tokenStatusCode != TokenStatus.StatusCode.OK) {
+//            throw new RuntimeException("유효하지 않은 리프레시 토큰입니다.");
+//        }
 
         //  Access Token 에서 Member ID 가져오기
         Authentication authentication = tokenProvider.getAuthentication(tokenRequestDto.getAccessToken());
