@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/usereduatten")
+@RequestMapping("/user")
 //@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
 //@CrossOrigin(origins = "http://localhost:3000")

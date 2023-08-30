@@ -4,14 +4,13 @@ import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.RegularInspectionRepository;
-import SeAH.savg.repository.SpeicalFileRepository;
+import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.MakeIdService;
 import SeAH.savg.service.RegularInspectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import SeAH.savg.service.MakeIdService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,18 +24,72 @@ import java.util.Map;
 //@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class RegularController {
 
-    private final RegularInspectionRepository regularInspectionRepository;
+    private final RegularStatisticsRepository regularStatisticsRepository;
     private final RegularInspectionService regularInspectionService;
     private final MakeIdService makeIdService;
 
    //--------------------------------------통계 관련
 
-        //연간 정기점검 건수
-        @GetMapping("/regular/statistics/yearcount")
-        public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
-            int statisticsCount = regularInspectionRepository.regularCountByYear(year);
+        //월간 정기점검 건수
+
+        @GetMapping("/admin/regular/statistics/monthcount")
+        public ResponseEntity<?> getRegularCountByMonth(@RequestParam("yearmonth") String yearMonth){
+            int year = Integer.parseInt(yearMonth.substring(0, 4));
+            int month = Integer.parseInt(yearMonth.substring(5, 7));
+
+            int statisticsCount = regularStatisticsRepository.regularCountByMonth(year, month);
             return ResponseEntity.ok(statisticsCount);
         }
+
+        //(pieChart) 월간 정기점검 위험성평가분석 데이터 값
+
+        @GetMapping("/admin/regular/statistics/checkvaluecount")
+        public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth){
+            String[] yearMonthParts = yearMonth.split("-");
+            int year = Integer.parseInt(yearMonthParts[0]);
+            int month = Integer.parseInt(yearMonthParts[1]);
+            System.out.println(year);
+            System.out.println(month);
+
+            List<Map<String, Object>> statisticsCount  = regularInspectionService.RegularCntByCheckAndMonth(year, month);
+            return ResponseEntity.ok(statisticsCount);
+        }
+
+        @GetMapping("/admin/regular/statistics/checkvaluecountsort")
+        public ResponseEntity<?> getRegularCntByCheckAndMonthSort(@RequestParam("yearmonth") String yearMonth,
+                                                              @RequestParam("regularinsname") String regularInsName){
+            String[] yearMonthParts = yearMonth.split("-");
+            int year = Integer.parseInt(yearMonthParts[0]);
+            int month = Integer.parseInt(yearMonthParts[1]);
+            System.out.println(year);
+            System.out.println(month);
+
+            List<Map<String, Object>> statisticsCount  = regularInspectionService.RegularCntByCheckAndMonthSort(year, month, regularInsName);
+            return ResponseEntity.ok(statisticsCount);
+        }
+
+        //(pieChart) 월간 정기점검 위험성평가분석 드롭다운
+
+        @GetMapping("/admin/regular/statistics/namedropdown")
+        public ResponseEntity<?> viewDropdownRegularNameList(){
+            Map<String, Object> responseData = new HashMap<>();
+            List<String> regularNameList = regularInspectionService.RegularNameList();
+
+            responseData.put("regularNameList", regularNameList);
+
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
+        }
+
+
+        //연간 정기점검 건수
+
+        @GetMapping("/admin/regular/statistics/yearcount")
+        public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
+            int statisticsCount = regularStatisticsRepository.regularCountByYear(year);
+            return ResponseEntity.ok(statisticsCount);
+        }
+
+
 
 
     /*
@@ -95,6 +148,7 @@ public class RegularController {
 
 
     //정기점검 목록 조회
+
     @GetMapping("/user/regularlist")
     public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month) {
         List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
@@ -112,6 +166,7 @@ public class RegularController {
         return ResponseEntity.ok(regularDTOList);
     }
 
+
     //정기점검 상세조회
     @GetMapping("/user/regular/detail/{regularId}")
     public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable String regularId){
@@ -121,6 +176,7 @@ public class RegularController {
         }
         return ResponseEntity.ok(regularDetailDTO);
     }
+
 
 
 
