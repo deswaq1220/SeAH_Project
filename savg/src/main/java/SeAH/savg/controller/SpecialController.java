@@ -143,8 +143,6 @@ public class SpecialController {
         int month = Integer.parseInt(yearMonth.substring(5, 7));
 
         List<Map<String, Object>> statisticsList = specialInspectionService.setSpecialListByPartAndMonth(year, month);
-
-
         return ResponseEntity.ok(statisticsList);
     }
 

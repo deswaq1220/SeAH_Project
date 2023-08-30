@@ -91,8 +91,8 @@ public class SpecialInspectionService {
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
 
-        MasterData idToFacilityData = masterDataRepository.findByMasterdataId(masterdataId);   // 설비
-        String idToFacility = idToFacilityData.getMasterdataFacility();
+        MasterData idToFacilityData = masterDataRepository.findByMasterdataId(masterdataId);   // 설비 ID로 설비정보찾기
+        String idToFacility = idToFacilityData.getMasterdataFacility();         // 설비명 얻기
         speInsFormDTO.setSpeFacility(idToFacility);
 
         SpeStatus.deadLineCal(speInsFormDTO);                                               // 위험도에 따른 완료요청기한
@@ -106,7 +106,7 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, NO);
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, idToFacility, NO);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
@@ -194,20 +194,21 @@ public class SpecialInspectionService {
     }
 
 
-    // 완료처리:업데이트
+//    // 완료처리:업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         System.out.println("-------------서비스 speDto: " +speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+        String facilityName = special.getSpeFacility();     // 설비명
 
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             List<SpecialFile> uploadFiles;
 
             if(speInsFormDTO.getSpeComplete() == OK){           // 완료처리일 경우
-                uploadFiles = specialFileService.uploadFile(speInsFormDTO, OK);
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, OK);
             } else {                                            // 수정일 경우
-                uploadFiles = specialFileService.uploadFile(speInsFormDTO, NO);
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
             }
 
             for(SpecialFile specialFile : uploadFiles)
