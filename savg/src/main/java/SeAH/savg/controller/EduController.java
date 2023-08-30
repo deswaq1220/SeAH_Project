@@ -26,6 +26,7 @@ import java.util.Map;
 
 //@Controller
 @RestController
+@RequestMapping("/admin")
 //@CrossOrigin(origins = "http://localhost:3000")
 //@CrossOrigin(origins = "http://172.20.20.252:3000") //세아
 

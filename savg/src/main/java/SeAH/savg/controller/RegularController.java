@@ -52,7 +52,8 @@ public class RegularController {
 
 
     //정기점검 항목 리스트
-    @GetMapping("/regularname")
+
+    @GetMapping("/user/regularname")
     public ResponseEntity<Map<String, Object>> regularNameListSelect() {
         Map<String, Object> responseData = new HashMap<>();
         List<String> regularNameList = regularInspectionService.selectRegularName();
@@ -62,7 +63,8 @@ public class RegularController {
     }
 
     //정기점검 영역 리스트(주조, 영역 등)
-    @GetMapping("/regularpart")
+
+    @GetMapping("/user/regularpart")
     public ResponseEntity<Map<String, Object>> regularPartListSelect(){
         Map<String, Object> responseData = new HashMap<>();
         List<String> regularPartList = regularInspectionService.selectRegularPart();
@@ -71,8 +73,10 @@ public class RegularController {
         return ResponseEntity.ok(responseData);
     }
 
+
     //정기점검 항목에 따른 체크리스트 세팅
-    @GetMapping("/regularcheck")
+
+    @GetMapping("/user/regularcheck")
     public ResponseEntity<Map<String, List<String>>> regularcheck(@RequestParam int regularNum) {
         Map<String, List<String>> responseData = new HashMap<>();
 
@@ -83,7 +87,7 @@ public class RegularController {
     }
 
     //정기점검 등록
-    @PostMapping("/regular/new")
+    @PostMapping("/user/regular/new")
     public ResponseEntity<String> createRegularInspection(@RequestBody RegularDetailDTO regularDetailDTO, @RequestBody RegularDTO regularDTO) {
         regularInspectionService.createRegular(regularDetailDTO, regularDTO);
         return ResponseEntity.ok("정기점검 등록 성공");
@@ -91,7 +95,7 @@ public class RegularController {
 
 
     //정기점검 목록 조회
-    @GetMapping("/regularlist")
+    @GetMapping("/user/regularlist")
     public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month) {
         List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
 
@@ -109,7 +113,7 @@ public class RegularController {
     }
 
     //정기점검 상세조회
-    @GetMapping("/regular/detail/{regularId}")
+    @GetMapping("/user/regular/detail/{regularId}")
     public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable String regularId){
         RegularDetailDTO regularDetailDTO = regularInspectionService.getRegularById(regularId);
         if (regularDetailDTO == null){
