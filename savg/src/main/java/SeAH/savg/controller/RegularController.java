@@ -29,7 +29,8 @@ public class RegularController {
    //--------------------------------------통계 관련
 
         //월간 정기점검 건수
-        @GetMapping("/regular/statistics/monthcount")
+
+        @GetMapping("/admin/regular/statistics/monthcount")
         public ResponseEntity<?> getRegularCountByMonth(@RequestParam("yearmonth") String yearMonth){
             int year = Integer.parseInt(yearMonth.substring(0, 4));
             int month = Integer.parseInt(yearMonth.substring(5, 7));
@@ -39,7 +40,8 @@ public class RegularController {
         }
 
         //(pieChart) 월간 정기점검 위험성평가분석 데이터 값
-        @GetMapping("/regular/statistics/checkvaluecount")
+
+        @GetMapping("/admin/regular/statistics/checkvaluecount")
         public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth){
             String[] yearMonthParts = yearMonth.split("-");
             int year = Integer.parseInt(yearMonthParts[0]);
@@ -50,7 +52,8 @@ public class RegularController {
             List<Map<String, Object>> statisticsCount  = regularInspectionService.RegularCntByCheckAndMonth(year, month);
             return ResponseEntity.ok(statisticsCount);
         }
-        @GetMapping("/regular/statistics/checkvaluecountsort")
+
+        @GetMapping("/admin/regular/statistics/checkvaluecountsort")
         public ResponseEntity<?> getRegularCntByCheckAndMonthSort(@RequestParam("yearmonth") String yearMonth,
                                                               @RequestParam("regularinsname") String regularInsName){
             String[] yearMonthParts = yearMonth.split("-");
@@ -64,7 +67,8 @@ public class RegularController {
         }
 
         //(pieChart) 월간 정기점검 위험성평가분석 드롭다운
-        @GetMapping("/regular/statistics/namedropdown")
+
+        @GetMapping("/admin/regular/statistics/namedropdown")
         public ResponseEntity<?> viewDropdownRegularNameList(){
             Map<String, Object> responseData = new HashMap<>();
             List<String> regularNameList = regularInspectionService.RegularNameList();
@@ -76,7 +80,8 @@ public class RegularController {
 
 
         //연간 정기점검 건수
-        @GetMapping("/regular/statistics/yearcount")
+
+        @GetMapping("/admin/regular/statistics/yearcount")
         public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
             int statisticsCount = regularStatisticsRepository.regularCountByYear(year);
             return ResponseEntity.ok(statisticsCount);

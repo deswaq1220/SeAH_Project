@@ -127,8 +127,22 @@ public class RegularInspectionService {
             Long count = (Long) row[1];
 
             Map<String, Object> middleData = new HashMap<>();
-            middleData.put("id", regularCheck);
-            middleData.put("label", regularCheck);
+
+            if(regularCheck.equals(RegStatus.GOOD)){
+                middleData.put("id", "양호");
+                middleData.put("label", "양호");
+            } else if(regularCheck.equals(RegStatus.BAD)){
+                middleData.put("id", "불량");
+                middleData.put("label", "불량");
+            } else if(regularCheck.equals(RegStatus.NA)){
+                middleData.put("id", "NA");
+                middleData.put("label", "NA");
+            } else{
+                middleData.put("id", "error");
+                middleData.put("label", "error");
+                log.error("에러발생");
+            };
+
             middleData.put("value", count);
 
             finalData.add(middleData);
@@ -146,8 +160,21 @@ public class RegularInspectionService {
             Long count = (Long) row[1];
 
             Map<String, Object> middleData = new HashMap<>();
-            middleData.put("id", regularCheck);
-            middleData.put("label", regularCheck);
+
+            if(regularCheck.equals(RegStatus.GOOD)){
+                middleData.put("id", "양호");
+                middleData.put("label", "양호");
+            } else if(regularCheck.equals(RegStatus.BAD)){
+                middleData.put("id", "불량");
+                middleData.put("label", "불량");
+            } else if(regularCheck.equals(RegStatus.NA)){
+                middleData.put("id", "NA");
+                middleData.put("label", "NA");
+            } else{
+                middleData.put("id", "error");
+                middleData.put("label", "error");
+                log.error("에러발생");
+            };
             middleData.put("value", count);
 
             finalData.add(middleData);
