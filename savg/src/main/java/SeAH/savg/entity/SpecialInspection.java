@@ -22,7 +22,7 @@ public class SpecialInspection {
     private String spePerson;               // 점검자
 
     @Column(nullable = false)
-    private String speEmpNum;             // 사원번호
+    private String speEmpNum;              // 사원번호
 
     @Column(nullable = false)
     private String speEmail;                // 점검자 이메일(조치완료시 회신)

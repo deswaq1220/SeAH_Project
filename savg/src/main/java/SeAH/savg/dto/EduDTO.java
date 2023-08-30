@@ -2,6 +2,7 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
+import SeAH.savg.entity.EduFile;
 import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter @Setter @ToString
 @EntityListeners(EduEntityListener.class)
@@ -50,12 +52,12 @@ public class EduDTO {
     @NotEmpty(message = "작성자를 입력하세요")
     private String eduWriter; //작성자
 
+    private List<Long> eduFileIds; //파일 수정에 필요한 ID
+
     private List<MultipartFile> files; // 파일
 
-    private List<String> eduFiles;
+    private List<EduFile> eduFileList = new ArrayList<>();
 
-
-//    private List<EduFile> eduFiles;
     //    private MultipartFile[] files;
     private static ModelMapper modelMapper = new ModelMapper();
 

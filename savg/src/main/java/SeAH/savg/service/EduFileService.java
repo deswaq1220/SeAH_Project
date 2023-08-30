@@ -44,6 +44,7 @@ public class EduFileService {
         List<EduFile> uploadedFiles = new ArrayList<>();
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
         List<MultipartFile> files = eduDTO.getFiles();
+
         for (MultipartFile file : files) {
             String originalFilename = file.getOriginalFilename();
             String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;
@@ -78,6 +79,11 @@ public class EduFileService {
         }
     }
 
+    public File fileUpload(String fileName) {
+        String filePath = eduFileLocation + "/" + fileName;
+        File uploadedFile = new File(filePath);
+       return uploadedFile;
+    }
     //파일명설정 : 오늘날짜_원본파일명 조합
     private String generateUniqueFileName(String originalFilename) {
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
