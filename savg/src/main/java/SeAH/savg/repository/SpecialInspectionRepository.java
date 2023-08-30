@@ -4,6 +4,7 @@ import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.entity.SpecialInspection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -11,9 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface SpecialInspectionRepository extends JpaRepository<SpecialInspection, String> {
+public interface SpecialInspectionRepository extends JpaRepository<SpecialInspection, String>, QuerydslPredicateExecutor<SpecialInspection> {
     // 설비로 찾기: 내림차순 정렬
-    List<SpecialInspection> findAllBySpeFacilityOrderBySpeDateDesc(String masterdataFacility);
+    List<SpecialInspection> findAllBySpeFacilityOrderBySpeDateDesc(String facility);
+
 
     // id: 생성 - DB에서 id들 들고와서 '-'기준으로 잘른 뒤에꺼의 가장 마지막 번호를 얻은 다음(int로 변환해서 비교해야할거같음) 가장 큰 숫자 구하기
     @Query("select MAX(substring(s.speId, 7)) from SpecialInspection s where substring(s.speId,2,4) =? 1")
@@ -42,7 +44,7 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
 
     // --------------------------- 공통
     // 등록된 전체 수시점검 조회
-//    List<SpecialInspection> findAll();
+//    List<SpecialInspection> findAllOrderBySpeIdDesc();
 
 
 

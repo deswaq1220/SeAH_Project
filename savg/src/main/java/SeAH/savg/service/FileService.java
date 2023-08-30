@@ -22,9 +22,9 @@ public class FileService {
  private final SpeicalFileRepository speicalFileRepository;
 
  // 파일 이름 세팅
-  public String makeFileName(String uploadPath, String originalFileName, byte[] fileData) throws Exception{
+  public String makeFileName(String uploadPath, String originalFileName, String facilityName, byte[] fileData) throws Exception{
    // 저장될 파일이름
-   String savedFileName = generateUniqueFileName(originalFileName);
+   String savedFileName = generateUniqueFileName(originalFileName, facilityName);
    String fileUploadFullUrl = uploadPath + "/" + savedFileName;
    // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
    FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
@@ -36,10 +36,10 @@ public class FileService {
 
 
 
- //파일명설정 : 오늘날짜_seqenceNumber_원본파일명 조합
+ //파일명설정 : 오늘날짜_seqenceNumber_설비명_원본파일명 조합
  private List<SpecialFile> previousDatelist = null; // 이전날짜 저장하는 변수
  private int sequenceNumber = 0;
- private String generateUniqueFileName(String originalFilename) {
+ private String generateUniqueFileName(String originalFilename, String facilityName) {
   String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
   previousDatelist = speicalFileRepository.findFilesByToday(todayDate);
 
@@ -53,7 +53,7 @@ public class FileService {
    sequenceNumber++;
   }
 
-  String newName = todayDate + "_" +  sequenceNumber  +"_" + originalFilename;
+  String newName = todayDate + "_" +  sequenceNumber + "_" + facilityName + "_" + originalFilename;
 
   return newName;
  }
