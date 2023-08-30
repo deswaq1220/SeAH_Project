@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -34,7 +31,7 @@ public class EmailController {
 //            helper.setTo(emailData.getRecipient());
             helper.setTo(emailData.getRecipients().toArray(new String[0]));
             helper.setSubject(emailData.getSubject());
-            helper.setText(emailData.getContent());
+            helper.setText(emailData.getContent(),true);
 
             mailSender.send(message);
             return ResponseEntity.ok().body(new ResponseMessage("Email sent successfully."));

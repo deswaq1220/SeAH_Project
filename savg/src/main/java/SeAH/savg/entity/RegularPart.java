@@ -1,6 +1,7 @@
 package SeAH.savg.entity;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Column;
@@ -8,13 +9,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-@Getter @ToString
-public class RegularInspectionKind {
-
+@Getter @Setter @ToString
+public class RegularPart {
     @Id
-    private String regularSpeKind;       // 정기점검 구분
+    private String partMenu; //영역분류
 
     @Column(nullable = false)
-    private int regularSpeNum;           // 순서
-
+    private int partNum; //순서
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/usereduatten")
+@RequestMapping("/user")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
