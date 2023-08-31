@@ -2,7 +2,9 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.entity.Email;
 import SeAH.savg.entity.RegularInspection;
+import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.MakeIdService;
@@ -122,6 +124,16 @@ public class RegularController {
         Map<String, Object> responseData = new HashMap<>();
         List<String> regularPartList = regularInspectionService.selectRegularPart();
         responseData.put("regularPartList", regularPartList);
+
+        return ResponseEntity.ok(responseData);
+    }
+
+    //정기점검 이메일 리스트(조치 담당자)
+    @GetMapping("/user/regularemail")
+    public ResponseEntity<Map<String, Object>> regularEmailList(){
+        Map<String, Object> responseData = new HashMap<>();
+        List<Email> emailList = regularInspectionService.selectEmail();
+        responseData.put("emailList", emailList);
 
         return ResponseEntity.ok(responseData);
     }

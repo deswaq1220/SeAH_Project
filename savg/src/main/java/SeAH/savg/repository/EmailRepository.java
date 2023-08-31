@@ -3,6 +3,7 @@ package SeAH.savg.repository;
 import SeAH.savg.constant.MasterStatus;
 import SeAH.savg.entity.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +17,8 @@ public interface EmailRepository extends JpaRepository <Email, Long> {
     List<Email> findByMasterStatus(MasterStatus ms);
   
     //전체 조치자 이메일 목록
-    List<Email> findByEmailId(Long emailId);
+    @Query("SELECT e FROM Email e ORDER BY e.emailId")
+    List<Email> regularEmailList();
 
 
 }

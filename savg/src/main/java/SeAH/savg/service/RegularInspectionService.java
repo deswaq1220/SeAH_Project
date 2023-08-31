@@ -14,10 +14,8 @@ import SeAH.savg.repository.RegularInspectionBadRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +46,12 @@ public class RegularInspectionService {
         return regularPartList;
     }
 
+
+    //정기점검 조치자 이메일 리스트
+    public List<Email> selectEmail(){
+        List<Email> regularEmail = emailRepository.regularEmailList();
+        return regularEmail;
+    }
 
 
     //정기점검 항목에 맞는 체크리스트 세팅
@@ -92,11 +96,6 @@ public class RegularInspectionService {
         return checklist;
     }
 
-    //정기점검 조치자 이메일 리스트
-    public List<Email> selectEmail(Long emailId){
-        List<Email> regularEmailList = emailRepository.findByEmailId(emailId);
-        return regularEmailList;
-    }
 
 
     private String categoryType = "R";
