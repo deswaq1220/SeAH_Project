@@ -200,7 +200,7 @@ public class SpecialController {
       int month = Integer.parseInt(yearMonth.substring(5, 7));
       List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonth(year, month);
       return ResponseEntity.ok(statisticsList);
-  }*/
+  }
 
 
     /* 월간 수시점검 현황 통계 조회 - 위험원인별(0건까지 나옴) - 기타값 포함
