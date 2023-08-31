@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+//@RequestMapping("/user")
 public class MasterDataController {
 
 

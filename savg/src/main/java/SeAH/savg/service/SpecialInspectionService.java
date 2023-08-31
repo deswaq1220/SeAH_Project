@@ -91,9 +91,9 @@ public class SpecialInspectionService {
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
 
-        MasterData idToFacilityData = masterDataRepository.findByMasterdataId(masterdataId);   // 설비 ID로 설비정보찾기
-        String idToFacility = idToFacilityData.getMasterdataFacility();         // 설비명 얻기
-        speInsFormDTO.setSpeFacility(idToFacility);
+//        MasterData idToFacilityData = masterDataRepository.findByMasterdataId(masterdataId);   // 설비 ID로 설비정보찾기
+//        String idToFacility = idToFacilityData.getMasterdataFacility();         // 설비명 얻기
+//        speInsFormDTO.setSpeFacility(idToFacility);
 
         SpeStatus.deadLineCal(speInsFormDTO);                                               // 위험도에 따른 완료요청기한
 
@@ -106,7 +106,8 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, idToFacility, NO);
+//            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, idToFacility, NO);
+            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, speInsFormDTO.getSpeFacility(), NO);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
         }
