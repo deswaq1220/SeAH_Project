@@ -2,6 +2,7 @@ package SeAH.savg.repository;
 
 import SeAH.savg.dto.MasterDataDepartmentDTO;
 import SeAH.savg.entity.MasterDataDepartment;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,20 +16,21 @@ import java.util.List;
 public interface MasterDataDepartmentRepository extends JpaRepository<MasterDataDepartment, String> {
 
     //전체조회
-    List<MasterDataDepartment> findAll();
+    List<MasterDataDepartment> findAll(Sort sort);
 
-    //부서별 조회 - (부서1 기준)
-    List<MasterDataDepartmentDTO> findByFirstDepartment(String depart1);
+    //부서별 조회
+    @Query("SELECT m.departmentId, m.departmentName FROM MasterDataDepartment m WHERE m.departmentId = :departmentId")
+    List<MasterDataDepartmentDTO> departmentListBySort(String departmentId);
 
     //부서별 드롭다운 노출
-    @Query("SELECT m.firstDepartment FROM MasterDataDepartment m")
+    @Query("SELECT m.departmentId, m.departmentName FROM MasterDataDepartment m")
     List<String> dropDownListByDepart();
 
     //부서 수정
     @Modifying
     @Transactional
-    @Query("UPDATE MasterDataDepartment m SET m.firstDepartment = :firstDepartment, m.secondDepartment = :secondDepartment WHERE m.secondDepartment = :depart2")
-    void updateDepartment(@Param("depart2") String depart2, @Param("firstDepartment") String firstDepartment, @Param("secondDepartment") String secondDepartment);
+    @Query("UPDATE MasterDataDepartment m SET m.departmentId = :departmentId, m.departmentName = :departmentName WHERE m.departmentId = :departmentId")
+    void updateDepartment(@Param("departmentid") String departmentId, @Param("departmentname") String departmentName);
 }
 
 

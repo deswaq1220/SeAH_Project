@@ -18,12 +18,28 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
             "WHERE YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month")
     int regularCountByMonth(@Param("year") int year, @Param("month") int month);
 
-    //월간 영역별 점검 건수(0건인 것들도 함께 나옴)- 하는 중
-/*    @Query("SELECT p.partMenu, COUNT(s.spePart) " +
-            "FROM SpecialPart p " +
-            "LEFT JOIN SpecialInspection s ON s.spePart = p.partMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+    //월간 영역별 점검 건수(0건인 것들도 함께 나옴)
+    // 1. 전체 리스트 뽑기
+    @Query("SELECT p.partMenu, COUNT(r) " +
+            "FROM RegularPart p " +
+            "LEFT JOIN RegularInspection r ON r.regularPart = p.partMenu AND YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month " +
             "GROUP BY p.partMenu")
-    List<Object[]> regularListByPartAndMonth(@Param("year") int year, @Param("month") int month);*/
+    List<Object[]> regularListByPartAndMonth(@Param("year") int year, @Param("month") int month);
+
+    //2.영역별 발생 건 수 -전체 값(기타(직접입력)으로 데이터가 일원화 안됨)
+    @Query("SELECT COUNT(r) " +
+            "FROM RegularInspection r " +
+            "WHERE YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month ")
+    Long regularCountByPartAndMonth(@Param("year") int year, @Param("month") int month);
+
+    //3. 영역별 발생 건 수 -기타 제외 값
+    @Query("SELECT COUNT(r) " +
+            "FROM RegularInspection r " +
+            "LEFT JOIN RegularPart p ON r.regularPart = p.partMenu AND YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month ")
+    Long regularCountOtherExcludedByPartAndMonth(@Param("year") int year, @Param("month") int month);
+
+
+
 
     //(pieChart) 월간 양호,불량,NA 건수 표시(구분(양호,불량,NA),값) - 전체
     @Query("SELECT c.regularCheck, COUNT(c) " +
@@ -59,12 +75,12 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
             "GROUP BY MONTH(r.regularDate)")
     List<Object[]> regularCountList(@Param("year") int year);
 
-/*        //1~12월 종류별 정기점검 점검건수 통계
-        @Query("SELECT MONTH(r.speDate), r.regularInsName, COUNT(r) " +
-                "FROM RegularInspection r " +
-                "WHERE YEAR(r.speDate) = :year " +
-                "GROUP BY r.regularInsName, MONTH(r.speDate)")
-        List<Object[]> regularDetailListByName(@Param("year") int year);*/
+    //(barChart) 1~12월 점검종류별 점검건수 통계
+    @Query("SELECT MONTH(r.regularDate), r.regularInsName, COUNT(r) " +
+            "FROM RegularInspection r " +
+            "WHERE YEAR(r.regularDate) = :year " +
+            "GROUP BY r.regularInsName, MONTH(r.regularDate)")
+    List<Object[]> regularDetailListByNameAndYear(@Param("year") int year);
 
 
 }

@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -161,6 +162,7 @@ public class RegularInspectionService {
     }
 
 //----------------------------------------------------통계 관련
+    //월간
     //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건
     public List<Map<String, Object>> RegularCntByCheckAndMonth(int year, int month){
         List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonth(year, month);
@@ -234,5 +236,72 @@ public class RegularInspectionService {
 
         return specialPartList;
     }
+
+
+    //(radarChart) 월간 영역별 정기점검 건수 통계 - 선택 제외, 직접입력은 '기타'로 일원화
+    @Transactional
+    public List<Map<String, Object>> regularDetailListByPartAndMonth(int year, int month){
+        List<Object[]> regularList = regularStatisticsRepository.regularListByPartAndMonth(year, month); //전체 리스트 가져오기
+        System.out.println("입력리스트"+ regularList);
+
+        //'기타(직접입력)'에 값 수정: 통계로 보여줄 때 기타(직접입력)으로 보여주기 위함.
+        Long allValue = regularStatisticsRepository.regularCountByPartAndMonth(year, month);//모든값
+        Long otherExcluedallValue = regularStatisticsRepository.regularCountOtherExcludedByPartAndMonth(year, month); //모든값-예외값
+
+        //기타 수정값 넣기
+        for (Object[] value : regularList) {
+            if ("기타(직접입력)".equals(value[0])) { // 값이 기타(직접입력)이면
+                value[1] = allValue - otherExcluedallValue; // 두 번째 값 수정
+                break; // 수정 후 루프 종료
+            }
+        }
+
+        // "선택" 값을 제외한 새로운 리스트 생성
+        List<Map<String, Object>> filteredList = new ArrayList<>();
+        for (Object[] row : regularList) {
+            String part = (String) row[0];
+            Long count = (Long) row[0];
+
+            if (!part.equals("선택")) { //"선택" 제거
+                Map<String, Object> dataPoint = new HashMap<>();
+                dataPoint.put("sort", part);
+                dataPoint.put("정기점검", count);
+                filteredList.add(dataPoint);
+            }
+        }
+
+        System.out.println(filteredList);
+        return filteredList;
+    }
+
+    //연간
+    //1~12월까지 월간 정기점검종류별 점검건수
+    @Transactional
+    public List<Map<String,Object>> regularCountListByNameAndYear(int year){
+        List<Object[]> regularList = regularStatisticsRepository.regularDetailListByNameAndYear(year);
+
+        Map<Integer, Map<String, Object>> dataByYear = new HashMap<>();
+
+        for(Object[] row : regularList){
+
+            Integer month = (Integer) row[0];
+            String regularName = (String) row[1];
+            Long count = (Long) row[2];
+
+            if(!dataByYear.containsKey(month)){
+                Map<String, Object> dataPoint = new HashMap<>();
+                dataPoint.put("month", month); //형태: "month":9월
+                dataByYear.put(month, dataPoint); //형태: 9월:"month":9월
+            }
+            Map<String, Object> dataPoint = dataByYear.get(month);
+            dataPoint.put(regularName, count);
+            //dataPoin 형태 =    "month": 9월
+            //                  "중대재해": 7
+        }
+        List<Map<String, Object>> finalData = new ArrayList<>(dataByYear.values());
+
+        return finalData;
+    }
+
 
 }

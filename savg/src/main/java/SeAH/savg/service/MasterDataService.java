@@ -11,6 +11,7 @@ import SeAH.savg.repository.MasterDataDepartmentRepository;
 import SeAH.savg.repository.MasterDataRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,27 +93,30 @@ public class MasterDataService {
 
     //------------------------------------------부서 관리
 
-        //부서 전체 목록 조회
+        //부서 전체 목록 조회(부서코드 순서)
         public List<MasterDataDepartment> DepartList(){
+
+                Sort sort = Sort.by(Sort.Direction.ASC, "departmentId");
+                return masterDataDepartmentRepository.findAll(sort);
+            }
+
+        /*        public List<MasterDataDepartment> DepartList(){
             List<MasterDataDepartment> resultList = masterDataDepartmentRepository.findAll();
 
             resultList.sort(Comparator
                                       .comparing((MasterDataDepartment dept) -> !dept.getFirstDepartment().equals(dept.getSecondDepartment()))
                                       .thenComparing(MasterDataDepartment::getFirstDepartment)
                                       .thenComparing(MasterDataDepartment::getSecondDepartment)
-
             );
             return resultList;
-        }
+        }*/
 
-        //부서별 목록 조회(카테고리용) -부서1 기준
-        public List<MasterDataDepartmentDTO> sortDepartList(String dept1){
+        //부서별 목록 조회(카테고리용)
+        public List<MasterDataDepartmentDTO> sortDepartList(String departmentId){
 
-            List<MasterDataDepartmentDTO> resultList = masterDataDepartmentRepository.findByFirstDepartment(dept1);
+            List<MasterDataDepartmentDTO> resultList = masterDataDepartmentRepository.departmentListBySort(departmentId);
 
-            resultList.sort(Comparator
-                                      .comparing((MasterDataDepartmentDTO dept) -> !dept.getFirstDepartment().equals(dept.getSecondDepartment()))
-            );
+
             return resultList;
         }
 
@@ -122,7 +126,6 @@ public class MasterDataService {
 
             //성공
             try {
-                //MasterDataDepartment entity = departmentDTO.toEntity(); //dto를 엔티티로 변환
                 MasterDataDepartment resultList = MasterDataDepartmentDTO.createMasterDepart(departmentDTO);
                 masterDataDepartmentRepository.save(resultList);
 
@@ -137,9 +140,9 @@ public class MasterDataService {
 
         //부서 삭제하기
        @Transactional
-       public void delDepart(String depart2){
+       public void delDepart(String departmentId){
            try{
-            masterDataDepartmentRepository.deleteById(depart2);
+            masterDataDepartmentRepository.deleteById(departmentId);
             System.out.println("삭제성공");
            } catch (Exception e) {
                log.error("삭제실패");
@@ -148,18 +151,18 @@ public class MasterDataService {
 
         //부서 수정하기
         @Transactional
-        public MasterDataDepartmentDTO updateDepart(String depart2, MasterDataDepartmentDTO departmentDTO){ //depart2: 수정해야하는 값, departmentDTO: 수정 값
+        public MasterDataDepartmentDTO updateDepart(MasterDataDepartmentDTO departmentDTO){ //depart2: 수정해야하는 값, departmentDTO: 수정 값
             try{
 
-                Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(depart2);
+                Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(departmentDTO.getDepartmentId());
 
                 //변경값이 존재할 경우
                 if(target.isPresent()){
 
-                    String firstDepartment = departmentDTO.getFirstDepartment();
-                    String secondDepartment = departmentDTO.getSecondDepartment();
+                    String departmentId = departmentDTO.getDepartmentId();
+                    String departmentName = departmentDTO.getDepartmentName();
 
-                    masterDataDepartmentRepository.updateDepartment(depart2, firstDepartment, secondDepartment);
+                    masterDataDepartmentRepository.updateDepartment(departmentId, departmentName);
 
                     log.info("수정 성공");
 

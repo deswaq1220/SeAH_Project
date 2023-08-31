@@ -114,7 +114,6 @@ public class MasterDataController {
         }
 
         //부서별 목록 드롭다운으로 뿌리기
-        //부서1로 조회
         @GetMapping("/master/departdropdown")
         public ResponseEntity<?> viewDropdownDepart(){
 
@@ -128,10 +127,9 @@ public class MasterDataController {
 
 
         //부서별 목록 조회(카테고리용)
-        //부서1로 조회하는 기능
         @GetMapping("/master/department/sort")
-        public ResponseEntity<List<MasterDataDepartmentDTO>> sortByDepart(@RequestParam("depart1") String depart1){
-            return new ResponseEntity<>(masterDataService.sortDepartList(depart1), HttpStatus.OK);
+        public ResponseEntity<List<MasterDataDepartmentDTO>> sortByDepart(@RequestParam("departmentid") String departmentId){
+            return new ResponseEntity<>(masterDataService.sortDepartList(departmentId), HttpStatus.OK);
         }
 
         //부서 등록
@@ -142,23 +140,21 @@ public class MasterDataController {
         }
 
         //부서 삭제
-        @PostMapping("/master/department/del/{depart2}")
-        public ResponseEntity<?> delDepart(@PathVariable String depart2){
+        @PostMapping("/master/department/del/{departmentId}")
+        public ResponseEntity<?> delDepart(@PathVariable String departmentId){
 
-            String Strdepart2 = "["+depart2+"]";
-            masterDataService.delDepart(Strdepart2);
+            masterDataService.delDepart(departmentId);
 
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
 
         //부서 수정
-        @PostMapping("/master/department/update/{depart2}")
-        public ResponseEntity<?> updateDepart(@PathVariable String depart2,
+        @PostMapping("/master/department/update/{departId}")
+        public ResponseEntity<?> updateDepart(@PathVariable String departId,
                                               @RequestBody MasterDataDepartmentDTO departmentDTO){
 
-            String Strdepart2 = "["+depart2+"]";
-            masterDataService.updateDepart(Strdepart2, departmentDTO);
+            masterDataService.updateDepart(departmentDTO);
             return new ResponseEntity<>(HttpStatus.OK);
         }
 

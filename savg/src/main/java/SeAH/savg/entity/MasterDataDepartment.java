@@ -14,16 +14,16 @@ import javax.persistence.*;
 @Table(name="master_data_department")
 public class MasterDataDepartment {
 
-    @Column(nullable = false)
-    private String firstDepartment;  // 부서명1
-
     @Id
-    private String secondDepartment;  // 부서명2
+    private String departmentId;  // 부서코드
+
+    @Column(nullable = false)
+    private String departmentName;  // 부서명
 
     @Builder
-    MasterDataDepartment(String firstDepartment, String secondDepartment) {
-        this.firstDepartment = firstDepartment;
-        this.secondDepartment = secondDepartment;
+    MasterDataDepartment(String departmentId, String departmentName) {
+        this.departmentId = departmentId;
+        this.departmentName = departmentName;
     }
 
 }

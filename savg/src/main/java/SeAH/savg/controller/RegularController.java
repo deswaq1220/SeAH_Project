@@ -29,9 +29,8 @@ public class RegularController {
     private final MakeIdService makeIdService;
 
    //--------------------------------------통계 관련
-
+    //월간 분석
         //월간 정기점검 건수
-
         @GetMapping("/admin/regular/statistics/monthcount")
         public ResponseEntity<?> getRegularCountByMonth(@RequestParam("yearmonth") String yearMonth){
             int year = Integer.parseInt(yearMonth.substring(0, 4));
@@ -41,8 +40,7 @@ public class RegularController {
             return ResponseEntity.ok(statisticsCount);
         }
 
-        //(pieChart) 월간 정기점검 위험성평가분석 데이터 값
-
+        //(pieChart) 월간 정기점검 위험성평가분석 데이터 값(전체)
         @GetMapping("/admin/regular/statistics/checkvaluecount")
         public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth){
             String[] yearMonthParts = yearMonth.split("-");
@@ -55,6 +53,7 @@ public class RegularController {
             return ResponseEntity.ok(statisticsCount);
         }
 
+        //(pieChart) 월간 정기점검 위험성평가분석 데이터 값(sort한 값)
         @GetMapping("/admin/regular/statistics/checkvaluecountsort")
         public ResponseEntity<?> getRegularCntByCheckAndMonthSort(@RequestParam("yearmonth") String yearMonth,
                                                               @RequestParam("regularinsname") String regularInsName){
@@ -69,7 +68,6 @@ public class RegularController {
         }
 
         //(pieChart) 월간 정기점검 위험성평가분석 드롭다운
-
         @GetMapping("/admin/regular/statistics/namedropdown")
         public ResponseEntity<?> viewDropdownRegularNameList(){
             Map<String, Object> responseData = new HashMap<>();
@@ -80,32 +78,34 @@ public class RegularController {
             return new ResponseEntity<>(responseData, HttpStatus.OK);
         }
 
+        //(radarChart) 월간 점검영역별 그래프 데이터값 전송
+        @GetMapping("/admin/regular/statistics/partandmonth")
+        public ResponseEntity<?> getRegularListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
+            int year = Integer.parseInt(yearMonth.substring(0, 4));
+            int month = Integer.parseInt(yearMonth.substring(5, 7));
 
+            List<Map<String, Object>> statisticsList = regularInspectionService.regularDetailListByPartAndMonth(year, month);
+            return ResponseEntity.ok(statisticsList);
+        }
+
+
+    //연간 분석
         //연간 정기점검 건수
-
         @GetMapping("/admin/regular/statistics/yearcount")
         public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
             int statisticsCount = regularStatisticsRepository.regularCountByYear(year);
             return ResponseEntity.ok(statisticsCount);
         }
-
-
-
-
-    /*
-     *//* 1~12월 내 발생한 월간 정기점검 현황 통계 조회 - 종류별
-         * 형태: 중대재해예방 일반점검, 작업장 일반, 추락예방, 이동장비(지게차,트럭), 이동장비(크레인)...  + 점검건수 리스트
-         * ex : 1월 중대재해예방 1건, 2월 중대재해예방 2건/ 작업장 일반 1건  ...
-         *//*
-        @GetMapping("/regular/statistics/detailname")
-        public ResponseEntity<List<Map<String, Object>>> getDetailRegularListByName(@RequestParam("year") int year) {
-            List<Map<String, Object>> statisticsList = regularInspectionService.regularDetailListByName(year);
+        //(barChart) 연간 점검종류별 점검 건수
+        @GetMapping("/admin/regular/statistics/nameandyear")
+        public ResponseEntity<List<Map<String, Object>>> getRegularCountByNameAndYear(@RequestParam("year") int year) {
+            List<Map<String, Object>> statisticsList = regularInspectionService.regularCountListByNameAndYear(year);
             return ResponseEntity.ok(statisticsList);
-        }*/
+        }
+
 
 
     //정기점검 항목 리스트
-
     @GetMapping("/user/regularname")
     public ResponseEntity<Map<String, Object>> regularNameListSelect() {
         Map<String, Object> responseData = new HashMap<>();
