@@ -102,44 +102,44 @@ public class RegularInspectionService {
 
     //정기점검 항목에 맞는 체크리스트 세팅
     public List<String> selectRegularListByNum(int regularNum) {
-        List<String> checklist = new ArrayList<>();
+        List<String> regularNameList = regularInspectionRepository.regularInsNameList();
 
         if (regularNum == 1) {
             List<String> regularList1 = regularInspectionRepository.regular1List();
-            checklist.addAll(regularList1);
+            regularNameList.addAll(regularList1);
         } else if (regularNum == 2) {
             List<String> regularList2 = regularInspectionRepository.regular2List();
-            checklist.addAll(regularList2);
+            regularNameList.addAll(regularList2);
         } else if (regularNum == 3) {
             List<String> regularList3 = regularInspectionRepository.regular3List();
-            checklist.addAll(regularList3);
+            regularNameList.addAll(regularList3);
         }else if (regularNum == 4) {
             List<String> regularList4 = regularInspectionRepository.regular4List();
-            checklist.addAll(regularList4);
+            regularNameList.addAll(regularList4);
         }else if (regularNum == 5) {
             List<String> regularList5 = regularInspectionRepository.regular5List();
-            checklist.addAll(regularList5);
+            regularNameList.addAll(regularList5);
         }else if (regularNum == 6) {
             List<String> regularList6 = regularInspectionRepository.regular6List();
-            checklist.addAll(regularList6);
+            regularNameList.addAll(regularList6);
         }else if (regularNum == 7) {
             List<String> regularList7 = regularInspectionRepository.regular7List();
-            checklist.addAll(regularList7);
+            regularNameList.addAll(regularList7);
         }else if (regularNum == 8) {
             List<String> regularList8 = regularInspectionRepository.regular8List();
-            checklist.addAll(regularList8);
+            regularNameList.addAll(regularList8);
         }else if (regularNum == 9) {
             List<String> regularList9 = regularInspectionRepository.regular9List();
-            checklist.addAll(regularList9);
+            regularNameList.addAll(regularList9);
         }else if (regularNum == 10) {
             List<String> regularList10 = regularInspectionRepository.regular10List();
-            checklist.addAll(regularList10);
+            regularNameList.addAll(regularList10);
         }else if (regularNum == 11) {
             List<String> regularList11 = regularInspectionRepository.regular11List();
-            checklist.addAll(regularList11);
+            regularNameList.addAll(regularList11);
         }
 
-        return checklist;
+        return regularNameList;
     }
 
 
