@@ -13,7 +13,7 @@ import org.modelmapper.ModelMapper;
 @Log4j2
 public class MasterDataDepartmentDTO {
 
-    private String departmentId; //부서1
+    private Long departmentId; //부서1
     private String departmentName; //부서2
 
     private static ModelMapper modelMapper = new ModelMapper();

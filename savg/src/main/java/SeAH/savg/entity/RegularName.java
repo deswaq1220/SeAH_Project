@@ -12,7 +12,7 @@ import javax.persistence.Id;
 public class RegularName {
 
     @Id
-    private String regularInsName;       // 정기점검 구분
+    private String regularInsName;       // 정기점검 종류
 
     @Column(nullable = false)
     private int regularNum;           // 순서

@@ -242,16 +242,22 @@ public class RegularInspectionService {
     @Transactional
     public List<Map<String, Object>> regularDetailListByPartAndMonth(int year, int month){
         List<Object[]> regularList = regularStatisticsRepository.regularListByPartAndMonth(year, month); //전체 리스트 가져오기
-        System.out.println("입력리스트"+ regularList);
 
         //'기타(직접입력)'에 값 수정: 통계로 보여줄 때 기타(직접입력)으로 보여주기 위함.
         Long allValue = regularStatisticsRepository.regularCountByPartAndMonth(year, month);//모든값
+        System.out.println("전체값 :   " + allValue);
         Long otherExcluedallValue = regularStatisticsRepository.regularCountOtherExcludedByPartAndMonth(year, month); //모든값-예외값
+        System.out.println("모든값-예외값 :   " + otherExcluedallValue);
+
 
         //기타 수정값 넣기
         for (Object[] value : regularList) {
             if ("기타(직접입력)".equals(value[0])) { // 값이 기타(직접입력)이면
-                value[1] = allValue - otherExcluedallValue; // 두 번째 값 수정
+
+                value[1] = allValue - otherExcluedallValue; // 기타에 해당하는 값 수정값으로 변경
+                String part = (String) value[0];
+                Long count = (Long) value[1];
+                System.out.println("기타(직접입력)일원화:   "+ part + count);
                 break; // 수정 후 루프 종료
             }
         }
@@ -260,8 +266,8 @@ public class RegularInspectionService {
         List<Map<String, Object>> filteredList = new ArrayList<>();
         for (Object[] row : regularList) {
             String part = (String) row[0];
-            Long count = (Long) row[0];
-
+            Long count = (Long) row[1];
+/*            System.out.println("기타(직접입력)일원화:   "+ part + count);*/
             if (!part.equals("선택")) { //"선택" 제거
                 Map<String, Object> dataPoint = new HashMap<>();
                 dataPoint.put("sort", part);
@@ -273,6 +279,25 @@ public class RegularInspectionService {
         System.out.println(filteredList);
         return filteredList;
     }
+
+    //(엑셀용) 월간 점검종류별 점검건수
+    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
+        List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
+
+        Map<String, Object> dataPoint = new HashMap<>();
+        List<Map<String, Object>> finalList = new ArrayList<>();
+
+        for(Object[] row : regularList){
+            String name = (String) row[0];
+            Long count = (Long) row[1];
+
+            dataPoint.put(name,count);
+            finalList.add(dataPoint);
+        }
+        dataPoint.put("전체",);
+        return finalList;
+    }
+
 
     //연간
     //1~12월까지 월간 정기점검종류별 점검건수

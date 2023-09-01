@@ -55,7 +55,7 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     @Query("SELECT COUNT(s) FROM SpecialInspection s WHERE YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month ")
     int countBySpeList(@Param("year") int year, @Param("month") int month);
 
-    //월간 수시점검 통계 조회 - 영역별 건 수(0건인 것들도 함께 나옴)
+    //(엑셀용) 월간 수시점검 통계 조회 - 영역별 건 수(0건인 것들도 함께 나옴)
     @Query("SELECT p.partMenu, COUNT(s.spePart) " +
             "FROM SpecialPart p " +
             "LEFT JOIN SpecialInspection s ON s.spePart = p.partMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +

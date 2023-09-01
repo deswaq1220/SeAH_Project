@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
 public class MasterDataController {
 
 
@@ -128,7 +127,7 @@ public class MasterDataController {
 
         //부서별 목록 조회(카테고리용)
         @GetMapping("/master/department/sort")
-        public ResponseEntity<List<MasterDataDepartmentDTO>> sortByDepart(@RequestParam("departmentid") String departmentId){
+        public ResponseEntity<List<MasterDataDepartmentDTO>> sortByDepart(@RequestParam("departmentid") Long departmentId){
             return new ResponseEntity<>(masterDataService.sortDepartList(departmentId), HttpStatus.OK);
         }
 
@@ -141,7 +140,7 @@ public class MasterDataController {
 
         //부서 삭제
         @PostMapping("/master/department/del/{departmentId}")
-        public ResponseEntity<?> delDepart(@PathVariable String departmentId){
+        public ResponseEntity<?> delDepart(@PathVariable Long departmentId){
 
             masterDataService.delDepart(departmentId);
 
@@ -151,7 +150,7 @@ public class MasterDataController {
 
         //부서 수정
         @PostMapping("/master/department/update/{departId}")
-        public ResponseEntity<?> updateDepart(@PathVariable String departId,
+        public ResponseEntity<?> updateDepart(@PathVariable Long departId,
                                               @RequestBody MasterDataDepartmentDTO departmentDTO){
 
             masterDataService.updateDepart(departmentDTO);

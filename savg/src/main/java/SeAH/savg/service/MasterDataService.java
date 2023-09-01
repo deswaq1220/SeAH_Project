@@ -112,7 +112,7 @@ public class MasterDataService {
         }*/
 
         //부서별 목록 조회(카테고리용)
-        public List<MasterDataDepartmentDTO> sortDepartList(String departmentId){
+        public List<MasterDataDepartmentDTO> sortDepartList(Long departmentId){
 
             List<MasterDataDepartmentDTO> resultList = masterDataDepartmentRepository.departmentListBySort(departmentId);
 
@@ -140,7 +140,7 @@ public class MasterDataService {
 
         //부서 삭제하기
        @Transactional
-       public void delDepart(String departmentId){
+       public void delDepart(Long departmentId){
            try{
             masterDataDepartmentRepository.deleteById(departmentId);
             System.out.println("삭제성공");
@@ -159,7 +159,7 @@ public class MasterDataService {
                 //변경값이 존재할 경우
                 if(target.isPresent()){
 
-                    String departmentId = departmentDTO.getDepartmentId();
+                    Long departmentId = departmentDTO.getDepartmentId();
                     String departmentName = departmentDTO.getDepartmentName();
 
                     masterDataDepartmentRepository.updateDepartment(departmentId, departmentName);

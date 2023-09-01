@@ -13,14 +13,14 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface MasterDataDepartmentRepository extends JpaRepository<MasterDataDepartment, String> {
+public interface MasterDataDepartmentRepository extends JpaRepository<MasterDataDepartment, Long> {
 
     //전체조회
     List<MasterDataDepartment> findAll(Sort sort);
 
     //부서별 조회
     @Query("SELECT m.departmentId, m.departmentName FROM MasterDataDepartment m WHERE m.departmentId = :departmentId")
-    List<MasterDataDepartmentDTO> departmentListBySort(String departmentId);
+    List<MasterDataDepartmentDTO> departmentListBySort(Long departmentId);
 
     //부서별 드롭다운 노출
     @Query("SELECT m.departmentId, m.departmentName FROM MasterDataDepartment m")
@@ -30,7 +30,7 @@ public interface MasterDataDepartmentRepository extends JpaRepository<MasterData
     @Modifying
     @Transactional
     @Query("UPDATE MasterDataDepartment m SET m.departmentId = :departmentId, m.departmentName = :departmentName WHERE m.departmentId = :departmentId")
-    void updateDepartment(@Param("departmentid") String departmentId, @Param("departmentname") String departmentName);
+    void updateDepartment(Long departmentId, String departmentName);
 }
 
 

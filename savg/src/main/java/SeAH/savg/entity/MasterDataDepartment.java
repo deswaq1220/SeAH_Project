@@ -15,13 +15,13 @@ import javax.persistence.*;
 public class MasterDataDepartment {
 
     @Id
-    private String departmentId;  // 부서코드
+    private Long departmentId;  // 부서코드
 
     @Column(nullable = false)
     private String departmentName;  // 부서명
 
     @Builder
-    MasterDataDepartment(String departmentId, String departmentName) {
+    MasterDataDepartment(Long departmentId, String departmentName) {
         this.departmentId = departmentId;
         this.departmentName = departmentName;
     }

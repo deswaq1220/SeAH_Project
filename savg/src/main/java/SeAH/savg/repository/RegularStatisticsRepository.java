@@ -18,7 +18,8 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
             "WHERE YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month")
     int regularCountByMonth(@Param("year") int year, @Param("month") int month);
 
-    //월간 영역별 점검 건수(0건인 것들도 함께 나옴)
+
+    //(radar) 월간 영역별 점검 건수(0건인 것들도 함께 나옴)
     // 1. 전체 리스트 뽑기
     @Query("SELECT p.partMenu, COUNT(r) " +
             "FROM RegularPart p " +
@@ -26,19 +27,24 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
             "GROUP BY p.partMenu")
     List<Object[]> regularListByPartAndMonth(@Param("year") int year, @Param("month") int month);
 
-    //2.영역별 발생 건 수 -전체 값(기타(직접입력)으로 데이터가 일원화 안됨)
+    //2.영역별 발생 건 수 -전체 총 건수(기타(직접입력)으로 데이터가 일원화 안됨)
     @Query("SELECT COUNT(r) " +
             "FROM RegularInspection r " +
             "WHERE YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month ")
     Long regularCountByPartAndMonth(@Param("year") int year, @Param("month") int month);
 
-    //3. 영역별 발생 건 수 -기타 제외 값
+    //3. 영역별 발생 건 수 -기타 제외 총 건수
     @Query("SELECT COUNT(r) " +
-            "FROM RegularInspection r " +
-            "LEFT JOIN RegularPart p ON r.regularPart = p.partMenu AND YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month ")
+            "FROM RegularPart p " +
+            "LEFT JOIN RegularInspection r ON r.regularPart = p.partMenu AND YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month ")
     Long regularCountOtherExcludedByPartAndMonth(@Param("year") int year, @Param("month") int month);
 
-
+    //(엑셀용) 월간 영역별 점검 건수(0건인 것들도 함께 나옴)
+    @Query("SELECT r.regularPart, COUNT(r) " +
+            "FROM RegularInspection r " +
+            "WHERE YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month " +
+            "GROUP BY r.regularPart")
+    List<Object[]> regularListByPartAndMonthForExcel(@Param("year") int year, @Param("month") int month);
 
 
     //(pieChart) 월간 양호,불량,NA 건수 표시(구분(양호,불량,NA),값) - 전체
@@ -59,6 +65,13 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
     //(pieChart) 월간 점검 드롭다운 생성하기
     @Query("SELECT n.regularInsName FROM RegularName n ORDER BY n.regularNum asc")
     List<String> RegularNameList();
+
+    //(엑셀용) 월간 점검종류별 위험성평가 건수
+    @Query("SELECT r.regularInsName, i.regularCheck, COUNT(r) " +
+            "FROM RegularInspection r " +
+            "JOIN RegularInspectionCheck i ON i.regularInspection.regularId = r.regularId AND YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month " +
+            "GROUP BY r.regularInsName")
+    List<Object[]> regularListByNameAndMonthForExcel(@Param("year") int year, @Param("month") int month);
 
 
     //연간

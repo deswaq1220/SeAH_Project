@@ -326,6 +326,22 @@ public class SpecialInspectionService {
 
         return resultList;
     }
+    //월간 위험분류별 점검건수(텍스트로 출력)
+    public List<Object[]> specialListByDangerAndMonth(int year, int month){
+        List<Object[]> specialList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
+
+        List<Object[]> filteredList = new ArrayList<>();
+        for(Object[] row: specialList){
+
+            if(!row[0].equals("선택")){
+
+                filteredList.add(row);
+            }
+
+        }
+        return filteredList;
+    }
+
 
 
 
