@@ -258,6 +258,42 @@ public class SpecialInspectionService {
         return responseData;
     }
 
+    // 수시점검 전체조회 검색
+    public Map<String, Object> searchList(String spePart, String speFacility, LocalDateTime speStartDateTime,
+                                          LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum){
+        Map<String, Object> searchSpeList = new HashMap<>();
+        QSpecialInspection qSpecialInspection = QSpecialInspection.specialInspection;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (spePart != null) {
+            builder.and(qSpecialInspection.spePart.eq(spePart));
+        }
+        if (speFacility != null) {
+            builder.and(qSpecialInspection.speFacility.eq(speFacility));
+        }
+        if (speStartDateTime != null && speEndDateTime != null) {
+            builder.and(qSpecialInspection.speDate.between(speStartDateTime, speEndDateTime));
+        }
+        if (speComplete != null) {
+            builder.and(qSpecialInspection.speComplete.eq(speComplete));
+        }
+        if (spePerson != null) {
+            builder.and(qSpecialInspection.spePerson.eq(spePerson));
+        }
+        if (speEmpNum != null) {
+            builder.and(qSpecialInspection.speEmpNum.eq(speEmpNum));
+        }
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "speId");
+        List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
+        List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.of(searchSpeData);
+        searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
+        System.out.println("서비스 검색 확인:"+searchSpeDataDTOList);
+
+        return searchSpeList;
+
+    }
+
 
   
 

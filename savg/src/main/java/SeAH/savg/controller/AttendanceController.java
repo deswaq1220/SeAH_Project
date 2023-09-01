@@ -14,7 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
@@ -23,14 +23,14 @@ public class AttendanceController {
 
   ////사용자 관련(1~2)
     //1. (사용자) 출석 등록 페이지보기
-    @GetMapping("/register/{eduId}")
+    @GetMapping("/user/register/{eduId}")
     public String showUserEduAtten() {
         return "page/attendance";
     }
 
 
     //2. (사용자) 출석 등록하기
-    @PostMapping("/register/{eduId}")
+    @PostMapping("/user/register/{eduId}")
     public ResponseEntity<?> registerAttendEdu(@RequestBody Map<String, Object> requestData) {
         String attenDepartment = (String) requestData.get("attenDepartment");
         String attenName = (String) requestData.get("attenName");
@@ -46,7 +46,7 @@ public class AttendanceController {
 
   ////관리자 관련
     //해당 교육일지에 따른 학생 출석 리스트 조회
-  @GetMapping("/list/{eduId}")
+  @GetMapping("/admin/list/{eduId}")
   public ResponseEntity<?> showUserEduAttenList(@PathVariable("eduId") String eduId) {
       List<Attendance> result = attendanceRepository.findAllByEduId(eduId);
       return new ResponseEntity<>(result, HttpStatus.OK);
