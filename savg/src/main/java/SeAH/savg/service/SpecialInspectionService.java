@@ -82,6 +82,7 @@ public class SpecialInspectionService {
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
         speInsFormDTO.setSpeFacility(masterdataFacility);                       // 설비
+
         SpeStatus.deadLineCal(speInsFormDTO);                                               // 위험도에 따른 완료요청기한
 
         speInsFormDTO.createSpeIns();
