@@ -77,6 +77,7 @@ public class SpecialController {
 
 
 
+
     // 수시저검 등록된 전체 현황
     @GetMapping("/master/spcial/list")
     public ResponseEntity<?> speFullList() {
