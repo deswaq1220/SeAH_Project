@@ -20,4 +20,7 @@ public interface MasterDataRepository extends JpaRepository<MasterData, Integer>
     @Query("SELECT m.masterdataPart, m.masterdataFacility FROM MasterData m WHERE m.masterdataPart = :part ORDER BY m.masterdataFacility asc")
     List<String[]> sortByPart(@Param("part") String part);
 
+    // 설비찾기 : id로 정렬
+    @Query("SELECT md FROM MasterData md ORDER BY md.masterdataId")
+    List<MasterData> findAllOrderBymasterdataId();
 }

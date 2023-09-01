@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,12 +79,48 @@ public class SpecialController {
 
 
 
-
     // 수시저검 등록된 전체 현황
-    @GetMapping("/master/spcial/list")
+    @GetMapping("/frequentinspection")
     public ResponseEntity<?> speFullList() {
-        return new ResponseEntity<>(specialInspectionService.findSpeAll(), HttpStatus.OK);
+        return new ResponseEntity<>(specialInspectionService.getPartAndFacilityDataAndAllList(), HttpStatus.OK);
     }
+
+    // 수시점검 전체현황 검색
+   @PostMapping("/frequentinspection")
+   public ResponseEntity<?> speFullList(@RequestParam (required = false) String spePart,
+                                        @RequestParam (required = false) String speFacility,
+                                        @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speStartDate,
+                                        @RequestParam (required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speEndDate,
+                                        @RequestParam (required = false) SpeStatus speComplete,
+                                        @RequestParam (required = false) String spePerson,
+                                        @RequestParam (required = false) String speEmpNum
+   ) {
+       System.out.println("컨트롤러 들어왔다");
+       System.out.println("spePart: "+spePart);
+       System.out.println("speFacility: "+speFacility);
+       System.out.println("speStartDate: "+speStartDate);
+       System.out.println("speComplete: "+speComplete);
+       System.out.println("spePerson: "+spePerson);
+       System.out.println("speEmpNum: "+speEmpNum);
+
+
+
+    Map<String, Object> responseData = new HashMap<>();
+
+    // 날짜 변환
+    LocalDateTime speStartDateTime = null;
+    LocalDateTime speEndDateTime = null;
+    if(speStartDate != null && speEndDate != null){
+     speStartDateTime =  LocalDateTime.of(speStartDate, LocalTime.MIN);
+     speEndDateTime =  LocalDateTime.of(speEndDate, LocalTime.MAX);
+    }
+
+    Map<String, Object> searchSpeList = specialInspectionService.searchList(spePart, speFacility, speStartDateTime, speEndDateTime, speComplete, spePerson, speEmpNum);
+    responseData.put("searchSpeList", searchSpeList);
+
+    return new ResponseEntity<>(responseData, HttpStatus.OK);
+   }
+
 
 
 // --------------------------- 관리자

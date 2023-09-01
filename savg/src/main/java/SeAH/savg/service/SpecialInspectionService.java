@@ -246,12 +246,28 @@ public class SpecialInspectionService {
     }
 
     // 수시점검 전체 조회
-    @Transactional(readOnly = true)
-    public Map<String, Object> findSpeAll(){
-        Map<String, Object> responseData = new HashMap<>();
+//    @Transactional(readOnly = true)
+//    public Map<String, Object> findSpeAll(){
+//        Map<String, Object> responseData = new HashMap<>();
+//
+//        List<SpecialInspection> specialInspectionList = specialInspectionRepository.findAll(Sort.by(Sort.Direction.DESC, "speId"));
+//        List<SpecialFile> specialFileList = specialFileRepository.findAll();
+//
+//        responseData.put("specialData", specialInspectionList);
+//        responseData.put("specialFileData", specialFileList);
+//        return responseData;
+//    }
 
-        List<SpecialInspection> specialInspectionList = specialInspectionRepository.findAll();
-        List<SpecialFile> specialFileList = specialFileRepository.findAll();
+
+    // 저장된 영역, 설비 리스트
+    public Map<String, Object> getPartAndFacilityDataAndAllList(){
+        Map<String, Object> responseData = new HashMap<>();
+        List<SpecialPart> specialPartList = specialPartRepository.findAllOrderByPartNum();        // 영역 리스트
+        List<MasterData> facilityList = masterDataRepository.findAllOrderBymasterdataId();             // 설비 리스트
+        List<SpecialInspection> specialList = specialInspectionRepository.findAll(Sort.by(Sort.Direction.DESC, "speId"));
+        responseData.put("specialPartList", specialPartList);
+        responseData.put("facilityList", facilityList);
+        responseData.put("specialList", specialList);
 
         responseData.put("specialData", specialInspectionList);
         responseData.put("specialFileData", specialFileList);

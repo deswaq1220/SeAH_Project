@@ -56,6 +56,11 @@ public class MasterDataService {
             return emailList;
         }
 
+        public void deleteEmail(Long emailId){
+            System.out.println("서비스 이메일 아이디"+ emailId);
+            emailRepository.deleteById(emailId);
+    }
+
         // 기준정보 등록
         @Transactional
         public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO){
