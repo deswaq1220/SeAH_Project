@@ -4,7 +4,6 @@ import SeAH.savg.jwt.JwtAccessDeniedHandler;
 import SeAH.savg.jwt.JwtAuthenticationEntryPoint;
 import SeAH.savg.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,7 +25,6 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @Component
-@Slf4j
 public class WebSecurityConfig {
 
     private final TokenProvider tokenProvider;                              //토큰생성및 검증담당
@@ -43,7 +41,6 @@ public class WebSecurityConfig {
     //filterChain(HttpSecurity http)- HttpSecurity를 구성하는 메서드 메서드에서 HTTP 요청에 대한 보안 설정 구성
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        log.info("시큐리티 컨피그 : " + http);
         http
 
                 .httpBasic().disable()

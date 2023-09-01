@@ -34,7 +34,6 @@ public class AuthController {
     //로그인
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@RequestBody MemberRequestDto requestDto) {
-        log.info("여기 오나?");
         Member member = memberRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new RuntimeException("해당 사용자를 찾을 수 없습니다."));
 

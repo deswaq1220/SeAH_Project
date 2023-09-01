@@ -11,7 +11,6 @@ import SeAH.savg.jwt.TokenStatus;
 import SeAH.savg.repository.MemberRepository;
 import SeAH.savg.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -23,7 +22,6 @@ import javax.transaction.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class AuthService {
     private final AuthenticationManagerBuilder managerBuilder;
     private final MemberRepository memberRepository;
@@ -51,7 +49,6 @@ public class AuthService {
     public TokenDto refresh(TokenRequestDto tokenRequestDto) {
 
         //Refresh Token 검증
-        log.info(tokenRequestDto.getRefreshToken());
         TokenStatus.StatusCode tokenStatusCode = tokenProvider.validateToken(tokenRequestDto.getRefreshToken());
         if (tokenStatusCode != TokenStatus.StatusCode.OK) {
             throw new RuntimeException("유효하지 않은 리프레시 토큰입니다.");
@@ -71,10 +68,9 @@ public class AuthService {
 
         // 새로운 토큰 생성
         TokenDto tokenDTO = tokenProvider.generateTokenDto(authentication);
-        log.info("여기?????111111111111111111111111");
+
         //  저장소 정보 업데이트
         RefreshToken newRefreshToken = refreshToken.updateValue(tokenDTO.getRefreshToken());
-
         refreshTokenRepository.save(newRefreshToken);
 
         return tokenDTO;
