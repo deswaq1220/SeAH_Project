@@ -2,7 +2,6 @@ package SeAH.savg.service;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
-import SeAH.savg.dto.EduFileDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
@@ -11,6 +10,7 @@ import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
@@ -41,36 +41,38 @@ public class EduService {
         Edu edu = eduRepository.findByEduId(eduId);
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
-
         EduDTO eduDTO = new EduDTO(edu);
-        List<String> filesName = new ArrayList<>();
-        for(EduFile file : eduFileList){
-            EduFileDTO eduFileDTO = EduFileDTO.of(file);
-            eduFileDTOList.add(eduFileDTO);
-            filesName.add(eduFileDTO.getEduFileOriName());
 
-        }
-        eduDTO.setEduFiles(filesName);
-
-
+        eduDTO.setEduFileList(eduFileList);
 
         return eduDTO;
     }
 
-    //파일 수정
     public void update(EduDTO eduDTO)throws Exception{
         Edu edu = eduDTO.toEntity();
-        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
 
-        for(EduFile eduFile : eduFileList){
-            eduFileRepository.delete(eduFile);
+
+        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
+        if(eduDTO.getEduFileIds()!=null){
+            for(Long eduFileId: eduDTO.getEduFileIds()){
+                for(EduFile eduFile : eduFileList){
+                    if(eduFile.getEduFileId() == eduFileId){
+                        eduFileRepository.delete(eduFile);
+                    }
+                }
+            }
         }
 
-        eduFileService.uploadFile(eduDTO);
+        if(eduDTO.getFiles()==null){
+            eduRepository.save(edu);
+        }else {
+            eduFileService.uploadFile(eduDTO);
+            eduRepository.save(edu);
+        }
 
-        eduRepository.save(edu);
+
     }
+
 
 
     //교육 삭제
@@ -111,7 +113,7 @@ public class EduService {
         }
         //전체시간 합산하기
         sumMonthlyEduTimeList.set(0, sumMonthlyEduTimeList.get(1)+sumMonthlyEduTimeList.get(2)
-                                    +sumMonthlyEduTimeList.get(3)+sumMonthlyEduTimeList.get(4));
+                +sumMonthlyEduTimeList.get(3)+sumMonthlyEduTimeList.get(4));
         return sumMonthlyEduTimeList;
     }
 
@@ -192,58 +194,5 @@ public class EduService {
 
     }
 
-
-        List<Object[]> results = eduRepository.selectMonthEduTimeList(eduCategory, month); //교육 시행 시간 리스트
-        List<EduStatisticsDTO> MonthlyEduTimeList = new ArrayList<>();
-        Long eduSumTime = 0L;
-
-        for(Object[] result : results){
-            String time = (String)result[0];
-
-            try {
-                Long timeValue = Long.parseLong(time);
-                eduSumTime += timeValue;
-            } catch (NumberFormatException e) {
-                System.out.println("월별 교육 실행시간 조회: 합산할 수 없습니다(Long타입 아님)");
-            }
-
-        }
-        return eduSumTime;
-    }
-*/
-
-   //상세조회
-    public EduDTO getEduById(String eduId) {
-        Edu edu = eduRepository.findByEduId(eduId);
-
-        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-        List<EduFileDTO> eduFileDTOList = new ArrayList<>();
-        EduDTO eduDTO = new EduDTO(edu);
-        List<String> filesName = new ArrayList<>();
-        for(EduFile file : eduFileList){
-            EduFileDTO eduFileDTO = EduFileDTO.of(file);
-            eduFileDTOList.add(eduFileDTO);
-         filesName.add(eduFileDTO.getEduFileOriName());
-
-        }
-        eduDTO.setEduFiles(filesName);
-
-
-
-        return eduDTO;
-    }
-
-    public void update(EduDTO eduDTO)throws Exception{
-        Edu edu = eduDTO.toEntity();
-        List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
-
-        for(EduFile eduFile : eduFileList){
-            eduFileRepository.delete(eduFile);
-        }
-
-        eduFileService.uploadFile(eduDTO);
-
-        eduRepository.save(edu);
-    }
 
 }
