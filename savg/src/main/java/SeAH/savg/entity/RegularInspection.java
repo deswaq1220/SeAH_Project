@@ -39,8 +39,7 @@ public class RegularInspection {
     @Column(nullable = false)
     private RegStatus regularContent;           // 점검내용: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
 
-
-
+    
 
     /*필요한 경우 주석 제거*/
 /*
