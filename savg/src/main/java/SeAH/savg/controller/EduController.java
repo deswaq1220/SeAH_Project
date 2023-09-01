@@ -134,6 +134,7 @@ public class EduController {
 
             for (Edu edu : eduList) {
                 eduDTOList.add(eduService.getEduById(edu.getEduId()));
+                log.info("테스트"+eduDTOList.get(i).getEduFiles().get(i).getEduFileName());
             }
 
         return ResponseEntity.ok(eduDTOList);
@@ -150,6 +151,7 @@ public class EduController {
             return ResponseEntity.notFound().build();
         }
 
+
         return ResponseEntity.ok(eduDTO);
     }
 
@@ -160,6 +162,7 @@ public class EduController {
 
             eduDTO.setEduId(eduId);
             eduService.update(eduDTO);
+
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {
