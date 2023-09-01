@@ -63,12 +63,9 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/auth/**", "/member/**", "/admin/**").permitAll() //인증되지 않은 사용자도 해당경로에 접근을 허용한다
+                .antMatchers("/auth/**", "/member/**", "/admin/**").permitAll()
 //                .antMatchers("/admin/**").hasAuthority("ADMIN") //ROLE_ADMIN 계정만 admin에 접근 가능함
-                .antMatchers(HttpMethod.POST, "/login","user/**").permitAll() // 로그인 엔드포인트에 대한 post 요청은 보호되지 않는다.
-                .antMatchers(HttpMethod.GET, "/user/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/user/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/login").permitAll() // 로그인 엔드포인트에 대한 post 요청은 보호되지 않는다.
                 .anyRequest().authenticated()
 
                 .and()

@@ -78,7 +78,6 @@ public class SpecialInspectionService {
     @Transactional
     public SpecialInspection speCreate(String masterdataPart, String masterdataFacility, SpeInsFormDTO speInsFormDTO) throws Exception {
         // speIsFormDTO 나머지 데이터 세팅
-        System.out.println("서비스확인용  : "+speInsFormDTO);
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));             // id
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
