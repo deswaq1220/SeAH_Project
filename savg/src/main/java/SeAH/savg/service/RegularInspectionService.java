@@ -280,8 +280,8 @@ public class RegularInspectionService {
         return filteredList;
     }
 
-    //(엑셀용) 월간 점검종류별 점검건수
-    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
+    //(엑셀용) 월간 점검종류별 점검건수// 진행중
+/*    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
         List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
 
         Map<String, Object> dataPoint = new HashMap<>();
@@ -296,7 +296,7 @@ public class RegularInspectionService {
         }
         dataPoint.put("전체",);
         return finalList;
-    }
+    }*/
 
 
     //연간
