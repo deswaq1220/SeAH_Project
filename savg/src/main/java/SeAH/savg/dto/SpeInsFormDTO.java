@@ -2,7 +2,9 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.entity.SpecialInspection;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
-@NoArgsConstructor
 public class SpeInsFormDTO {
     private String speId;                     // id
     private LocalDateTime speDate;          // 점검일
@@ -42,60 +43,12 @@ public class SpeInsFormDTO {
 
     public static ModelMapper modelMapper = new ModelMapper();
 
-
-    public SpeInsFormDTO(String speId, LocalDateTime speDate, String spePerson, String speEmpNum, String speEmail, String spePart, String speFacility, String speDanger, String speInjure, String speCause, String speTrap, SpeStatus speRiskAssess, String speContent, String speActContent, String speActPerson, String speActEmail, LocalDateTime speActDate, LocalDateTime speDeadline, SpeStatus speComplete) {
-        this.speId = speId;
-        this.speDate = speDate;
-        this.spePerson = spePerson;
-        this.speEmpNum = speEmpNum;
-        this.speEmail = speEmail;
-        this.spePart = spePart;
-        this.speFacility = speFacility;
-        this.speDanger = speDanger;
-        this.speInjure = speInjure;
-        this.speCause = speCause;
-        this.speTrap = speTrap;
-        this.speRiskAssess = speRiskAssess;
-        this.speContent = speContent;
-        this.speActContent = speActContent;
-        this.speActPerson = speActPerson;
-        this.speActEmail = speActEmail;
-        this.speActDate = speActDate;
-        this.speDeadline = speDeadline;
-        this.speComplete = speComplete;
-    }
     // DTO -> entity 변환
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
 
-    // 검색한 결과 리스트 세팅
-    public static List<SpeInsFormDTO> of(List<SpecialInspection> speFindList) {
-        List<SpeInsFormDTO> speInsFormDTOList = new ArrayList<>();
-        for (SpecialInspection specialInspection : speFindList) {
-            SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO(
-                    specialInspection.getSpeId(),
-                    specialInspection.getSpeDate(),
-                    specialInspection.getSpePerson(),
-                    specialInspection.getSpeEmpNum(),
-                    specialInspection.getSpeEmail(),
-                    specialInspection.getSpePart(),
-                    specialInspection.getSpeFacility(),
-                    specialInspection.getSpeDanger(),
-                    specialInspection.getSpeInjure(),
-                    specialInspection.getSpeCause(),
-                    specialInspection.getSpeTrap(),
-                    specialInspection.getSpeRiskAssess(),
-                    specialInspection.getSpeContent(),
-                    specialInspection.getSpeActContent(),
-                    specialInspection.getSpeActPerson(),
-                    specialInspection.getSpeActEmail(),
-                    specialInspection.getSpeActDate(),
-                    specialInspection.getSpeDeadline(),
-                    specialInspection.getSpeComplete()
-            );
-            speInsFormDTOList.add(speInsFormDTO);
-        }
-        return speInsFormDTOList;
-    }
+   // 폼에서받은 DTO + 서비스에서 세팅된 데이터 세팅
+//    public SpecialInspection createSpeInsSet(){ return modelMapper.map(this, SpecialInspection.class); }
+
 
 
 }

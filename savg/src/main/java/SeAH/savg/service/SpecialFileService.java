@@ -25,7 +25,7 @@ public class SpecialFileService {
     private String speFileLocation;
 
     // 파일 등록
-    public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO, String facilityName, SpeStatus isComplete) throws Exception {
+    public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO, SpeStatus isComplete) throws Exception {
         List<SpecialFile> uploadedFiles = new ArrayList<>();
 
         List<MultipartFile> files = speInsFormDTO.getFiles();
@@ -33,8 +33,9 @@ public class SpecialFileService {
             byte[] resizedImageData = fileService.resizeImageToByteArray(file);
 
             String originalFilename = file.getOriginalFilename();  // 원래파일명
-            String makeSpeFileName = fileService.makeFileName(speFileLocation, originalFilename, facilityName, resizedImageData); // 파일명
+            String makeSpeFileName = fileService.makeFileName(speFileLocation, originalFilename, resizedImageData); // 파일명
             String fileUploadFullUrl = "/images/specialInspection/" + makeSpeFileName;  // 업로드 url
+
 
 
             System.out.println("파일경로: " + fileUploadFullUrl);

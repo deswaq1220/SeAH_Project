@@ -20,7 +20,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
 public class MasterDataController {
 
 
@@ -97,12 +96,6 @@ public class MasterDataController {
     }
 
 
-    // 이메일삭제
-    @DeleteMapping("/master/email/delete/{emailId}")
-    public ResponseEntity<String> emailDelete(@PathVariable Long emailId){
-        masterDataService.deleteEmail(emailId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 
     //------------------------------------------부서 관리
