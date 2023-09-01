@@ -13,16 +13,6 @@ import java.util.List;
 public interface RegularInspectionRepository extends JpaRepository<RegularInspection, String> {
 
 
-    //월간
-        //정기점건 건수
-        @Query("SELECT COUNT(r) " +
-                "FROM RegularInspection r " +
-                "WHERE YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month")
-        int regularCountByMonth(@Param("year") int year, @Param("month") int month);
-
-        //
-
-
     //연간
         //(LineChart) 1~12월 총 수시점검 건수(정기점검 테이블 생기면 가동)
         @Query("SELECT COUNT(r) " +
