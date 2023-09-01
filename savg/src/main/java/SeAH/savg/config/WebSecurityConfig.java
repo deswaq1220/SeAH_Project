@@ -70,6 +70,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET, "/user/**","/regularcheck","/regularname").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/user/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/user/**").permitAll()
+                .antMatchers("/auth/**", "/member/**", "/admin/**", "/auth/refresh").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

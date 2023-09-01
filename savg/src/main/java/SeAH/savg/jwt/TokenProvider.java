@@ -33,7 +33,7 @@ public class TokenProvider {
     private static final String BEARER_TYPE = "bearer";     // 토큰유형 지정시 사용 Oauth 2.0 인증 프로토콜에서 사용되는 토큰 유형
 
 //    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;       // 30분 액세스토큰
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 500 * 10;
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 5;
 
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 7; // 7일 리프레쉬토큰
 
@@ -83,7 +83,7 @@ public class TokenProvider {
     public Authentication getAuthentication(String accessToken) {
         Claims claims = parseClaims(accessToken);
 
-        log.info("여기는 토큰이 우째되노:" + claims.get(AUTHORITIES_KEY));
+        log.info("확인: " + accessToken);
         if (claims == null || claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
