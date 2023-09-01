@@ -3,10 +3,7 @@ package SeAH.savg.service;
 import SeAH.savg.constant.RegStatus;
 import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
-import SeAH.savg.entity.Email;
-import SeAH.savg.entity.RegularInspection;
-import SeAH.savg.entity.RegularInspectionBad;
-import SeAH.savg.entity.RegularInspectionCheck;
+import SeAH.savg.entity.*;
 import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.RegularCheckRepository;
 import SeAH.savg.repository.RegularInspectionRepository;
@@ -14,9 +11,9 @@ import SeAH.savg.repository.RegularInspectionBadRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,38 +90,44 @@ public class RegularInspectionService {
     }
 
     //정기점검 조치자 이메일 리스트
-    public List<Email> selectEmail(Long emailId){
-        List<Email> regularEmailList = emailRepository.findByEmailId(emailId);
-        return regularEmailList;
+    public List<Email> selectEmail(){
+        List<Email> regularEmail = emailRepository.regularEmailList();
+        return regularEmail;
     }
 
 
     private String categoryType = "R";
 
     //정기점검 등록
-    public void createRegular(RegularDetailDTO regularDetailDTO, RegularDTO regularDTO) {
+    public void createRegular(RegularDTO regularDTO) {
         //정기점검 ID 부여 -> ex.R2308-00
         regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
+        regularInspection.setRegularDate(LocalDateTime.now());
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
 
-        //상세정보 등록
-        RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
-        regularInspectionCheck.setRegularInspection(savedRegularInspection);
+//        for(RegularDetailDTO regularDetailDTO:  regularDTO.getRegularDetailDTOList()){
+//            //상세정보 등록
+//            RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
+//            regularInspectionCheck.setRegularInspection(savedRegularInspection);
+//
+//            RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
+//
+//            if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
+//                RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
+//                regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
+//                regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
+//
+//                regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
+//                regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
+//                regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
+//                regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
+//
+//                regularInspectionBadRepository.save(regularInspectionBadEntity);
+//            }
+//        }
 
-        RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
 
-        if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
-            RegularInspectionBad regularInspectionBadEntity = new RegularInspectionBad();
-            regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
-            regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
-            regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-            regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
-            regularInspectionBadEntity.setRegularComplete(regularDetailDTO.getRegularCheck());
-            regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
-
-            regularInspectionBadRepository.save(regularInspectionBadEntity);
-        }
     }
 
     //정기점검 목록 조회
@@ -150,12 +153,12 @@ public class RegularInspectionService {
 
         //양호, N/A
         RegularInspection inspection = (RegularInspection) data[0];
-        regularDetailDTO.setRegularInsName(inspection.getRegularInsName());
-        regularDetailDTO.setRegularDate(inspection.getRegularDate());
-        regularDetailDTO.setRegularPerson(inspection.getRegularPerson());
-        regularDetailDTO.setRegularEmpNum(inspection.getRegularEmpNum());
-        regularDetailDTO.setRegularEmail(inspection.getRegularEmail());
-        regularDetailDTO.setRegularPart(inspection.getRegularPart());
+//        regularDetailDTO.setRegularInsName(inspection.getRegularInsName());
+//        regularDetailDTO.setRegularDate(inspection.getRegularDate());
+//        regularDetailDTO.setRegularPerson(inspection.getRegularPerson());
+//        regularDetailDTO.setRegularEmpNum(inspection.getRegularEmpNum());
+//        regularDetailDTO.setRegularEmail(inspection.getRegularEmail());
+//        regularDetailDTO.setRegularPart(inspection.getRegularPart());
 
         return regularDetailDTO;
     }

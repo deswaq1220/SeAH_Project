@@ -16,5 +16,6 @@ public class RegularName {
 
     @Column(nullable = false)
     private int regularNum;           // 순서
-
+    @Column(nullable = false)
+    private String regularId; //아이디
 }

@@ -2,6 +2,7 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.entity.Email;
 import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
@@ -134,15 +135,28 @@ public class RegularController {
         Map<String, List<String>> responseData = new HashMap<>();
 
         List<String> checklist = regularInspectionService.selectRegularListByNum(regularNum);
+
+
         responseData.put("checklist", checklist);
+
+        return ResponseEntity.ok(responseData);
+    }
+
+
+    //정기점검 이메일 리스트(조치 담당자)
+    @GetMapping("/user/regularemail")
+    public ResponseEntity<Map<String, Object>> regularEmailList(){
+        Map<String, Object> responseData = new HashMap<>();
+        List<Email> emailList = regularInspectionService.selectEmail();
+        responseData.put("emailList", emailList);
 
         return ResponseEntity.ok(responseData);
     }
 
     //정기점검 등록
     @PostMapping("/user/regular/new")
-    public ResponseEntity<String> createRegularInspection(@RequestBody RegularDetailDTO regularDetailDTO, @RequestBody RegularDTO regularDTO) {
-        regularInspectionService.createRegular(regularDetailDTO, regularDTO);
+    public ResponseEntity<String> createRegularInspection(@RequestBody RegularDTO regularDTO) {
+        regularInspectionService.createRegular(regularDTO);
         return ResponseEntity.ok("정기점검 등록 성공");
     }
 
@@ -158,7 +172,7 @@ public class RegularController {
             RegularDTO regularDTO = new RegularDTO();
             regularDTO.setRegularId(regularInspection.getRegularId());
             regularDTO.setRegularInsName(regularInspection.getRegularInsName());
-            regularDTO.setRegularDate(regularInspection.getRegularDate());
+//            regularDTO.setRegularDate(regularInspection.getRegularDate());
             regularDTO.setRegularPart(regularInspection.getRegularPart());
             regularDTOList.add(regularDTO);
         }

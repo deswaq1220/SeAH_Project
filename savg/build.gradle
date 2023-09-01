@@ -72,6 +72,9 @@ dependencies {
 	// 3. querydsl dependencies 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+
+	implementation 'org.springframework.boot:spring-boot-devtools:2.7.10'
 }
 
 tasks.named('test') {
