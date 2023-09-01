@@ -15,7 +15,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 
-
 public class SpecialController {
  private final SpecialInspectionService specialInspectionService;
  private final SpecialInspectionRepository specialInspectionRepository;

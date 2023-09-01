@@ -1,14 +1,7 @@
 package SeAH.savg.service;
 
-import SeAH.savg.constant.RegStatus;
-import SeAH.savg.dto.RegularDTO;
-import SeAH.savg.dto.RegularDetailDTO;
-import SeAH.savg.entity.RegularInspection;
-import SeAH.savg.entity.RegularInspectionBad;
-import SeAH.savg.entity.RegularInspectionCheck;
-import SeAH.savg.repository.RegularCheckRepository;
 import SeAH.savg.repository.RegularInspectionRepository;
-import SeAH.savg.repository.RegularInspectionBadRepository;
+import SeAH.savg.repository.SpecialInspectionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -26,8 +19,6 @@ import java.util.Map;
 public class RegularInspectionService {
 
     private final RegularInspectionRepository regularInspectionRepository;
-    private final RegularInspectionBadRepository regularInspectionBadRepository;
-    private final RegularCheckRepository regularCheckRepository;
 
 
     //(lineChart) 1~12월까지 연간 수시점검 건수
@@ -61,6 +52,9 @@ public class RegularInspectionService {
 
 
 
+
+
+
     //1~12월까지 월간 정기점검 건수(barChart용)
 /*      public List<Map<String,Object>> regularDetailListByName(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
@@ -86,6 +80,7 @@ public class RegularInspectionService {
 
         return finalData;
     }*/
+
 
     // 정기점검 항목 불러오기
     public List<String> selectRegularName(){
