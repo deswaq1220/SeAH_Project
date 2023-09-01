@@ -52,9 +52,8 @@ public class SpecialController {
  // 수시점검 저장
  @PostMapping("/special/new/{masterdataPart}/{masterdataId}")
  public ResponseEntity<?> speNew(@PathVariable String masterdataPart,
-                                 @PathVariable String masterdataId,
                                  SpeInsFormDTO speInsFormDTO) throws Exception{
-  return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart, masterdataId, speInsFormDTO), HttpStatus.CREATED);
+  return new ResponseEntity<>(specialInspectionService.speCreate(masterdataPart,speInsFormDTO), HttpStatus.CREATED);
  }
 
 
