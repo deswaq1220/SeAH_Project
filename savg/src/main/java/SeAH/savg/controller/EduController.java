@@ -73,7 +73,7 @@ public class EduController {
 
         for (Edu edu : eduList) {
             eduDTOList.add(eduService.getEduById(edu.getEduId()));
-
+            log.info("테스트"+eduDTOList.get(i).getEduFiles());
         }
 
         return ResponseEntity.ok(eduDTOList);
@@ -123,6 +123,21 @@ public class EduController {
     }
 
 
+    //교육일지 목록 조회
+    @GetMapping("/edumain")
+    public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
+        List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
+
+        int i = 0;
+
+            List<EduDTO> eduDTOList = new ArrayList<>();
+
+            for (Edu edu : eduList) {
+                eduDTOList.add(eduService.getEduById(edu.getEduId()));
+            }
+
+        return ResponseEntity.ok(eduDTOList);
+    }
 
 
 
@@ -130,7 +145,6 @@ public class EduController {
     @GetMapping("/edudetails/{eduId}")
     public ResponseEntity<EduDTO> getEduDetail(@PathVariable String eduId) {
         EduDTO eduDTO = eduService.getEduById(eduId);
-        log.info(eduDTO.getEduFileList().get(0).getEdu());
 
         if (eduDTO == null) {
             return ResponseEntity.notFound().build();
@@ -143,12 +157,7 @@ public class EduController {
     @PostMapping("/edudetails/{eduId}")
     public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO) {
         try {
-            System.out.println("여기-------------------------------------------");
-            for(int i =0; i<eduDTO.getEduFileList().size(); i++){
-                System.out.println("파일");
-                System.out.println(eduDTO.getEduFileList().get(i).getEduFileId());
-                System.out.println(eduDTO.getEduFileList().get(i).getEduFileOriName());
-            }
+
             eduDTO.setEduId(eduId);
             eduService.update(eduDTO);
 
