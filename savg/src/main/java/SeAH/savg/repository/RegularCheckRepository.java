@@ -12,9 +12,11 @@ import java.util.List;
 public interface RegularCheckRepository extends JpaRepository<RegularInspectionCheck, String> {
 
 
+
     //상세조회
     @Query("SELECT i, b FROM RegularInspection i " +
             "LEFT JOIN RegularInspectionBad b ON i.regularId = b.regularInspectionCheck.regularInspection.regularId " +
             "WHERE i.regularId = :regularId")
     List<Object[]> getRegularInspectionDetail(String regularId);
+
 }

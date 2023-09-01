@@ -30,6 +30,7 @@ public class RegularController {
 
    //--------------------------------------통계 관련
 
+
         //연간 정기점검 건수
         @GetMapping("/regular/statistics/yearcount")
         public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
@@ -92,6 +93,7 @@ public class RegularController {
     //정기점검 목록 조회
     @GetMapping("/regularlist")
     public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month) {
+
         List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
 
         List<RegularDTO> regularDTOList = new ArrayList<>();
@@ -115,6 +117,7 @@ public class RegularController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(regularDetailDTO);
+
     }
 
 

@@ -14,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -181,6 +182,7 @@ public class RegularInspectionService {
 
         RegularDetailDTO regularDetailDTO = new RegularDetailDTO();
         Object[] data = result.get(0);
+
 
         //불량일때
         RegularInspectionBad bad = (RegularInspectionBad) data[1];
