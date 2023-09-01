@@ -196,7 +196,8 @@ public class RegularInspectionService {
         regularDetailDTO.setRegularEmpNum(inspection.getRegularEmpNum());
         regularDetailDTO.setRegularEmail(inspection.getRegularEmail());
         regularDetailDTO.setRegularPart(inspection.getRegularPart());
-
+        
         return regularDetailDTO;
+
     }
 }

@@ -8,7 +8,6 @@ import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.MakeIdService;
 import SeAH.savg.service.RegularInspectionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import SeAH.savg.service.MakeIdService;
