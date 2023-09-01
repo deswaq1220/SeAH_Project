@@ -1,7 +1,6 @@
 package SeAH.savg.service;
 
 import SeAH.savg.repository.RegularInspectionRepository;
-import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,13 +14,12 @@ import java.util.*;
 public class InspectionService {
 
     private final RegularInspectionRepository regularInspectionRepository;
-    private final RegularStatisticsRepository regularStatisticsRepository;
     private final SpecialInspectionRepository specialInspectionRepository;
 
 
     //(lineChart) 1~12월까지 연간 수시점검 건수
     public List<Map<String, Object>> setCountList(int year){
-        List<Object[]> regularCountList = regularStatisticsRepository.regularCountList(year);
+        List<Object[]> regularCountList = regularInspectionRepository.regularCountList(year);
         List<Object[]> specialCountList = specialInspectionRepository.specialCountList(year);
 
         Map<Integer, Long> regularCountListMap = new HashMap<>();

@@ -1,6 +1,7 @@
 package SeAH.savg.entity;
 
-
+import SeAH.savg.constant.RegStatus;
+import SeAH.savg.constant.SpeStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 
 @Entity @Table(name = "regular_inspection")
 @Getter @Setter @ToString
-
 public class RegularInspection {
 
     @Id

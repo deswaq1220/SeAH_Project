@@ -275,18 +275,8 @@ public class SpecialInspectionService {
                 break; // 수정 후 루프 종료
             }
         }
-
-        // "선택" 값을 제외한 새로운 리스트 생성
-        List<Object[]> filteredList = new ArrayList<>();
-        for (Object[] item : specialList) {
-            String value = (String) item[0];
-            if (!value.equals("선택")) { //"선택" 제거
-                filteredList.add(item);
-            }
-        }
-
-        System.out.println(filteredList);
-        return filteredList;
+        System.out.println(specialList);
+        return specialList;
     }
 
 

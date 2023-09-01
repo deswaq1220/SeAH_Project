@@ -11,10 +11,8 @@ import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.RegularCheckRepository;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularInspectionBadRepository;
-import SeAH.savg.repository.RegularStatisticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,12 +27,68 @@ import java.util.Map;
 public class RegularInspectionService {
 
     private final RegularInspectionRepository regularInspectionRepository;
-    private final RegularStatisticsRepository regularStatisticsRepository;
     private final RegularInspectionBadRepository regularInspectionBadRepository;
     private final RegularCheckRepository regularCheckRepository;
     private final MakeIdService makeIdService;
     private final EmailRepository emailRepository;
 
+
+    //(lineChart) 1~12월까지 연간 수시점검 건수
+    public List<Map<String, Object>> setRegularCountList(int year){
+        List<Object[]> statisticsList = regularInspectionRepository.regularCountList(year);
+
+        List<Map<String, Object>> dataPoints = new ArrayList<>();
+
+        for(Object[] row : statisticsList){
+
+            Integer month = (Integer) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put("month", month);
+            dataPoint.put("y", count);
+
+            dataPoints.add(dataPoint);
+        }
+
+        Map<String, Object> finalDate = new HashMap<>();
+        finalDate.put("id", "정기점검");
+        finalDate.put("data", dataPoints);
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        resultList.add(finalDate);
+
+
+        return resultList;
+    }
+
+
+
+    //1~12월까지 월간 정기점검 건수(barChart용)
+/*      public List<Map<String,Object>> regularDetailListByName(int year){
+        List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
+
+        Map<Integer, Map<String, Object>> dataByMonth = new HashMap<>();
+
+
+        for(Object[] row : specialList){
+
+            Integer month = (Integer) row[0];
+            String dangerKind = (String) row[1];
+            Long count = (Long) row[2];
+
+            if(!dataByMonth.containsKey(month)){
+                Map<String, Object> dataPoint = new HashMap<>();
+                dataPoint.put("month", month);
+                dataByMonth.put(month, dataPoint);
+            }
+            Map<String, Object> dataPoint = dataByMonth.get(month);
+            dataPoint.put(dangerKind, count);
+        }
+        List<Map<String, Object>> finalData = new ArrayList<>(dataByMonth.values());
+
+        return finalData;
+    }*/
 
     // 정기점검 항목 불러오기
     public List<String> selectRegularName(){
@@ -158,81 +212,6 @@ public class RegularInspectionService {
         regularDetailDTO.setRegularPart(inspection.getRegularPart());
 
         return regularDetailDTO;
-    }
-
-//----------------------------------------------------통계 관련
-    //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건
-    public List<Map<String, Object>> RegularCntByCheckAndMonth(int year, int month){
-        List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonth(year, month);
-
-        List<Map<String, Object>> finalData = new ArrayList<>();
-        for(Object[] row : data){
-            RegStatus regularCheck = (RegStatus) row[0];
-            Long count = (Long) row[1];
-
-            Map<String, Object> middleData = new HashMap<>();
-
-            if(regularCheck.equals(RegStatus.GOOD)){
-                middleData.put("id", "양호");
-                middleData.put("label", "양호");
-            } else if(regularCheck.equals(RegStatus.BAD)){
-                middleData.put("id", "불량");
-                middleData.put("label", "불량");
-            } else if(regularCheck.equals(RegStatus.NA)){
-                middleData.put("id", "NA");
-                middleData.put("label", "NA");
-            } else{
-                middleData.put("id", "error");
-                middleData.put("label", "error");
-                log.error("에러발생");
-            };
-
-            middleData.put("value", count);
-
-            finalData.add(middleData);
-        }
-        return finalData;
-    }
-
-
-    //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건 - sort
-    public List<Map<String, Object>> RegularCntByCheckAndMonthSort(int year, int month, String regularInsName){
-        List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonthSortName(year, month, regularInsName);
-
-        List<Map<String, Object>> finalData = new ArrayList<>();
-        for(Object[] row : data){
-            RegStatus regularCheck = (RegStatus) row[0];
-            Long count = (Long) row[1];
-
-            Map<String, Object> middleData = new HashMap<>();
-
-            if(regularCheck.equals(RegStatus.GOOD)){
-                middleData.put("id", "양호");
-                middleData.put("label", "양호");
-            } else if(regularCheck.equals(RegStatus.BAD)){
-                middleData.put("id", "불량");
-                middleData.put("label", "불량");
-            } else if(regularCheck.equals(RegStatus.NA)){
-                middleData.put("id", "NA");
-                middleData.put("label", "NA");
-            } else{
-                middleData.put("id", "error");
-                middleData.put("label", "error");
-                log.error("에러발생");
-            };
-            middleData.put("value", count);
-
-            finalData.add(middleData);
-        }
-        return finalData;
-    }
-
-    //(pieChart) 월간 정기점검 체크 값 드롭다운 생성
-    public List<String> RegularNameList(){
-
-        List<String> specialPartList = regularStatisticsRepository.RegularNameList();
-
-        return specialPartList;
     }
 
 }

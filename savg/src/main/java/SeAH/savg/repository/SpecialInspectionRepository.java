@@ -69,6 +69,7 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     List<Object[]> specialListByDangerAndMonth(@Param("year") int year, @Param("month") int month);
 
 
+
     //월간 수시점검 통계 조회 - 위험원인별 발생 건 수(0건인 것들도 함께 나옴)
     @Query("SELECT c.causeMenu, COUNT(s) " +
             "FROM SpecialCause c " +
@@ -87,7 +88,6 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
             "FROM SpecialCause c " +
             "LEFT JOIN SpecialInspection s ON s.speCause = c.causeMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month ")
     Long specialCountOtherExcludedByCauseAndMonth(@Param("year") int year, @Param("month") int month);
-
 
     //월간 수시점검 통계 조회 - 실수함정별 발생 건 수
     @Query("SELECT s.speTrap, COUNT(s) FROM SpecialInspection s WHERE MONTH(s.speDate) = :month GROUP BY s.speTrap")

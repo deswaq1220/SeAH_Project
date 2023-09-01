@@ -47,6 +47,7 @@ public class SpecialListStatisticsServiceTest {
             Long count = (Long) row[1];
             System.out.println(cause + count);
         }
+
     }*/
 }
 
