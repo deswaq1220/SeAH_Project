@@ -15,7 +15,4 @@ public interface EmailRepository extends JpaRepository <Email, Long> {
     // 고정수신자
     List<Email> findByMasterStatus(MasterStatus ms);
 
-    //전체 조치자 이메일 목록
-    List<Email> findByEmailId(Long emailId);
-
 }

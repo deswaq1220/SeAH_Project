@@ -3,11 +3,9 @@ package SeAH.savg.service;
 import SeAH.savg.constant.RegStatus;
 import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
-import SeAH.savg.entity.Email;
 import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.entity.RegularInspectionBad;
 import SeAH.savg.entity.RegularInspectionCheck;
-import SeAH.savg.repository.EmailRepository;
 import SeAH.savg.repository.RegularCheckRepository;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularInspectionBadRepository;
@@ -29,8 +27,6 @@ public class RegularInspectionService {
     private final RegularInspectionRepository regularInspectionRepository;
     private final RegularInspectionBadRepository regularInspectionBadRepository;
     private final RegularCheckRepository regularCheckRepository;
-    private final MakeIdService makeIdService;
-    private final EmailRepository emailRepository;
 
 
     //(lineChart) 1~12월까지 연간 수시점검 건수
@@ -146,24 +142,14 @@ public class RegularInspectionService {
         return checklist;
     }
 
-    //정기점검 조치자 이메일 리스트
-    public List<Email> selectEmail(Long emailId){
-        List<Email> regularEmailList = emailRepository.findByEmailId(emailId);
-        return regularEmailList;
-    }
-
-
-    private String categoryType = "R";
 
     //정기점검 등록
     public void createRegular(RegularDetailDTO regularDetailDTO, RegularDTO regularDTO) {
-        //정기점검 ID 부여 -> ex.R2308-00
-        regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
 
-        //상세정보 등록
         RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
+
         regularInspectionCheck.setRegularInspection(savedRegularInspection);
 
         RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);

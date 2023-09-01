@@ -43,7 +43,7 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
     @Query("SELECT r.regularInsName FROM RegularName r ORDER BY r.regularNum")
     List<String> regularInsNameList();
 
-    //정기점검 항목 불러오기(주조/압출 등 )
+    //정기점검 항목 불러오기(중대재해, 작업장 일반.. 등등)
     @Query("SELECT rp.partMenu FROM RegularPart rp ORDER BY rp.partNum")
     List<String> regularPartList();
 
