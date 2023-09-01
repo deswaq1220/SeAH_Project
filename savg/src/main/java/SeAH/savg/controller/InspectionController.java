@@ -18,8 +18,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
-@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
+//@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
 //@CrossOrigin(origins = "http://127.0.0.1:3000")
 
 //기타 점검관련 사항 관리하는 컨트롤러

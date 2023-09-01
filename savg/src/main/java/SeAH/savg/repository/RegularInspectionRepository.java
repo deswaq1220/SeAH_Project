@@ -1,6 +1,5 @@
 package SeAH.savg.repository;
 
-import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.entity.RegularName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RegularInspectionRepository extends JpaRepository<RegularInspection, String> {
+public interface RegularInspectionRepository extends JpaRepository<RegularName, String> {
 
 
     //연간
@@ -34,41 +33,5 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
                 "GROUP BY r.regularInsName, MONTH(r.speDate)")
         List<Object[]> regularDetailListByName(@Param("year") int year);*/
 
-
-
-    //정기점검 항목 불러오기(중대재해, 작업장 일반.. 등등)
-    @Query("SELECT r.regularInsName FROM RegularName r ORDER BY r.regularNum")
-    List<String> regularInsNameList();
-
-    //정기점검 항목에 따른 체크리스트 불러오기
-    @Query("SELECT r.r1List FROM RegularList1 r")
-    List<String> regular1List(); // 중대재해일반점검
-    @Query("SELECT r.r2List FROM RegularList2 r")
-    List<String> regular2List(); //작업장 일반
-    @Query("SELECT r.r3List FROM RegularList3 r")
-    List<String> regular3List(); //추락예방
-    @Query("SELECT r.r4List FROM RegularList4 r")
-    List<String> regular4List(); //이동장비_지게차트럭
-    @Query("SELECT r.r5List FROM RegularList5 r")
-    List<String> regular5List(); //이동장비_크레인
-    @Query("SELECT r.r6List FROM RegularList6 r")
-    List<String> regular6List(); //LOTO
-    @Query("SELECT r.r7List FROM RegularList7 r")
-    List<String> regular7List(); //위험기계기구
-    @Query("SELECT r.r8List FROM RegularList8 r")
-    List<String> regular8List(); //지붕작업
-    @Query("SELECT r.r9List FROM RegularList9 r")
-    List<String> regular9List(); //밀폐공간(제한구역)
-    @Query("SELECT r.r10List FROM RegularList10 r")
-    List<String> regular10List(); //전기작업
-    @Query("SELECT r.r11List FROM RegularList11 r")
-    List<String> regular11List(); //태풍풍수해대비점검
-
-    //정기점검 목록 조회
-    @Query("SELECT r FROM RegularInspection r WHERE YEAR(r.regularDate)=:year AND MONTH(r.regularDate) =:month")
-    List<RegularInspection> findAllByRegularDate(@Param("year") int year, @Param("month") int month);
-
-
-    RegularInspection findByRegularIdOrderByRegularDate(String regularId);
 
 }

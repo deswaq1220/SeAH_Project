@@ -33,8 +33,10 @@ public class RegularInspectionBad {
     @Enumerated(EnumType.STRING)
     private RegStatus regularComplete;              // 완료여부
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "regular_check_id")                    //정기점검 id
-    private RegularInspectionCheck regularInspectionCheck;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "regular_id")                    //정기점검 id
+    private RegularInspection regularInspection;
+
+
 
 }
