@@ -298,6 +298,7 @@ public class SpecialInspectionService {
 
 // ----------------------------------------------------------------------------------------------------------
 
+
     //월간 수시점검 현황 통계 조회 - 위험분류별(그래프용-지금 안씀)
     public List<Map<String, Object>> setSpecialListByDangerAndMonth(int year, int month){
         List<Object[]> statisticsList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
@@ -328,45 +329,8 @@ public class SpecialInspectionService {
     }
 
 
-
-    //월간 수시점검 위험원인 건수(기타값 포함)
-    public List<Object[]> specialDetailListByCauseAndMonth(int year, int month){
-        List<Object[]> specialList = specialInspectionRepository.specialListByCauseAndMonth(year, month);
-        System.out.println("입력리스트"+ specialList);
-
-
-        //'기타(직접입력)'에 값 수정: 통계로 보여줄 때 기타(직접입력)으로 보여주기 위함.
-        Long allValue = specialInspectionRepository.specialCountByCauseAndMonth(year, month);//모든값
-        Long otherExcluedallValue = specialInspectionRepository.specialCountOtherExcludedByCauseAndMonth(year, month); //모든값-예외값
-
-        //기타 수정값 넣기
-        for (Object[] value : specialList) {
-            if ("기타(직접입력)".equals(value[0])) { // 값이 기타(직접입력)이면
-                value[1] = allValue - otherExcluedallValue; // 두 번째 값 수정
-                break; // 수정 후 루프 종료
-            }
-        }
-
-        // "선택" 값을 제외한 새로운 리스트 생성
-        List<Object[]> filteredList = new ArrayList<>();
-        for (Object[] item : specialList) {
-            String value = (String) item[0];
-            if (!value.equals("선택")) { //"선택" 제거
-                filteredList.add(item);
-            }
-        }
-
-        System.out.println(filteredList);
-        return filteredList;
-    }
-
-
-
-
-
-
     //1~12월까지 월별 수시점검 위험분류 건수
-    public List<Map<String,Object>> specialDetailListByDanger(int year){
+   public List<Map<String,Object>> specialDetailListByDanger(int year){
         List<Object[]> specialList = specialInspectionRepository.specialDetailListByDanger(year);
 
         Map<Integer, Map<String, Object>> dataByMonth = new HashMap<>();
@@ -386,7 +350,7 @@ public class SpecialInspectionService {
             Map<String, Object> dataPoint = dataByMonth.get(month);
             dataPoint.put(dangerKind, count);
         }
-        List<Map<String, Object>> finalData = new ArrayList<>(dataByMonth.values());
+       List<Map<String, Object>> finalData = new ArrayList<>(dataByMonth.values());
 
         return finalData;
     }
@@ -394,7 +358,7 @@ public class SpecialInspectionService {
 
 
     // 1~12월까지 연간 수시점검 건수
-    public List<Map<String, Object>> setSpecialCountList(int year){
+     public List<Map<String, Object>> setSpecialCountList(int year){
         List<Object[]> statisticsList = specialInspectionRepository.specialCountList(year);
 
         List<Map<String, Object>> dataPoints = new ArrayList<>();
