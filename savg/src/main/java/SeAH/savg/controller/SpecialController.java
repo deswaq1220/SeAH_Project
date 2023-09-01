@@ -13,7 +13,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-
 @CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 
 
@@ -25,6 +24,7 @@ public class SpecialController {
 
 
   // 월별 수시점검현황: 수시점검 qr찍고 첫번째 페이지
+
   @GetMapping("/special/{masterdataPart}/{masterdataFacility}")
   public ResponseEntity<?> speMonthly() {
       return new ResponseEntity<>(specialInspectionService.findSpeMonthly(), HttpStatus.OK);
@@ -35,6 +35,7 @@ public class SpecialController {
   @GetMapping("/special/list/{masterdataPart}/{masterdataFacility}")
   public ResponseEntity<?> speListOfFac(@PathVariable String masterdataFacility) {
       return new ResponseEntity<>(specialInspectionService.findListOfFac(masterdataFacility), HttpStatus.OK);
+
   }
 
 
@@ -73,6 +74,7 @@ public class SpecialController {
  }
 
 // -------------------------- 공통
+
 
 
     // 수시저검 등록된 전체 현황
