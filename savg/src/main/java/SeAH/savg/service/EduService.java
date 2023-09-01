@@ -11,7 +11,6 @@ import SeAH.savg.repository.EduRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.File;
@@ -220,15 +219,14 @@ public class EduService {
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         List<EduFileDTO> eduFileDTOList = new ArrayList<>();
         EduDTO eduDTO = new EduDTO(edu);
-
-        List<MultipartFile> multipartFileList = new ArrayList<>();
-
+        List<String> filesName = new ArrayList<>();
         for(EduFile file : eduFileList){
             EduFileDTO eduFileDTO = EduFileDTO.of(file);
             eduFileDTOList.add(eduFileDTO);
-            multipartFileList.add(eduFileService.fileUpload(file.getEduFileName()));
+         filesName.add(eduFileDTO.getEduFileOriName());
+
         }
-        eduDTO.setFiles();
+        eduDTO.setEduFiles(filesName);
 
 
 
