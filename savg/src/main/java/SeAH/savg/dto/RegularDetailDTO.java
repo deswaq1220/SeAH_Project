@@ -34,8 +34,6 @@ public class RegularDetailDTO {
 //시간은 직접 입력(now)
 //    private LocalDateTime regularActDate;      //점검완료일
 
-    private List<MultipartFile> files; //파일
-
     public RegularDetailDTO(String id, String checklist){
         this.id = id;
         this.checklist = checklist;

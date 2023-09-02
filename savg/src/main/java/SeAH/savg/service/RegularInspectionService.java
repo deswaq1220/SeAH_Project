@@ -71,31 +71,34 @@ public class RegularInspectionService {
         regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
         regularInspection.setRegularDate(LocalDateTime.now());
+        regularInspection.setRegularEmail(regularDTO.getRegularEmail());
+
+
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
 
-//        for(RegularDetailDTO regularDetailDTO:  regularDTO.getRegularDetailDTOList()){
-//                   //상세정보 등록
-//            RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
-//            regularInspectionCheck.setRegularInspection(savedRegularInspection);
-//            regularInspectionCheck.setRegularCheck(regularDetailDTO.getRegularCheck());
-//
-//            RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
-//
-//            if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
-//                RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
-//                regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
-//                regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
-//
-//                regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
-//                regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
-//                regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-////                regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
-//
-//                regularInspectionBadRepository.save(regularInspectionBadEntity);
+        for(RegularDetailDTO regularDetailDTO:  regularDTO.getRegularDetailDTOList()){
+                   //상세정보 등록
+            RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
+            regularInspectionCheck.setRegularInspection(savedRegularInspection);
+            regularInspectionCheck.setRegularCheck(regularDetailDTO.getRegularCheck());
+
+            RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
+
+            if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
+                RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
+                regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
+                regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
+
+                regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
+                regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
+                regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
+//                regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
+
+                regularInspectionBadRepository.save(regularInspectionBadEntity);
 //                eduFileService.uploadFile2(regularInspection, regularDetailDTO);
-//
-//            }
-//        }
+
+            }
+        }
 
 
     }

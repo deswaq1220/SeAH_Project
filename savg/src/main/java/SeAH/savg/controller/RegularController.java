@@ -8,10 +8,14 @@ import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.MakeIdService;
 import SeAH.savg.service.RegularInspectionService;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,8 +157,19 @@ public class RegularController {
     }
 
     //정기점검 등록
-    @PostMapping(value = "/user/regular/new", consumes = "multipart/form-data")
-    public ResponseEntity<String> createRegularInspection(RegularDTO regularDTO) throws Exception {
+    @PostMapping(value = "/user/regular/new")
+        public ResponseEntity<String> createRegularInspection(@RequestPart(value = "regularDTO") RegularDTO regularDTO) throws Exception {
+
+//        ObjectMapper objectMapper = new ObjectMapper();
+
+
+//        List<RegularDetailDTO> regularDetailDTOList =
+//                objectMapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
+//        System.out.println(file);
+//        for (RegularDetailDTO regularDetailDTO : regularDetailDTOList){
+//            System.out.println(regularDetailDTO.getRegularActPerson());
+//        }
+        System.out.println(regularDTO.getRegularDetailDTOList().get(0).getRegularActPerson());
         regularInspectionService.createRegular(regularDTO);
         return ResponseEntity.ok("정기점검 등록 성공");
     }

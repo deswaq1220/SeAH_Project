@@ -75,34 +75,32 @@ public class EduFileService {
         return uploadedFiles;
     }
 
-    public void uploadFile2(RegularInspection regularInspection,RegularDetailDTO regularDetailDTO) throws Exception {
+//    public void uploadFile2(RegularInspection regularInspection,RegularDetailDTO regularDetailDTO) throws Exception {
 
-        List<RegularFile> uploadedFiles = new ArrayList<>();
-        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        List<MultipartFile> files = regularDetailDTO.getFiles();
-
-        for (MultipartFile file : files) {
-            String originalFilename = file.getOriginalFilename();
-            String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;
-
-            System.out.println("파일경로: " + fileUploadFullUrl);
-            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-            fos.write(file.getBytes());
-            fos.close();
-
-            // 파일 정보 생성 및 저장
-            RegularFile regularFile = new RegularFile();
-            regularFile.setRegularFileName(todayDate + "_" + originalFilename);
-            regularFile.setRegularOriName(originalFilename);
-            regularFile.setRegularFileUrl(fileUploadFullUrl);
-            regularFile.setRegularInspection(regularInspection);
-            regularFileRepository.save(regularFile); // 데이터베이스에 저장
-
-            uploadedFiles.add(regularFile);
-        }
-
-
-    }
+//        List<RegularFile> uploadedFiles = new ArrayList<>();
+//        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+//        List<MultipartFile> files = regularDetailDTO.getFiles();
+//
+//        for (MultipartFile file : files) {
+//            String originalFilename = file.getOriginalFilename();
+//            String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;
+//
+//            System.out.println("파일경로: " + fileUploadFullUrl);
+//            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+//            fos.write(file.getBytes());
+//            fos.close();
+//
+//            // 파일 정보 생성 및 저장
+//            RegularFile regularFile = new RegularFile();
+//            regularFile.setRegularFileName(todayDate + "_" + originalFilename);
+//            regularFile.setRegularOriName(originalFilename);
+//            regularFile.setRegularFileUrl(fileUploadFullUrl);
+//            regularFile.setRegularInspection(regularInspection);
+//            regularFileRepository.save(regularFile); // 데이터베이스에 저장
+//
+//            uploadedFiles.add(regularFile);
+//        }
+//    }
 
 
 

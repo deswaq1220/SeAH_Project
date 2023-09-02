@@ -22,7 +22,8 @@ public class RegularDTO {
     private String regularEmail;
 
     private LocalDateTime regularDate;
-    private RegularDetailDTO[] regularDetailDTOList;
+    private List<RegularDetailDTO> regularDetailDTOList;
+
     public static ModelMapper modelMapper = new ModelMapper();
 
     public RegularInspection createRegular() {
