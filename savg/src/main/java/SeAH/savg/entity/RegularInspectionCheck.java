@@ -13,7 +13,8 @@ import javax.persistence.*;
 public class RegularInspectionCheck {
 
     @Id
-    private String regularCheckId;
+    @GeneratedValue(strategy = GenerationType.AUTO) // 자동 증가 ID를 사용하도록 설정
+    private Long regularCheckId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -131,15 +131,14 @@ public class RegularController {
     //정기점검 항목에 따른 체크리스트 세팅
 
     @GetMapping("/user/regularcheck")
-    public ResponseEntity<Map<String, List<String>>> regularcheck(@RequestParam int regularNum) {
-        Map<String, List<String>> responseData = new HashMap<>();
+    public ResponseEntity<List<RegularDetailDTO>> regularcheck(@RequestParam int regularNum) {
+        Map<String, List<RegularDetailDTO>> responseData = new HashMap<>();
 
-        List<String> checklist = regularInspectionService.selectRegularListByNum(regularNum);
+        List<RegularDetailDTO> checklist = regularInspectionService.selectRegularListByNum(regularNum);
 
 
-        responseData.put("checklist", checklist);
 
-        return ResponseEntity.ok(responseData);
+        return ResponseEntity.ok(checklist);
     }
 
 
@@ -154,8 +153,8 @@ public class RegularController {
     }
 
     //정기점검 등록
-    @PostMapping("/user/regular/new")
-    public ResponseEntity<String> createRegularInspection(@RequestBody RegularDTO regularDTO) {
+    @PostMapping(value = "/user/regular/new", consumes = "multipart/form-data")
+    public ResponseEntity<String> createRegularInspection(RegularDTO regularDTO) throws Exception {
         regularInspectionService.createRegular(regularDTO);
         return ResponseEntity.ok("정기점검 등록 성공");
     }
@@ -172,7 +171,7 @@ public class RegularController {
             RegularDTO regularDTO = new RegularDTO();
             regularDTO.setRegularId(regularInspection.getRegularId());
             regularDTO.setRegularInsName(regularInspection.getRegularInsName());
-//            regularDTO.setRegularDate(regularInspection.getRegularDate());
+            regularDTO.setRegularDate(regularInspection.getRegularDate());
             regularDTO.setRegularPart(regularInspection.getRegularPart());
             regularDTOList.add(regularDTO);
         }

@@ -2,10 +2,14 @@ package SeAH.savg.service;
 
 
 import SeAH.savg.dto.EduDTO;
+import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
+import SeAH.savg.entity.RegularFile;
+import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
+import SeAH.savg.repository.RegularFileRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +37,9 @@ public class EduFileService {
 //    public EduFileService(EduFileRepository eduFileRepository) {
 //        this.eduFileRepository = eduFileRepository;
 //    }
+
+    @Autowired
+    private RegularFileRepository regularFileRepository;
 
     @Value("${eduFileLocation}")
     private  String eduFileLocation;
@@ -66,6 +73,35 @@ public class EduFileService {
         }
 
         return uploadedFiles;
+    }
+
+    public void uploadFile2(RegularInspection regularInspection,RegularDetailDTO regularDetailDTO) throws Exception {
+
+        List<RegularFile> uploadedFiles = new ArrayList<>();
+        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        List<MultipartFile> files = regularDetailDTO.getFiles();
+
+        for (MultipartFile file : files) {
+            String originalFilename = file.getOriginalFilename();
+            String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;
+
+            System.out.println("파일경로: " + fileUploadFullUrl);
+            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+            fos.write(file.getBytes());
+            fos.close();
+
+            // 파일 정보 생성 및 저장
+            RegularFile regularFile = new RegularFile();
+            regularFile.setRegularFileName(todayDate + "_" + originalFilename);
+            regularFile.setRegularOriName(originalFilename);
+            regularFile.setRegularFileUrl(fileUploadFullUrl);
+            regularFile.setRegularInspection(regularInspection);
+            regularFileRepository.save(regularFile); // 데이터베이스에 저장
+
+            uploadedFiles.add(regularFile);
+        }
+
+
     }
 
 

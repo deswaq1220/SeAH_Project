@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 public class RegularInspectionBad {
 
     @Id
-    private String regularBadId;                    // id
+    @GeneratedValue(strategy = GenerationType.AUTO) // 자동 증가 ID를 사용하도록 설정
+    private Long regularBadId;
 
     @Column(nullable = false)
     private String regularActContent;           // 개선대책

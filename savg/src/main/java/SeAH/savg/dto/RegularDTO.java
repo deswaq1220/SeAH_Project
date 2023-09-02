@@ -7,6 +7,7 @@ import SeAH.savg.entity.RegularInspectionCheck;
 import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +20,9 @@ public class RegularDTO {
     private String regularPart;                 // 점검구역(주조, 압출 등)
     private String regularInsName;             //점검항목(중대재해, LOTO 등 )
     private String regularEmail;
-    private List<RegularDetailDTO> regularDetailDTOList;
+
+    private LocalDateTime regularDate;
+    private RegularDetailDTO[] regularDetailDTOList;
     public static ModelMapper modelMapper = new ModelMapper();
 
     public RegularInspection createRegular() {

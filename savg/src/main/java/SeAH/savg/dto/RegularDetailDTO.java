@@ -6,13 +6,14 @@ import SeAH.savg.entity.RegularInspectionBad;
 import SeAH.savg.entity.RegularInspectionCheck;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RegularDetailDTO {
 
 //    private String regularInsName;          // 관찰 점검종류(또는 이름)   참조테이블: RegularName
@@ -24,6 +25,7 @@ public class RegularDetailDTO {
 
     private String id;                          //체크리스트 기준정보 id
     private RegStatus regularCheck;           // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
+    private String checklist;             //checkList
     //bad
     private String regularActContent;           //개선대책
     private String regularActPerson;            //조치담당자
@@ -32,10 +34,14 @@ public class RegularDetailDTO {
 //시간은 직접 입력(now)
 //    private LocalDateTime regularActDate;      //점검완료일
 
-
     private List<MultipartFile> files; //파일
 
+    public RegularDetailDTO(String id, String checklist){
+        this.id = id;
+        this.checklist = checklist;
+    }
 
+    public RegularDetailDTO(){}
 
     public static ModelMapper modelMapper = new ModelMapper();
     public RegularInspectionCheck createRegularDetail() {

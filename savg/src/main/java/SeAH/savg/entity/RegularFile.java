@@ -2,12 +2,13 @@ package SeAH.savg.entity;
 
 import SeAH.savg.constant.RegStatus;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
-@Getter @ToString
+@Getter @ToString @Setter
 public class RegularFile {
 
     @Id
