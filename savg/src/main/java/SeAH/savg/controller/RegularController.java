@@ -2,6 +2,7 @@ package SeAH.savg.controller;
 
 import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.dto.RegularFileDTO;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.RegularInspectionRepository;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -158,18 +160,12 @@ public class RegularController {
 
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
-        public ResponseEntity<String> createRegularInspection(@RequestPart(value = "regularDTO") RegularDTO regularDTO) throws Exception {
-
-//        ObjectMapper objectMapper = new ObjectMapper();
+        public ResponseEntity<String> createRegularInspection(@ModelAttribute RegularDTO regularDTO)throws Exception {
 
 
-//        List<RegularDetailDTO> regularDetailDTOList =
-//                objectMapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
-//        System.out.println(file);
-//        for (RegularDetailDTO regularDetailDTO : regularDetailDTOList){
-//            System.out.println(regularDetailDTO.getRegularActPerson());
-//        }
-        System.out.println(regularDTO.getRegularDetailDTOList().get(0).getRegularActPerson());
+
+
+
         regularInspectionService.createRegular(regularDTO);
         return ResponseEntity.ok("정기점검 등록 성공");
     }
