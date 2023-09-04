@@ -3,9 +3,10 @@ package SeAH.savg.dto;
 import SeAH.savg.entity.MasterData;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class MasterDataFormDTO {
     private String masterdataId;                // id
     private String masterdataPart;           // 영역

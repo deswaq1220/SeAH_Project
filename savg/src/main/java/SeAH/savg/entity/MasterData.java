@@ -30,6 +30,7 @@ public class MasterData {
 
     public static MasterData createMaster(MasterDataFormDTO masterDataFormDTO) {
         return MasterData.builder()
+                .masterdataId(masterDataFormDTO.getMasterdataId())
                 .masterdataPart(masterDataFormDTO.getMasterdataPart())
                 .masterdataFacility(masterDataFormDTO.getMasterdataFacility())
                 .build();
