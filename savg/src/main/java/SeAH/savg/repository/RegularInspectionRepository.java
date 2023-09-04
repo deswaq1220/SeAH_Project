@@ -34,4 +34,5 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
 
     RegularInspection findByRegularIdOrderByRegularDate(String regularId);
 
+
 }

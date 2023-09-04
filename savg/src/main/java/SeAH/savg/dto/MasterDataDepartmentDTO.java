@@ -13,8 +13,8 @@ import org.modelmapper.ModelMapper;
 @Log4j2
 public class MasterDataDepartmentDTO {
 
-    private String firstDepartment; //부서1
-    private String secondDepartment; //부서2
+    private Long departmentId; //부서1
+    private String departmentName; //부서2
 
     private static ModelMapper modelMapper = new ModelMapper();
 
@@ -25,8 +25,8 @@ public class MasterDataDepartmentDTO {
 
     public MasterDataDepartment toEntity() {
         return MasterDataDepartment.builder()
-                .firstDepartment(this.firstDepartment)
-                .secondDepartment(this.secondDepartment) // 직접 기본키 값을 설정
+                .departmentId(this.departmentId)
+                .departmentName(this.departmentName) // 직접 기본키 값을 설정
                 .build();
     }
 
@@ -34,8 +34,8 @@ public class MasterDataDepartmentDTO {
     public static MasterDataDepartment createMasterDepart(MasterDataDepartmentDTO departmentDTO) {
 
         return MasterDataDepartment.builder()
-                .firstDepartment(departmentDTO.getFirstDepartment())
-                .secondDepartment(departmentDTO.getSecondDepartment())
+                .departmentId(departmentDTO.getDepartmentId())
+                .departmentName(departmentDTO.getDepartmentName())
                 .build();
     }
 

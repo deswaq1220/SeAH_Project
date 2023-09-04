@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/admin")
 @RequiredArgsConstructor
-@RequestMapping("/user")
 public class MasterDataController {
 
 
@@ -79,7 +79,7 @@ public class MasterDataController {
 
     // 설비삭제
     @DeleteMapping("/master/delete/{masterdataId}")
-    public ResponseEntity<String> masterDelete(@PathVariable Integer masterdataId){
+    public ResponseEntity<String> masterDelete(@PathVariable String masterdataId){
         masterDataService.deleteMaster(masterdataId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -97,69 +97,59 @@ public class MasterDataController {
     }
 
 
-    // 이메일삭제
-    @DeleteMapping("/master/email/delete/{emailId}")
-    public ResponseEntity<String> emailDelete(@PathVariable Long emailId){
-        masterDataService.deleteEmail(emailId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
 
 
     //------------------------------------------부서 관리
 
-        //부서 목록 조회(화면에 전체 뿌리기)
-        @GetMapping("/master/department/view")
-        public ResponseEntity<?> viewDepartList(){
-            return new ResponseEntity<>(masterDataService.DepartList(), HttpStatus.OK);
-        }
+    //부서 목록 조회(화면에 전체 뿌리기)
+    @GetMapping("/master/department/view")
+    public ResponseEntity<?> viewDepartList(){
+        return new ResponseEntity<>(masterDataService.DepartList(), HttpStatus.OK);
+    }
 
-        //부서별 목록 드롭다운으로 뿌리기
-        //부서1로 조회
-        @GetMapping("/master/departdropdown")
-        public ResponseEntity<?> viewDropdownDepart(){
+    //부서별 목록 드롭다운으로 뿌리기
+    @GetMapping("/master/departdropdown")
+    public ResponseEntity<?> viewDropdownDepart(){
 
-            Map<String, Object> responseData = new HashMap<>();
-            List<String> departmentList = masterDataDepartmentRepository.dropDownListByDepart();
+        Map<String, Object> responseData = new HashMap<>();
+        List<String> departmentList = masterDataDepartmentRepository.dropDownListByDepart();
 
-            responseData.put("departmentList", departmentList);
+        responseData.put("departmentList", departmentList);
 
-            return new ResponseEntity<>(responseData, HttpStatus.OK);
-        }
-
-
-        //부서별 목록 조회(카테고리용)
-        //부서1로 조회하는 기능
-        @GetMapping("/master/department/sort")
-        public ResponseEntity<List<MasterDataDepartmentDTO>> sortByDepart(@RequestParam("depart1") String depart1){
-            return new ResponseEntity<>(masterDataService.sortDepartList(depart1), HttpStatus.OK);
-        }
-
-        //부서 등록
-        @PostMapping("/master/department/reg")
-        public ResponseEntity<?> regDepart(@RequestBody MasterDataDepartmentDTO departmentDTO){
-
-            return new ResponseEntity<>(masterDataService.saveDepart(departmentDTO), HttpStatus.CREATED);
-        }
-
-        //부서 삭제
-        @PostMapping("/master/department/del/{depart2}")
-        public ResponseEntity<?> delDepart(@PathVariable String depart2){
-
-            String Strdepart2 = "["+depart2+"]";
-            masterDataService.delDepart(Strdepart2);
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+    }
 
 
-        //부서 수정
-        @PostMapping("/master/department/update/{depart2}")
-        public ResponseEntity<?> updateDepart(@PathVariable String depart2,
-                                              @RequestBody MasterDataDepartmentDTO departmentDTO){
+    //부서별 목록 조회(카테고리용)
+    @GetMapping("/master/department/sort")
+    public ResponseEntity<List<MasterDataDepartmentDTO>> sortByDepart(@RequestParam("departmentid") Long departmentId){
+        return new ResponseEntity<>(masterDataService.sortDepartList(departmentId), HttpStatus.OK);
+    }
 
-            String Strdepart2 = "["+depart2+"]";
-            masterDataService.updateDepart(Strdepart2, departmentDTO);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
+    //부서 등록
+    @PostMapping("/master/department/reg")
+    public ResponseEntity<?> regDepart(@RequestBody MasterDataDepartmentDTO departmentDTO){
+
+        return new ResponseEntity<>(masterDataService.saveDepart(departmentDTO), HttpStatus.CREATED);
+    }
+
+    //부서 삭제
+    @PostMapping("/master/department/del/{departmentId}")
+    public ResponseEntity<?> delDepart(@PathVariable Long departmentId){
+
+        masterDataService.delDepart(departmentId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    //부서 수정
+    @PostMapping("/master/department/update/{departId}")
+    public ResponseEntity<?> updateDepart(@PathVariable Long departId,
+                                          @RequestBody MasterDataDepartmentDTO departmentDTO){
+
+        masterDataService.updateDepart(departmentDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
