@@ -1,6 +1,5 @@
 package SeAH.savg.service;
 
-import SeAH.savg.Exception.DuplicateCodeException;
 import SeAH.savg.dto.MasterDataDepartmentDTO;
 import SeAH.savg.dto.MasterDataFormDTO;
 import SeAH.savg.entity.Email;
@@ -14,9 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import javax.security.auth.message.AuthException;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -58,29 +56,19 @@ public class MasterDataService {
             return emailList;
         }
 
-
-        // 기준정보(이메일) 삭제
-        @Transactional
         public void deleteEmail(Long emailId){
             System.out.println("서비스 이메일 아이디"+ emailId);
             emailRepository.deleteById(emailId);
     }
 
-        // 기준정보 등록 : 영역당 설비
+        // 기준정보 등록
         @Transactional
-        public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO) {
-            String frontCode = String.valueOf(masterDataFormDTO.getMasterdataId());
+        public MasterData saveMaster(MasterDataFormDTO masterDataFormDTO){
+            MasterData masterData = MasterData.createMaster(masterDataFormDTO);
+            System.out.println(masterData);
+            masterDataRepository.save(masterData);
 
-            if (masterDataRepository.existsByMasterdataId(frontCode)) {
-                // 이미 존재하는 코드이므로 오류 메시지를 반환하거나 예외를 던지는 등의 처리가 필요합니다.
-                throw new DuplicateCodeException("기존 코드 정보와 중복됩니다. 다른 코드를 사용하세요.");
-            } else {
-                MasterData masterData = MasterData.createMaster(masterDataFormDTO);
-                System.out.println(masterData);
-                masterDataRepository.save(masterData);
-                return masterData;
-            }
-
+            return masterData;
         }
 
         // 기준정보 삭제

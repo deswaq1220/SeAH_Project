@@ -22,17 +22,17 @@ public class FileService {
  private final SpeicalFileRepository speicalFileRepository;
 
  // 파일 이름 세팅
-  public String makeFileName(String uploadPath, String originalFileName, String facilityName, byte[] fileData) throws Exception{
-   // 저장될 파일이름
-   String savedFileName = generateUniqueFileName(originalFileName, facilityName);
-   String fileUploadFullUrl = uploadPath + "/" + savedFileName;
-   // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
-   FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-   fos.write(fileData);
-   fos.close();
-   return  savedFileName;
+ public String makeFileName(String uploadPath, String originalFileName, String facilityName, byte[] fileData) throws Exception{
+  // 저장될 파일이름
+  String savedFileName = generateUniqueFileName(originalFileName, facilityName);
+  String fileUploadFullUrl = uploadPath + "/" + savedFileName;
+  // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
+  FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+  fos.write(fileData);
+  fos.close();
+  return  savedFileName;
 
-  }
+ }
 
 
 
@@ -64,14 +64,14 @@ public class FileService {
   int newWidth = 0;
   int newHeight = 0;
   if(originalImg.getHeight() < originalImg.getWidth()) {   // 가로이미지이면
-    newWidth = 640;
-    newHeight = 480;
+   newWidth = 640;
+   newHeight = 480;
   } else if(originalImg.getHeight() > originalImg.getWidth()){  // 세로이미지이면
-    newWidth = 480;
-    newHeight = 640;
+   newWidth = 480;
+   newHeight = 640;
   } else {  // 정방형이면
-    newWidth = 480;
-    newHeight = 480;
+   newWidth = 480;
+   newHeight = 480;
   }
 
   BufferedImage resizedImg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
