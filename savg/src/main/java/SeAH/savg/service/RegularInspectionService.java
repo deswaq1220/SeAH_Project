@@ -14,15 +14,13 @@ import SeAH.savg.repository.RegularInspectionBadRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -284,20 +282,51 @@ public class RegularInspectionService {
 /*    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
         List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
 
-        Map<String, Object> dataPoint = new HashMap<>();
         List<Map<String, Object>> finalList = new ArrayList<>();
 
         for(Object[] row : regularList){
+
             String name = (String) row[0];
             Long count = (Long) row[1];
 
+            Map<String, Object> dataPoint = new HashMap<>();
             dataPoint.put(name,count);
             finalList.add(dataPoint);
         }
-        dataPoint.put("전체",);
+
+        finalList.sort(Comparator.comparing(o -> o.keySet().iterator().next())); // sort하기
+
         return finalList;
     }*/
 
+    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
+        List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
+
+        List<Map<String, Object>> finalList = new ArrayList<>();
+        Map<String, Map<String, Object>> middleList = new HashMap<>(); //같은 name으로 묶기위함
+
+        for(Object[] row : regularList){
+
+            String name = (String) row[0];
+            RegStatus value = (RegStatus) row[1];
+            Long count = (Long) row[2];
+
+            Map<String, Object> dataPoint = middleList.get(name);
+
+            //name에 맞는 dataPoint가 없으면 새로 배열 생성
+            if(dataPoint == null){
+                dataPoint = new HashMap<>();
+                middleList.put(name,dataPoint);
+            }
+
+            dataPoint.put(value.toString(),count);
+            middleList.put(name, dataPoint);
+        }
+        finalList.add(new HashMap<>(middleList));
+        finalList.sort(Comparator.comparing(o -> o.keySet().iterator().next())); // sort하기
+
+        return finalList;
+    }
 
     //연간
     //1~12월까지 월간 정기점검종류별 점검건수

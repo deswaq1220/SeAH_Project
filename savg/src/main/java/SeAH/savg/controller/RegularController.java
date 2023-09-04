@@ -40,27 +40,29 @@ public class RegularController {
             return ResponseEntity.ok(statisticsCount);
         }
 
-    // (엑셀용) 월간 점검영역별 - 직접입력한 기타 내용 모두 출력
-    @GetMapping("/regular/statistics/partandmonthforexcel")
-    public ResponseEntity<?> getRegularListByPartAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
-        int year = Integer.parseInt(yearMonth.substring(0, 4));
-        int month = Integer.parseInt(yearMonth.substring(5, 7));
+        // (엑셀용) 월간 점검영역별 - 직접입력한 기타 내용 모두 출력
+        @GetMapping("/regular/statistics/partandmonthforexcel")
+        public ResponseEntity<?> getRegularListByPartAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
+            int year = Integer.parseInt(yearMonth.substring(0, 4));
+            int month = Integer.parseInt(yearMonth.substring(5, 7));
 
-        List<Object[]> statisticsList = regularStatisticsRepository.regularListByPartAndMonthForExcel(year, month);
+            List<Object[]> statisticsList = regularStatisticsRepository.regularListByPartAndMonthForExcel(year, month);
 
-        return ResponseEntity.ok(statisticsList);
-    }
+            return ResponseEntity.ok(statisticsList);
+        }
 
-    // (엑셀용) 월간 점검종류별 위험성평가 건수
-    @GetMapping("/regular/statistics/nameandmonthforexcel")
-    public ResponseEntity<?> getRegularListByNameAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
-        int year = Integer.parseInt(yearMonth.substring(0, 4));
-        int month = Integer.parseInt(yearMonth.substring(5, 7));
 
-        List<Object[]> statisticsList = regularStatisticsRepository.regularListByPartAndMonthForExcel(year, month);
+        // (엑셀용) 월간 점검종류별 위험성평가 건수
+        @GetMapping("/regular/statistics/nameandmonthforexcel")
+        public ResponseEntity<?> getRegularListByNameAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
+            int year = Integer.parseInt(yearMonth.substring(0, 4));
+            int month = Integer.parseInt(yearMonth.substring(5, 7));
 
-        return ResponseEntity.ok(statisticsList);
-    }
+            List<Map<String, Object>> statisticsList = regularInspectionService.regularCntListByNameAndYearForExcel(year, month);
+
+            return ResponseEntity.ok(statisticsList);
+        }
+
 
         //(pieChart) 월간 정기점검 위험성평가분석 데이터 값(전체)
         @GetMapping("/regular/statistics/checkvaluecount")
