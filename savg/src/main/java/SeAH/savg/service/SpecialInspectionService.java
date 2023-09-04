@@ -165,9 +165,19 @@ public class SpecialInspectionService {
     public Map<String, Object> getSpecialDetail(String speId) {
         Map<String, Object> detailMap = new HashMap<>();
 
+
         // 수시점검 데이터
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
         detailMap.put("specialData", special);
+
+        // 설비코드
+        String facilityName = special.getSpeFacility();
+        MasterData facilityData = masterDataRepository.findByMasterdataFacility(facilityName);
+        System.out.println("masterData확인: "+ facilityData);
+        String facilityCode = facilityData.getMasterdataId();
+        System.out.println("masterData 설비코드: "+ facilityCode);
+        detailMap.put("facilityCode", facilityCode);
+
 
         // 이미지 데이터
         List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
