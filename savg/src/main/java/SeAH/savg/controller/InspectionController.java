@@ -27,7 +27,7 @@ public class InspectionController {
 
     private final InspectionService inspectionService;
 
-    @GetMapping("/statistics/inspectioncount")
+    @GetMapping("/admin/statistics/inspectioncount")
     public ResponseEntity<List<Map<String, Object>>> getInspectionCountList(@RequestParam("year") int year){
         List<Map<String, Object>> specialStatisticsList = inspectionService.setCountList(year);
 

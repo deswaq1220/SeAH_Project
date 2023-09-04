@@ -129,7 +129,7 @@ public class RegularController {
     //--------------------------------------통계 관련
     //월간 분석
     //월간 정기점검 건수
-    @GetMapping("/regular/statistics/monthcount")
+    @GetMapping("/admin/regular/statistics/monthcount")
     public ResponseEntity<?> getRegularCountByMonth(@RequestParam("yearmonth") String yearMonth){
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
@@ -139,7 +139,7 @@ public class RegularController {
     }
 
     // (엑셀용) 월간 점검영역별 - 직접입력한 기타 내용 모두 출력
-    @GetMapping("/regular/statistics/partandmonthforexcel")
+    @GetMapping("/admin/regular/statistics/partandmonthforexcel")
     public ResponseEntity<?> getRegularListByPartAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
@@ -151,7 +151,7 @@ public class RegularController {
 
 
     // (엑셀용) 월간 점검종류별 위험성평가 건수
-    @GetMapping("/regular/statistics/nameandmonthforexcel")
+    @GetMapping("/admin/regular/statistics/nameandmonthforexcel")
     public ResponseEntity<?> getRegularListByNameAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
@@ -163,7 +163,7 @@ public class RegularController {
 
 
     //(pieChart) 월간 정기점검 위험성평가분석 데이터 값(전체)
-    @GetMapping("/regular/statistics/checkvaluecount")
+    @GetMapping("/admin/regular/statistics/checkvaluecount")
     public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth){
         String[] yearMonthParts = yearMonth.split("-");
         int year = Integer.parseInt(yearMonthParts[0]);
@@ -176,7 +176,7 @@ public class RegularController {
     }
 
     //(pieChart) 월간 정기점검 위험성평가분석 데이터 값(sort한 값)
-    @GetMapping("/regular/statistics/checkvaluecountsort")
+    @GetMapping("/admin/regular/statistics/checkvaluecountsort")
     public ResponseEntity<?> getRegularCntByCheckAndMonthSort(@RequestParam("yearmonth") String yearMonth,
                                                               @RequestParam("regularinsname") String regularInsName){
         String[] yearMonthParts = yearMonth.split("-");
@@ -190,7 +190,7 @@ public class RegularController {
     }
 
     //(pieChart) 월간 정기점검 위험성평가분석 드롭다운
-    @GetMapping("/regular/statistics/namedropdown")
+    @GetMapping("/admin/regular/statistics/namedropdown")
     public ResponseEntity<?> viewDropdownRegularNameList(){
         Map<String, Object> responseData = new HashMap<>();
         List<String> regularNameList = regularInspectionService.RegularNameList();
@@ -201,7 +201,7 @@ public class RegularController {
     }
 
     //(radarChart) 월간 점검영역별 그래프 데이터값 전송
-    @GetMapping("/regular/statistics/partandmonth")
+    @GetMapping("/admin/regular/statistics/partandmonth")
     public ResponseEntity<?> getRegularListByPartAndMonth(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
@@ -213,13 +213,13 @@ public class RegularController {
 
     //연간 분석
     //연간 정기점검 건수
-    @GetMapping("/regular/statistics/yearcount")
+    @GetMapping("/admin/regular/statistics/yearcount")
     public ResponseEntity<?> getRegularCountByYear(@RequestParam("year") int year){
         int statisticsCount = regularStatisticsRepository.regularCountByYear(year);
         return ResponseEntity.ok(statisticsCount);
     }
     //(barChart) 연간 점검종류별 점검 건수
-    @GetMapping("/regular/statistics/nameandyear")
+    @GetMapping("/admin/regular/statistics/nameandyear")
     public ResponseEntity<List<Map<String, Object>>> getRegularCountByNameAndYear(@RequestParam("year") int year) {
         List<Map<String, Object>> statisticsList = regularInspectionService.regularCountListByNameAndYear(year);
         return ResponseEntity.ok(statisticsList);

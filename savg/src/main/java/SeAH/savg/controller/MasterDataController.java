@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class MasterDataController {
 
