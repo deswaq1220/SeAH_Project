@@ -1,6 +1,6 @@
 package SeAH.savg.repository;
 
-import SeAH.savg.entity.RegularName;
+import SeAH.savg.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,5 +33,17 @@ public interface RegularInspectionRepository extends JpaRepository<RegularName, 
                 "GROUP BY r.regularInsName, MONTH(r.speDate)")
         List<Object[]> regularDetailListByName(@Param("year") int year);*/
 
+    //정기점검 항목 불러오기(주조/압출 등 )
+    @Query("SELECT rp.partMenu FROM RegularPart rp ORDER BY rp.partNum")
+    List<String> regularPartList();
+
+
+
+    //정기점검 목록 조회
+    @Query("SELECT r FROM RegularInspection r WHERE YEAR(r.regularDate)=:year AND MONTH(r.regularDate) =:month")
+    List<RegularInspection> findAllByRegularDate(@Param("year") int year, @Param("month") int month);
+
+
+    RegularInspection findByRegularIdOrderByRegularDate(String regularId);
 
 }

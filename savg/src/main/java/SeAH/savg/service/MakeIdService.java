@@ -31,9 +31,10 @@ public class MakeIdService {
             if(categoryType.equals("S")) {      // 수시점검
                 categoryRepository = specialInspectionRepository.findAllByMaxSeq(todayYearAndMonth);
             }
-//            else if(categoryType.equals("R")){     // 정기점검
-//                categoryRepository = regularInspectionRepository.findAllByMaxSeq(todayYearAndMonth);
-//            }
+            else if(categoryType.equals("R")){     // 정기점검
+                categoryRepository = regularInspectionRepository.findAllByMaxSeq(todayYearAndMonth);
+            }
+
         else if(categoryType.equals("E")){     // 안전교육
                 categoryRepository = eduRepository.findAllByMaxSeq(todayYearAndMonth);
             }

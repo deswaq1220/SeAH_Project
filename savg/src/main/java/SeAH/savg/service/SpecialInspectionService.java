@@ -254,7 +254,6 @@ public class SpecialInspectionService {
         return responseData;
     }
 
-
     // 수시점검 전체조회 검색
     public Map<String, Object> searchList(String spePart, String speFacility, LocalDateTime speStartDateTime,
                                           LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum){
@@ -290,7 +289,6 @@ public class SpecialInspectionService {
         return searchSpeList;
 
     }
-
 
 
 // ----------------------------------------------------------------------------------------------------------

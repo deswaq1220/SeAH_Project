@@ -16,5 +16,4 @@ public class RegularName {
 
     @Column(nullable = false)
     private int regularNum;           // 순서
-
 }

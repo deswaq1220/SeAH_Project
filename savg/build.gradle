@@ -36,7 +36,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.2'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-    testImplementation 'org.projectlombok:lombok:1.18.26'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.5' // 라이브러리 버전은 프로젝트에 맞게 설정하세요
+
+	testImplementation 'org.projectlombok:lombok:1.18.26'
 	testImplementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -75,6 +77,8 @@ dependencies {
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
+
+	implementation 'org.springframework.boot:spring-boot-devtools:2.7.10'
 }
 
 tasks.named('test') {
