@@ -1,6 +1,7 @@
 package SeAH.savg.service;
 
 import SeAH.savg.repository.EduRepository;
+import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.SpecialInspectionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.AopInvocationException;
@@ -14,7 +15,7 @@ import java.util.Date;
 public class MakeIdService {
     public final SpecialInspectionRepository specialInspectionRepository;
     public final EduRepository eduRepository;
-//    public final RegularInspectionRepository regularInspectionRepository;
+    public final RegularInspectionRepository regularInspectionRepository;
 
     private String makingId = "";   // id 저장할 변수
     private String previousYearAndMonth = "";      // 이전 todayYearAndMonth 저장할 변수

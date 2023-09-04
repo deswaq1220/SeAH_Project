@@ -81,35 +81,35 @@ public class RegularInspectionService {
 
         ObjectMapper mapper = new ObjectMapper();
 
-            List<RegularDetailDTO> list = mapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
+        List<RegularDetailDTO> list = mapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
 
 
-            for(RegularDetailDTO regularDetailDTO:  list){
-                //상세정보 등록
-                RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
-                regularInspectionCheck.setRegularInspection(savedRegularInspection);
-                regularInspectionCheck.setRegularCheck(regularDetailDTO.getRegularCheck());
+        for(RegularDetailDTO regularDetailDTO:  list){
+            //상세정보 등록
+            RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
+            regularInspectionCheck.setRegularInspection(savedRegularInspection);
+            regularInspectionCheck.setRegularCheck(regularDetailDTO.getRegularCheck());
 
-                RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
+            RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
 
-                if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
-                    RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
-                    regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
-                    regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
+            if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
+                RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
+                regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
+                regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
 
-                    regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
-                    regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
-                    regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
+                regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
+                regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
+                regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
 //                regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
 
-                    regularInspectionBadRepository.save(regularInspectionBadEntity);
+                regularInspectionBadRepository.save(regularInspectionBadEntity);
 //                eduFileService.uploadFile2(regularInspection, regularDetailDTO);
 
-                }
             }
-
-
         }
+
+
+    }
 
     //정기점검 목록 조회
     public List<RegularInspection> getRegularByDate(int year, int month){
@@ -143,4 +143,5 @@ public class RegularInspectionService {
 
         return regularDetailDTO;
     }
+
 }
