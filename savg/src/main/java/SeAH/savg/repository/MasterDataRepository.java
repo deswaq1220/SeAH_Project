@@ -27,4 +27,7 @@ public interface MasterDataRepository extends JpaRepository<MasterData, Integer>
 
     // 설비코드에 해당하는 설비 찾기
     MasterData findByMasterdataId(String masterdataId);
+
+    // id찾아서 삭제
+    String deleteByMasterdataId(String masterdataId);
 }

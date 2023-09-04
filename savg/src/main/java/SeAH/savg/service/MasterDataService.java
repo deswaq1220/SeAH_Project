@@ -85,8 +85,8 @@ public class MasterDataService {
 
         // 기준정보 삭제
         @Transactional
-        public void deleteMaster(Integer masterdataId){
-            masterDataRepository.deleteById(masterdataId);
+        public void deleteMaster(String masterdataId){
+            masterDataRepository.deleteByMasterdataId(masterdataId);
         }
 
 
