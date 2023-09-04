@@ -32,21 +32,11 @@ public class SpecialListStatisticsServiceTest {
     }*/
 
 
-/*    @Test
+    @Test
     public void testSpecialCountList(){
         List<Map<String, Object>> result = specialInspectionService.setSpecialCountList(2023);
         System.out.println(result);
 
-    }*/
-/*    @Test
-    public void testSpecialCountListMonth(){
-        List<Object[]> result = specialInspectionService.specialDetailListByCauseAndMonth(2023,8);
-
-        for(Object[] row : result){
-            String cause = (String) row[0];
-            Long count = (Long) row[1];
-            System.out.println(cause + count);
-        }
-    }*/
+    }
 }
 

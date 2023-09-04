@@ -64,8 +64,9 @@ public class EduController {
 
 
     //교육일지 목록 조회
-    @GetMapping("/edumain")
+    @GetMapping("/eduMain")
     public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
+        log.info("에듀메인");
         List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
 
         int i = 0;
@@ -154,7 +155,7 @@ public class EduController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    
+
     //교육삭제
     @DeleteMapping("/edudetails/{eduId}")
     public ResponseEntity<?> deleteEduAndFiles(@PathVariable String eduId) {
@@ -207,10 +208,10 @@ public class EduController {
     // 2. 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명) (3000/edustatics/atten)
     @GetMapping("/edustatistics/atten")
     public ResponseEntity<HashMap<String,List<Object>>> viewMonthEduStatis(@RequestParam(name = "eduCategory", required = false) edustate eduCategory,
-                                                                     @RequestParam(name = "year") int year,
-                                                                     @RequestParam(name = "month") int month,
-                                                                     @RequestParam(name = "department", defaultValue = "") String department,
-                                                                     @RequestParam(name = "name") String name) {
+                                                                           @RequestParam(name = "year") int year,
+                                                                           @RequestParam(name = "month") int month,
+                                                                           @RequestParam(name = "department", defaultValue = "") String department,
+                                                                           @RequestParam(name = "name") String name) {
         System.out.println("이름: " + name);
         System.out.println("카테고리: " + eduCategory);
         if(department != null ){

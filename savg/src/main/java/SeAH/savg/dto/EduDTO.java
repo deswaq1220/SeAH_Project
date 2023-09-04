@@ -45,7 +45,7 @@ public class EduDTO {
 
     @NotNull(message = "교육대상을 선택하세요")
     private edustate eduTarget; //교육대상 : 현장/사무/전체
-    
+
     @NotEmpty(message = "내용을 입력하세요")
     private String eduContent; //교육내용
 
