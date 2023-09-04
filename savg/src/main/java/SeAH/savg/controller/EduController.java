@@ -64,7 +64,7 @@ public class EduController {
 
 
     //교육일지 목록 조회
-    @GetMapping("/eduMain")
+    @GetMapping("/edumain")
     public ResponseEntity<List<EduDTO>> getEduList(@RequestParam int year, @RequestParam int month) {
         log.info("에듀메인");
         List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
@@ -102,7 +102,6 @@ public class EduController {
             Edu edu = eduDTO.toEntity();
             eduRepository.save(edu); // Edu 엔티티 저장
 
-
             if (eduDTO.getFiles() == null || eduDTO.getFiles().isEmpty()) {
                 log.info("파일 없음");
             } else {
@@ -113,8 +112,6 @@ public class EduController {
                     eduFile.setEdu(edu); // EduFile 엔티티와 연결
                 }
             }
-
-
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

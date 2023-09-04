@@ -50,8 +50,6 @@ public class EduService {
 
     public void update(EduDTO eduDTO)throws Exception{
         Edu edu = eduDTO.toEntity();
-
-
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         if(eduDTO.getEduFileIds()!=null){
             for(Long eduFileId: eduDTO.getEduFileIds()){
@@ -69,7 +67,6 @@ public class EduService {
             eduFileService.uploadFile(eduDTO);
             eduRepository.save(edu);
         }
-
 
     }
 
