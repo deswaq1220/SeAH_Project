@@ -13,11 +13,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Entity;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -144,4 +142,208 @@ public class RegularInspectionService {
         return regularDetailDTO;
     }
 
+
+
+
+
+//----------------------------------------------------통계 관련
+    //월간
+    //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건
+    public List<Map<String, Object>> RegularCntByCheckAndMonth(int year, int month){
+        List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonth(year, month);
+
+        List<Map<String, Object>> finalData = new ArrayList<>();
+        for(Object[] row : data){
+            RegStatus regularCheck = (RegStatus) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> middleData = new HashMap<>();
+
+            if(regularCheck.equals(RegStatus.GOOD)){
+                middleData.put("id", "양호");
+                middleData.put("label", "양호");
+            } else if(regularCheck.equals(RegStatus.BAD)){
+                middleData.put("id", "불량");
+                middleData.put("label", "불량");
+            } else if(regularCheck.equals(RegStatus.NA)){
+                middleData.put("id", "NA");
+                middleData.put("label", "NA");
+            } else{
+                middleData.put("id", "error");
+                middleData.put("label", "error");
+                log.error("에러발생");
+            };
+
+            middleData.put("value", count);
+
+            finalData.add(middleData);
+        }
+        return finalData;
+    }
+
+
+    //(pieChart) 월간 정기점검 체크 값: GOOD ()건, BAD ()건 - sort
+    public List<Map<String, Object>> RegularCntByCheckAndMonthSort(int year, int month, String regularInsName){
+        List<Object[]> data = regularStatisticsRepository.regularCntByCheckAndMonthSortName(year, month, regularInsName);
+
+        List<Map<String, Object>> finalData = new ArrayList<>();
+        for(Object[] row : data){
+            RegStatus regularCheck = (RegStatus) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> middleData = new HashMap<>();
+
+            if(regularCheck.equals(RegStatus.GOOD)){
+                middleData.put("id", "양호");
+                middleData.put("label", "양호");
+            } else if(regularCheck.equals(RegStatus.BAD)){
+                middleData.put("id", "불량");
+                middleData.put("label", "불량");
+            } else if(regularCheck.equals(RegStatus.NA)){
+                middleData.put("id", "NA");
+                middleData.put("label", "NA");
+            } else{
+                middleData.put("id", "error");
+                middleData.put("label", "error");
+                log.error("에러발생");
+            };
+            middleData.put("value", count);
+
+            finalData.add(middleData);
+        }
+        return finalData;
+    }
+
+    //(pieChart) 월간 정기점검 체크 값 드롭다운 생성
+    public List<String> RegularNameList(){
+
+        List<String> specialPartList = regularStatisticsRepository.RegularNameList();
+
+        return specialPartList;
+    }
+
+
+    //(radarChart) 월간 영역별 정기점검 건수 통계 - 선택 제외, 직접입력은 '기타'로 일원화
+    @Transactional
+    public List<Map<String, Object>> regularDetailListByPartAndMonth(int year, int month){
+        List<Object[]> regularList = regularStatisticsRepository.regularListByPartAndMonth(year, month); //전체 리스트 가져오기
+
+        //'기타(직접입력)'에 값 수정: 통계로 보여줄 때 기타(직접입력)으로 보여주기 위함.
+        Long allValue = regularStatisticsRepository.regularCountByPartAndMonth(year, month);//모든값
+        System.out.println("전체값 :   " + allValue);
+        Long otherExcluedallValue = regularStatisticsRepository.regularCountOtherExcludedByPartAndMonth(year, month); //모든값-예외값
+        System.out.println("모든값-예외값 :   " + otherExcluedallValue);
+
+
+        //기타 수정값 넣기
+        for (Object[] value : regularList) {
+            if ("기타(직접입력)".equals(value[0])) { // 값이 기타(직접입력)이면
+
+                value[1] = allValue - otherExcluedallValue; // 기타에 해당하는 값 수정값으로 변경
+                String part = (String) value[0];
+                Long count = (Long) value[1];
+                System.out.println("기타(직접입력)일원화:   "+ part + count);
+                break; // 수정 후 루프 종료
+            }
+        }
+
+        // "선택" 값을 제외한 새로운 리스트 생성
+        List<Map<String, Object>> filteredList = new ArrayList<>();
+        for (Object[] row : regularList) {
+            String part = (String) row[0];
+            Long count = (Long) row[1];
+            /*            System.out.println("기타(직접입력)일원화:   "+ part + count);*/
+            if (!part.equals("선택")) { //"선택" 제거
+                Map<String, Object> dataPoint = new HashMap<>();
+                dataPoint.put("sort", part);
+                dataPoint.put("정기점검", count);
+                filteredList.add(dataPoint);
+            }
+        }
+
+        System.out.println(filteredList);
+        return filteredList;
+    }
+
+    //(엑셀용) 월간 점검종류별 점검건수// 진행중
+/*    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
+        List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
+
+        List<Map<String, Object>> finalList = new ArrayList<>();
+
+        for(Object[] row : regularList){
+
+            String name = (String) row[0];
+            Long count = (Long) row[1];
+
+            Map<String, Object> dataPoint = new HashMap<>();
+            dataPoint.put(name,count);
+            finalList.add(dataPoint);
+        }
+
+        finalList.sort(Comparator.comparing(o -> o.keySet().iterator().next())); // sort하기
+
+        return finalList;
+    }*/
+
+    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
+        List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
+
+        List<Map<String, Object>> finalList = new ArrayList<>();
+        Map<String, Map<String, Object>> middleList = new HashMap<>(); //같은 name으로 묶기위함
+
+        for(Object[] row : regularList){
+
+            String name = (String) row[0];
+            RegStatus value = (RegStatus) row[1];
+            Long count = (Long) row[2];
+
+            Map<String, Object> dataPoint = middleList.get(name);
+
+            //name에 맞는 dataPoint가 없으면 새로 배열 생성
+            if(dataPoint == null){
+                dataPoint = new HashMap<>();
+                middleList.put(name,dataPoint);
+            }
+
+            dataPoint.put(value.toString(),count);
+            middleList.put(name, dataPoint);
+        }
+        finalList.add(new HashMap<>(middleList));
+        finalList.sort(Comparator.comparing(o -> o.keySet().iterator().next())); // sort하기
+
+        return finalList;
+    }
+
+    //연간
+    //1~12월까지 월간 정기점검종류별 점검건수
+    @Transactional
+    public List<Map<String,Object>> regularCountListByNameAndYear(int year){
+        List<Object[]> regularList = regularStatisticsRepository.regularDetailListByNameAndYear(year);
+
+        Map<Integer, Map<String, Object>> dataByYear = new HashMap<>();
+
+        for(Object[] row : regularList){
+
+            Integer month = (Integer) row[0];
+            String regularName = (String) row[1];
+            Long count = (Long) row[2];
+
+            if(!dataByYear.containsKey(month)){
+                Map<String, Object> dataPoint = new HashMap<>();
+                dataPoint.put("month", month); //형태: "month":9월
+                dataByYear.put(month, dataPoint); //형태: 9월:"month":9월
+            }
+            Map<String, Object> dataPoint = dataByYear.get(month);
+            dataPoint.put(regularName, count);
+            //dataPoin 형태 =    "month": 9월
+            //                  "중대재해": 7
+        }
+        List<Map<String, Object>> finalData = new ArrayList<>(dataByYear.values());
+
+        return finalData;
+    }
+
 }
+
+

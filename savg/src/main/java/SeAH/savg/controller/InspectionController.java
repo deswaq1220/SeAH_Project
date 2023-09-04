@@ -25,10 +25,13 @@ import java.util.Map;
 //기타 점검관련 사항 관리하는 컨트롤러
 public class InspectionController {
 
-    private final SpecialInspectionService specialInspectionService;
-    private final RegularInspectionService regularInspectionService;
     private final InspectionService inspectionService;
 
+    @GetMapping("/statistics/inspectioncount")
+    public ResponseEntity<List<Map<String, Object>>> getInspectionCountList(@RequestParam("year") int year){
+        List<Map<String, Object>> specialStatisticsList = inspectionService.setCountList(year);
 
+        return new ResponseEntity<>(specialStatisticsList, HttpStatus.OK);
+    }
 
 }
