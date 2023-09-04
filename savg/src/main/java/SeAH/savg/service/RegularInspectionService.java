@@ -69,7 +69,7 @@ public class RegularInspectionService {
     private String categoryType = "R";
 
     //정기점검 등록
-    public void createRegular(RegularDTO regularDTO) throws JsonProcessingException {
+    public void createRegular(RegularDTO regularDTO) throws Exception {
         //정기점검 ID 부여 -> ex.R2308-00
         regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
@@ -77,8 +77,9 @@ public class RegularInspectionService {
         regularInspection.setRegularEmail(regularDTO.getRegularEmail());
 
 
-        RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
 
+        RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
+        eduFileService.uploadFile2(regularInspection, regularDTO);
         ObjectMapper mapper = new ObjectMapper();
 
             List<RegularDetailDTO> list = mapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
@@ -100,10 +101,10 @@ public class RegularInspectionService {
                     regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
                     regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
                     regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-//                regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
+                    regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
 
                     regularInspectionBadRepository.save(regularInspectionBadEntity);
-//                eduFileService.uploadFile2(regularInspection, regularDetailDTO);
+
 
                 }
             }
