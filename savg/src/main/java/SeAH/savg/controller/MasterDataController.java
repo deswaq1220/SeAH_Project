@@ -78,7 +78,7 @@ public class MasterDataController {
 
     // 설비삭제
     @DeleteMapping("/master/delete/{masterdataId}")
-    public ResponseEntity<String> masterDelete(@PathVariable Integer masterdataId){
+    public ResponseEntity<String> masterDelete(@PathVariable String masterdataId){
         masterDataService.deleteMaster(masterdataId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
