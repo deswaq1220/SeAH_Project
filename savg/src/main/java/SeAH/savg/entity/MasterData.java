@@ -12,8 +12,7 @@ import javax.persistence.*;
 public class MasterData {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int masterdataId;                // id
+    private String masterdataId;                // id
 
     @Column(nullable = false)
     private String masterdataPart;           // 영역
@@ -23,7 +22,7 @@ public class MasterData {
 
 
     @Builder
-    MasterData(int masterdataId, String masterdataPart, String masterdataFacility) {
+    MasterData(String masterdataId, String masterdataPart, String masterdataFacility) {
         this.masterdataId = masterdataId;
         this.masterdataPart = masterdataPart;
         this.masterdataFacility = masterdataFacility;
@@ -31,6 +30,7 @@ public class MasterData {
 
     public static MasterData createMaster(MasterDataFormDTO masterDataFormDTO) {
         return MasterData.builder()
+                .masterdataId(masterDataFormDTO.getMasterdataId())
                 .masterdataPart(masterDataFormDTO.getMasterdataPart())
                 .masterdataFacility(masterDataFormDTO.getMasterdataFacility())
                 .build();
@@ -38,4 +38,3 @@ public class MasterData {
 
 
 }
-
