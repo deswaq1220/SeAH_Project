@@ -156,12 +156,12 @@ public class RegularController {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
 
-        List<Map<String, Object>> statisticsList = regularInspectionService.regularCntListByNameAndYearForExcel(year, month);
+        List<Map<String, Map<String,Long>>> statisticsList = regularInspectionService.regularCntListByNameAndYearForExcel(year, month);
 
         return ResponseEntity.ok(statisticsList);
     }
 
-
+    
     //(pieChart) 월간 정기점검 위험성평가분석 데이터 값(전체)
     @GetMapping("/admin/regular/statistics/checkvaluecount")
     public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth){
