@@ -3,7 +3,6 @@ package SeAH.savg.service;
 
 import SeAH.savg.dto.EduDTO;
 import SeAH.savg.dto.RegularDTO;
-import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
 import SeAH.savg.entity.RegularFile;
@@ -11,12 +10,10 @@ import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import SeAH.savg.repository.RegularFileRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -26,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+
 @Log4j2
 @Service
 public class EduFileService {
@@ -36,9 +33,9 @@ public class EduFileService {
 
     @Autowired
     private EduFileRepository eduFileRepository;
-//    public EduFileService(EduFileRepository eduFileRepository) {
-//        this.eduFileRepository = eduFileRepository;
-//    }
+
+    @Autowired
+    private final FileService fileService;
 
     @Autowired
     private RegularFileRepository regularFileRepository;
@@ -46,25 +43,31 @@ public class EduFileService {
     @Value("${eduFileLocation}")
     private  String eduFileLocation;
 
+    public EduFileService(FileService fileService) {
+        this.fileService = fileService;
+    }
+
 
     //파일 등록
-    public List<EduFile> uploadFile(EduDTO eduDTO) throws Exception {
+    public List<EduFile> uploadFile(EduDTO eduDTO, String eduCatory) throws Exception {
         Edu edu = eduRepository.findByEduId(eduDTO.getEduId());
         List<EduFile> uploadedFiles = new ArrayList<>();
-        String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+
+        String todayDate = new SimpleDateFormat("yyMMdd").format(new Date());
+
         List<MultipartFile> files = eduDTO.getFiles();
         for (MultipartFile file : files) {
+            byte[] resizedImageData = fileService.resizeImageToByteArray(file);
             String originalFilename = file.getOriginalFilename();
-            String fileUploadFullUrl = eduFileLocation + File.separator + todayDate + "_" + originalFilename;
+            String makeEduFileName = fileService.makeEduFileName(eduFileLocation, originalFilename, eduCatory, resizedImageData);
+            String fileUploadFullUrl = "/images/edu/" + makeEduFileName;  // 업로드 url
 
             System.out.println("파일경로: " + fileUploadFullUrl);
-            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-            fos.write(file.getBytes());
-            fos.close();
+
 
             // 파일 정보 생성 및 저장
             EduFile eduFile = new EduFile();
-            eduFile.setEduFileName(todayDate + "_" + originalFilename);
+            eduFile.setEduFileName(makeEduFileName);
             eduFile.setEduFileOriName(originalFilename);
             eduFile.setEduFileUrl(fileUploadFullUrl);
             eduFile.setEdu(edu);
@@ -76,6 +79,7 @@ public class EduFileService {
         return uploadedFiles;
     }
 
+    //여기 교육인데 왜 정기점검이 있나요 정답을 알려조
     public void uploadFile2(RegularInspection regularInspection, RegularDTO regularDTO) throws Exception {
 
         List<RegularFile> uploadedFiles = new ArrayList<>();

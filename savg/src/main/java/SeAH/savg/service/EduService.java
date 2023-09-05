@@ -42,16 +42,33 @@ public class EduService {
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         EduDTO eduDTO = new EduDTO(edu);
+        log.info("시간 체크 " +eduDTO.getEduUpdateTime());
 
+        if (!eduFileList.isEmpty()) {
+            List<String> imageUrls = new ArrayList<>(); // 이미지 url
+
+            for (EduFile eduFile : eduFileList) {
+                String imagePath = eduFile.getEduFileUrl();
+                imageUrls.add(imagePath);
+            }
+
+            eduDTO.setEduimgurls(imageUrls);
+        }
         eduDTO.setEduFileList(eduFileList);
 
         return eduDTO;
     }
 
-    public void update(EduDTO eduDTO)throws Exception{
+    //교육수정
+    public void update(EduDTO eduDTO, String eduCategory)throws Exception{
+//        eduDTO.setEduRegTime(eduDTO.getEduRegTime());
         Edu edu = eduDTO.toEntity();
+
+//        edu.setEduRegTime(LocalDateTime.now());
+
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         if(eduDTO.getEduFileIds()!=null){
+//        if(!eduDTO.getEduFileIds().isEmpty()){
             for(Long eduFileId: eduDTO.getEduFileIds()){
                 for(EduFile eduFile : eduFileList){
                     if(eduFile.getEduFileId() == eduFileId){
@@ -62,9 +79,10 @@ public class EduService {
         }
 
         if(eduDTO.getFiles()==null){
+//        if(eduDTO.getFiles().isEmpty()){
             eduRepository.save(edu);
         }else {
-            eduFileService.uploadFile(eduDTO);
+            eduFileService.uploadFile(eduDTO, eduCategory);
             eduRepository.save(edu);
         }
 

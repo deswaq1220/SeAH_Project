@@ -39,7 +39,10 @@ public class EduDTO {
     private LocalDateTime eduStartTime; // 교육시작시각
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
-    private LocalDateTime eduEndTime; // 교육종료시각
+    private LocalDateTime eduRegTime; // 교육등록시각
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime eduUpdateTime; // 교육수정시각
 
     private String eduSumTime; // 교육시간
 
@@ -51,6 +54,8 @@ public class EduDTO {
 
     @NotEmpty(message = "작성자를 입력하세요")
     private String eduWriter; //작성자
+
+    private List<String> eduimgurls;  // 파일 경로
 
     private List<Long> eduFileIds; //파일 수정에 필요한 ID
 
@@ -69,7 +74,9 @@ public class EduDTO {
             this.eduInstructor = edu.getEduInstructor();
             this.eduPlace = edu.getEduPlace();
             this.eduStartTime = edu.getEduStartTime();
-            this.eduSumTime = edu.getEduSumTime(); // eduSumTime 추가
+            this.eduRegTime=edu.getRegTime();
+            this.eduUpdateTime = edu.getUpdateTime();
+            this.eduSumTime = edu.getEduSumTime();
             this.eduTarget = edu.getEduTarget();
             this.eduContent = edu.getEduContent();
             this.eduWriter = edu.getEduWriter();

@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,13 +70,11 @@ public class EduController {
         log.info("에듀메인");
         List<Edu> eduList = eduService.getEduByYearAndMonth(year, month);
 
-        int i = 0;
-
         List<EduDTO> eduDTOList = new ArrayList<>();
 
         for (Edu edu : eduList) {
-            eduDTOList.add(eduService.getEduById(edu.getEduId()));
 
+            eduDTOList.add(eduService.getEduById(edu.getEduId()));
         }
 
         return ResponseEntity.ok(eduDTOList);
@@ -84,8 +83,8 @@ public class EduController {
 
     //안전교육 일지 등록
     @PostMapping("/edureg")
-    public ResponseEntity<?> handleEduReg(EduDTO eduDTO) {
-        System.out.println(eduDTO);
+    public ResponseEntity<?> handleEduReg(EduDTO eduDTO, String eduCategory) {
+
         try {
             // 데이터 처리 로직: 유효성 검사
             if (eduDTO.getEduContent() == null || eduDTO.getEduContent().isEmpty()) {
@@ -94,10 +93,13 @@ public class EduController {
             if (eduDTO.getEduInstructor() == null || eduDTO.getEduInstructor().isEmpty()) {
                 return ResponseEntity.badRequest().body("Edu Instructor is required.");
             }
+
 //        log.info(eduDTO.getFiles());
             // 데이터 처리 로직: 데이터 저장
             // DTO에 아이디 세팅
             eduDTO.setEduId(makeIdService.makeId(categoryType));
+
+//            eduDTO.setEduRegTime(LocalDateTime.now());
 
             Edu edu = eduDTO.toEntity();
             eduRepository.save(edu); // Edu 엔티티 저장
@@ -107,7 +109,7 @@ public class EduController {
             } else {
                 log.info("파일 있음: ");
                 // 데이터 처리 로직: 파일 업로드 및 파일 정보 저장
-                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO);
+                List<EduFile> uploadedFiles = eduFileService.uploadFile(eduDTO, eduCategory);
                 for (EduFile eduFile : uploadedFiles) {
                     eduFile.setEdu(edu); // EduFile 엔티티와 연결
                 }
@@ -120,8 +122,6 @@ public class EduController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
 
 
 
@@ -140,11 +140,11 @@ public class EduController {
 
     // 교육일지 수정
     @PostMapping("/edudetails/{eduId}")
-    public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO) {
+    public ResponseEntity<?> handleEduModify(@PathVariable String eduId, EduDTO eduDTO, String eduCategory) {
         try {
 
             eduDTO.setEduId(eduId);
-            eduService.update(eduDTO);
+            eduService.update(eduDTO, eduCategory);
 
             return ResponseEntity.ok().build();
         } catch (Exception e) {

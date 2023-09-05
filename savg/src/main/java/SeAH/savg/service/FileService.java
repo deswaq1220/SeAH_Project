@@ -1,6 +1,8 @@
 package SeAH.savg.service;
 
+import SeAH.savg.entity.EduFile;
 import SeAH.savg.entity.SpecialFile;
+import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FileService {
  private final SpeicalFileRepository speicalFileRepository;
+ private final EduFileRepository eduFileRepository;
 
  // 파일 이름 세팅
  public String makeFileName(String uploadPath, String originalFileName, String facilityName, byte[] fileData) throws Exception{
@@ -31,18 +34,25 @@ public class FileService {
   fos.write(fileData);
   fos.close();
   return  savedFileName;
-
  }
 
-
+ // 교육  파일 이름 설정
+ public String makeEduFileName(String uploadPath,  String originalFileName, String eduCategory, byte[] fileData) throws Exception{
+  String savedFileName = newEduFileName(originalFileName, eduCategory);
+  String fileUploadFullUrl = uploadPath + "/" + savedFileName;
+  FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+  fos.write(fileData);
+  fos.close();
+  return  savedFileName;
+ }
 
  //파일명설정 : 오늘날짜_seqenceNumber_설비명_원본파일명 조합
  private List<SpecialFile> previousDatelist = null; // 이전날짜 저장하는 변수
  private int sequenceNumber = 0;
+
  private String generateUniqueFileName(String originalFilename, String facilityName) {
   String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
   previousDatelist = speicalFileRepository.findFilesByToday(todayDate);
-
   // DB에 저장된 오늘 날짜 구하기
   if(previousDatelist.isEmpty() || previousDatelist.size() == 0){
    // 오늘날짜 저장된게 없으면(다음날이면) : sequenceNumber 초기화
@@ -54,6 +64,27 @@ public class FileService {
   }
 
   String newName = todayDate + "_" +  sequenceNumber + "_" + facilityName + "_" + originalFilename;
+
+  return newName;
+ }
+
+ //교육
+ private List<EduFile> eduPreDateList = null; // 이전날짜 저장하는 변수
+ private String newEduFileName(String originalFilename, String eduCategory) {
+  String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+  eduPreDateList = eduFileRepository.findFilesByToday(todayDate);
+
+  // DB에 저장된 오늘 날짜 구하기
+  if(eduPreDateList.isEmpty() || eduPreDateList.size() == 0){
+   // 오늘날짜 저장된게 없으면(다음날이면) : sequenceNumber 초기화
+   sequenceNumber = 0;
+  } else{
+   // 오늘날짜중 가장 높은 seq찾아서 sequenceNumber++ 세팅하기
+   sequenceNumber = eduFileRepository.getMaxSeqNumberByToday(todayDate);
+   sequenceNumber++;
+  }
+
+  String newName = todayDate + "_" +  sequenceNumber + "_" + eduCategory + "_" + originalFilename;
 
   return newName;
  }
@@ -86,4 +117,7 @@ public class FileService {
   ImageIO.write(resizedImg, "jpg", baos);
   return baos.toByteArray();
  }
+
+
+
 }
