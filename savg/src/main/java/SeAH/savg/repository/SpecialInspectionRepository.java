@@ -78,6 +78,14 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
             "GROUP BY c.causeMenu")
     List<Object[]> specialListByCauseAndMonth(@Param("year") int year, @Param("month") int month);
 
+
+    //(엑셀용) 월간 영역별 점검건 수(기타- 입력한 내용으로 출력됨)
+    @Query("SELECT s.speCause, Count(s) " +
+            "FROM SpecialInspection s " +
+            "WHERE YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
+            "GROUP BY s.speCause")
+    List<Object[]> specialListByCauseAndMonthForExcel(@Param("year") int year, @Param("month") int month);
+
     //월간 수시점검 통계 조회 - 위험원인별 발생 건 수(전체 값)
     @Query("SELECT COUNT(s) " +
             "FROM SpecialInspection s " +
