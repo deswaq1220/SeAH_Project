@@ -168,7 +168,10 @@ public class SpecialInspectionService {
 
         // 수시점검 데이터
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
-        detailMap.put("specialData", special);
+        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();
+        modelMapper.map(special, speInsFormDTO);
+
+        detailMap.put("specialData", speInsFormDTO);
 
         // 설비코드
         String facilityName = special.getSpeFacility();
@@ -208,7 +211,9 @@ public class SpecialInspectionService {
         System.out.println("-------------서비스 speDto: " +speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
         String facilityName = special.getSpeFacility();     // 설비명
-
+        speInsFormDTO.setSpeDate(special.getSpeDate());
+        speInsFormDTO.setSpePart(special.getSpePart());
+        SpeStatus.deadLineCal(speInsFormDTO);
         // 파일이 있으면 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             List<SpecialFile> uploadFiles;
@@ -225,6 +230,8 @@ public class SpecialInspectionService {
 
         // 완료여부가 OK일 경우만 완료시간 세팅
         if(speInsFormDTO.getSpeComplete() == OK){
+            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+        }else {
             speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
         }
 
@@ -271,6 +278,7 @@ public class SpecialInspectionService {
         QSpecialInspection qSpecialInspection = QSpecialInspection.specialInspection;
         BooleanBuilder builder = new BooleanBuilder();
 
+
         if (spePart != null) {
             builder.and(qSpecialInspection.spePart.eq(spePart));
         }
@@ -299,6 +307,8 @@ public class SpecialInspectionService {
         return searchSpeList;
 
     }
+
+
 
 
 // ----------------------------------------------------------------------------------------------------------

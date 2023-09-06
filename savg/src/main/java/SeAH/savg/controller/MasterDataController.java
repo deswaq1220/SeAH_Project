@@ -21,6 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@CrossOrigin("http://localhost:3000")
 public class MasterDataController {
 
 
@@ -96,6 +97,12 @@ public class MasterDataController {
         return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, emailId), HttpStatus.CREATED);
     }
 
+    // 이메일삭제
+    @DeleteMapping("/master/email/delete/{emailId}")
+    public ResponseEntity<?> emailDelete(@PathVariable Long emailId){
+        emailService.deleteEmail(emailId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 
 
@@ -134,7 +141,7 @@ public class MasterDataController {
     }
 
     //부서 삭제
-    @PostMapping("/master/department/del/{departmentId}")
+    @DeleteMapping("/master/department/del/{departmentId}")
     public ResponseEntity<?> delDepart(@PathVariable Long departmentId){
 
         masterDataService.delDepart(departmentId);
@@ -144,11 +151,11 @@ public class MasterDataController {
 
 
     //부서 수정
-    @PostMapping("/master/department/update/{departId}")
+    @PutMapping("/master/department/update/{departId}")
     public ResponseEntity<?> updateDepart(@PathVariable Long departId,
                                           @RequestBody MasterDataDepartmentDTO departmentDTO){
 
-        masterDataService.updateDepart(departmentDTO);
+        masterDataService.updateDepart(departmentDTO, departId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

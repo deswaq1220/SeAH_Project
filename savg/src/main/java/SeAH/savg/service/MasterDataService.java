@@ -147,17 +147,20 @@ public class MasterDataService {
     }
 
     //부서 수정하기
-    @Transactional
-    public MasterDataDepartmentDTO updateDepart(MasterDataDepartmentDTO departmentDTO){ //depart2: 수정해야하는 값, departmentDTO: 수정 값
+//    @Transactional
+    public MasterDataDepartmentDTO updateDepart(MasterDataDepartmentDTO departmentDTO, Long id){ //depart2: 수정해야하는 값, departmentDTO: 수정 값
         try{
 
-            Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(departmentDTO.getDepartmentId());
+            Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(id);
+            log.info("departmentDTO.getDepartmentId()" + departmentDTO.getDepartmentId());
 
             //변경값이 존재할 경우
             if(target.isPresent()){
 
                 Long departmentId = departmentDTO.getDepartmentId();
                 String departmentName = departmentDTO.getDepartmentName();
+
+                log.info("departmentId" + departmentId);
 
                 masterDataDepartmentRepository.updateDepartment(departmentId, departmentName);
 

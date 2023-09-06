@@ -32,10 +32,10 @@ public class EmailService {
     @Transactional
     public Email saveEmail(EmailFormDTO emailFormDTO){
         // 이메일정보 등록
-         Email email = emailFormDTO.creatEmail();
-         emailRepository.save(email);
+        Email email = emailFormDTO.creatEmail();
+        emailRepository.save(email);
 
-         return email;
+        return email;
     }
 
     // 이메일 수정
@@ -53,5 +53,15 @@ public class EmailService {
 
         return email;
     }
+    // 이메일 삭제
+    @Transactional
+    public void deleteEmail(Long emailId){
+        // 이메일 정보 가져오기
+        Email email = emailRepository.findById(emailId).orElseThrow();
+
+        // 삭제
+        emailRepository.delete(email);
+    }
+
 
 }

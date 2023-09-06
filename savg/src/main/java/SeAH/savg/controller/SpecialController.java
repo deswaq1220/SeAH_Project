@@ -75,7 +75,7 @@ public class SpecialController {
 
 
     // 완료처리 / 수정(update)
-    @PostMapping("/user/special/detail/{speId}")
+    @PutMapping("/user/special/detail/{speId}")
     public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
     }
