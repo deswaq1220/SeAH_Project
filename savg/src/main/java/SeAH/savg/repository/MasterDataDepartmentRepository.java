@@ -30,7 +30,7 @@ public interface MasterDataDepartmentRepository extends JpaRepository<MasterData
     @Modifying
     @Transactional
     @Query("UPDATE MasterDataDepartment m SET m.departmentId = :departmentId, m.departmentName = :departmentName WHERE m.departmentId = :departmentId")
-    void updateDepartment(Long departmentId, String departmentName);
+    void updateDepartment(@Param("departmentId") Long departmentId, @Param("departmentName") String departmentName);
 }
 
 

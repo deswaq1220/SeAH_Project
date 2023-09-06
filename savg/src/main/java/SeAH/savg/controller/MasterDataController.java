@@ -155,7 +155,7 @@ public class MasterDataController {
     public ResponseEntity<?> updateDepart(@PathVariable Long departId,
                                           @RequestBody MasterDataDepartmentDTO departmentDTO){
 
-        masterDataService.updateDepart(departmentDTO);
+        masterDataService.updateDepart(departmentDTO, departId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
