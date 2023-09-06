@@ -77,7 +77,10 @@ public class RegularInspectionService {
 
 
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
-        eduFileService.uploadFile2(regularInspection, regularDTO);
+        if(regularDTO.getFile()!=null){
+            eduFileService.uploadFile2(regularInspection, regularDTO);
+        }
+
         ObjectMapper mapper = new ObjectMapper();
 
         List<RegularDetailDTO> list = mapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
