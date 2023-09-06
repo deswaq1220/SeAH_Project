@@ -5,8 +5,10 @@ import SeAH.savg.dto.EduDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
+import SeAH.savg.entity.MasterDataDepartment;
 import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
+import SeAH.savg.repository.MasterDataDepartmentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class EduService {
     private final EduRepository eduRepository;
     private final EduFileService eduFileService;
     private final EduFileRepository eduFileRepository;
+    private final MasterDataDepartmentRepository masterDataDepartmentRepository;
 
 
     //교육 목록
@@ -132,6 +135,15 @@ public class EduService {
         return sumMonthlyEduTimeList;
     }
 
+    public List<String> selectDepart(){
+        List<String> attenDepartList = new ArrayList<>();
+         List<MasterDataDepartment> masterDataDepartmentList = masterDataDepartmentRepository.findAll();
+
+        for(MasterDataDepartment master : masterDataDepartmentList){
+         attenDepartList.add(master.getDepartmentName());
+        }
+        return attenDepartList;
+    }
 
 
     // 2. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회

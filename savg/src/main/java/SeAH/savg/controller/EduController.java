@@ -201,6 +201,16 @@ public class EduController {
         return ResponseEntity.ok(statisticsList);
     }
 
+    //참석자통계 : 참석자 부서 리스트
+    @GetMapping("/edustatistics/attendepart")
+    public ResponseEntity<Map<String, Object>> attenDepartList(){
+        Map<String, Object> responseData = new HashMap<>();
+        List<String> attenDepartList = eduService.selectDepart();
+        responseData.put("attenDepartList", attenDepartList);
+
+        return ResponseEntity.ok(responseData);
+    }
+
 
     // 2. 월별 교육참석자 조회하기(카테고리별/ 카테고리+부서별/ 카테고리+성명) (3000/edustatics/atten)
     @GetMapping("/edustatistics/atten")
