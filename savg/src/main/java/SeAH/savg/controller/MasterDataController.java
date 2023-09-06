@@ -96,7 +96,12 @@ public class MasterDataController {
         return new ResponseEntity<>(emailService.updateEmail(emailFormDTO, emailId), HttpStatus.CREATED);
     }
 
-
+    // 이메일삭제
+    @DeleteMapping("/master/email/delete/{emailId}")
+    public ResponseEntity<String> emailDelete(@PathVariable Long emailId){
+        emailService.deleteEmail(emailId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
     //------------------------------------------부서 관리
