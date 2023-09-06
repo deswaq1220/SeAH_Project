@@ -18,7 +18,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
 
     // 안전교육 일지 조회 /edumain
-    @Query("SELECT e FROM Edu e WHERE YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month")
+    @Query("SELECT e FROM Edu e WHERE YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month ORDER BY e.regTime DESC")
     List<Edu> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
 
 

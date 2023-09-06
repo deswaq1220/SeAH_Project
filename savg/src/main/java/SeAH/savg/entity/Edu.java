@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor
-public class Edu {
+public class Edu extends BaseTimeEntity {
 
     @Id
     private String eduId;                    // id
@@ -39,8 +41,8 @@ public class Edu {
     @Column(nullable = false)
     private LocalDateTime eduStartTime;     //교육시작시각
 
-//    @Column(nullable = false)
-//    private LocalDateTime eduEndTime;       //교육종료시각
+//    @CreatedDate
+//    private LocalDateTime eduRegTime;       //교육등록시각
 
 //    @Column(nullable = false)
     private String eduSumTime;             //교육시간(분)

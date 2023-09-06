@@ -13,6 +13,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
 //@CrossOrigin(origins = "http://localhost:3000")
 @CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
@@ -84,9 +86,7 @@ public class RegularController {
 
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
-        public ResponseEntity<String> createRegularInspection(@ModelAttribute RegularDTO regularDTO)throws Exception {
-
-
+        public ResponseEntity<String> createRegularInspection(RegularDTO regularDTO)throws Exception {
 
 
 

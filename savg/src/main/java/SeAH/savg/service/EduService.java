@@ -5,8 +5,10 @@ import SeAH.savg.dto.EduDTO;
 import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
+import SeAH.savg.entity.MasterDataDepartment;
 import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
+import SeAH.savg.repository.MasterDataDepartmentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class EduService {
     private final EduRepository eduRepository;
     private final EduFileService eduFileService;
     private final EduFileRepository eduFileRepository;
+    private final MasterDataDepartmentRepository masterDataDepartmentRepository;
 
 
     //교육 목록
@@ -42,18 +45,33 @@ public class EduService {
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         EduDTO eduDTO = new EduDTO(edu);
+        log.info("시간 체크 " +eduDTO.getEduUpdateTime());
 
+        if (!eduFileList.isEmpty()) {
+            List<String> imageUrls = new ArrayList<>(); // 이미지 url
+
+            for (EduFile eduFile : eduFileList) {
+                String imagePath = eduFile.getEduFileUrl();
+                imageUrls.add(imagePath);
+            }
+
+            eduDTO.setEduimgurls(imageUrls);
+        }
         eduDTO.setEduFileList(eduFileList);
 
         return eduDTO;
     }
 
-    public void update(EduDTO eduDTO)throws Exception{
+    //교육수정
+    public void update(EduDTO eduDTO, String eduCategory)throws Exception{
+//        eduDTO.setEduRegTime(eduDTO.getEduRegTime());
         Edu edu = eduDTO.toEntity();
 
+//        edu.setEduRegTime(LocalDateTime.now());
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         if(eduDTO.getEduFileIds()!=null){
+//        if(!eduDTO.getEduFileIds().isEmpty()){
             for(Long eduFileId: eduDTO.getEduFileIds()){
                 for(EduFile eduFile : eduFileList){
                     if(eduFile.getEduFileId() == eduFileId){
@@ -64,12 +82,12 @@ public class EduService {
         }
 
         if(eduDTO.getFiles()==null){
+//        if(eduDTO.getFiles().isEmpty()){
             eduRepository.save(edu);
         }else {
-            eduFileService.uploadFile(eduDTO);
+            eduFileService.uploadFile(eduDTO, eduCategory);
             eduRepository.save(edu);
         }
-
 
     }
 
@@ -117,6 +135,15 @@ public class EduService {
         return sumMonthlyEduTimeList;
     }
 
+    public List<String> selectDepart(){
+        List<String> attenDepartList = new ArrayList<>();
+         List<MasterDataDepartment> masterDataDepartmentList = masterDataDepartmentRepository.findAll();
+
+        for(MasterDataDepartment master : masterDataDepartmentList){
+         attenDepartList.add(master.getDepartmentName());
+        }
+        return attenDepartList;
+    }
 
 
     // 2. 월별교육통계 조회하기 - 카테고리에 따른 교육참가자 조회 or 카테고리/부서에 따른 참가자 조회

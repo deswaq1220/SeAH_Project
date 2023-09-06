@@ -24,7 +24,7 @@ public class SpecialFileService {
     @Value("${speFileLocation}")
     private String speFileLocation;
 
-    // 파일 등록
+    //  수시점검 파일 등록
     public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO, String facilityName, SpeStatus isComplete) throws Exception {
         List<SpecialFile> uploadedFiles = new ArrayList<>();
 
@@ -54,13 +54,6 @@ public class SpecialFileService {
 
         return uploadedFiles;
     }
-
-
-
-
-
-
-
 
     // 파일 경로 반환
     private String getFilePath(String fileName) {
