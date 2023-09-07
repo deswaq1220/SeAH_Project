@@ -77,7 +77,10 @@ public class RegularInspectionService {
 
 
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
-        eduFileService.uploadFile2(regularInspection, regularDTO);
+        if(regularDTO.getFile()!=null){
+            eduFileService.uploadFile2(regularInspection, regularDTO);
+        }
+
         ObjectMapper mapper = new ObjectMapper();
 
         List<RegularDetailDTO> list = mapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
@@ -96,12 +99,12 @@ public class RegularInspectionService {
                 regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
                 regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
 
-                    regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
-                    regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
-                    regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-                    regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
+                regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
+                regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
+                regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
+                regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
 
-                    regularInspectionBadRepository.save(regularInspectionBadEntity);
+                regularInspectionBadRepository.save(regularInspectionBadEntity);
 
 
             }
@@ -118,6 +121,7 @@ public class RegularInspectionService {
     //상세조회
     public RegularDetailDTO getRegularById(String regularId) {
         List<Object[]> result = regularCheckRepository.getRegularInspectionDetail(regularId);
+
         if (result.isEmpty()) {
             return null;
         }

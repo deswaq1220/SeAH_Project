@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity @Table(name = "regular_inspection")
 @Getter @Setter @ToString
 
-public class RegularInspection {
+public class RegularInspection extends BaseTimeEntity{
 
     @Id
     private String regularId;                    // id

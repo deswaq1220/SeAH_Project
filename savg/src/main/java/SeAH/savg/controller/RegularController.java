@@ -117,7 +117,7 @@ public class RegularController {
 
     //정기점검 상세조회
     @GetMapping("/user/regular/detail/{regularId}")
-    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable String regularId){
+    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable("regularId") String regularId){
         RegularDetailDTO regularDetailDTO = regularInspectionService.getRegularById(regularId);
         if (regularDetailDTO == null){
             return ResponseEntity.notFound().build();
