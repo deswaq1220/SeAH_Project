@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,12 +87,16 @@ public class RegularController {
 
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
-        public ResponseEntity<String> createRegularInspection(RegularDTO regularDTO)throws Exception {
+        public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
+        LocalDateTime regularDate = regularInspectionService.createRegular(regularDTO);
+
+        // 응답 데이터 생성
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("message", "정기점검 등록 성공");
+        responseData.put("regularDate", regularDate);
 
 
-
-        regularInspectionService.createRegular(regularDTO);
-        return ResponseEntity.ok("정기점검 등록 성공");
+        return ResponseEntity.ok(responseData);
     }
 
 
