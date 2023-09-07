@@ -259,21 +259,24 @@ public class SpecialInspectionService {
 //    }
 
 
-    // 저장된 영역, 설비 리스트
-    public Map<String, Object> getPartAndFacilityDataList(){
+    // 저장된 영역, 설비, 위험분류 리스트
+    public Map<String, Object> getPartAndFacilityAndDangerList(){
         Map<String, Object> responseData = new HashMap<>();
-        List<SpecialPart> specialPartList = specialPartRepository.findAllOrderByPartNum();        // 영역 리스트
+        List<SpecialPart> specialPartList = specialPartRepository.findAllOrderByPartNum();             // 영역 리스트
         List<MasterData> facilityList = masterDataRepository.findAllOrderBymasterdataId();             // 설비 리스트
+        List<SpecialDanger> dangerList = specialDangerRepository.findAllOrderByDangerNum();             // 위험분류 리스트
 
         responseData.put("specialPartList", specialPartList);
         responseData.put("facilityList", facilityList);
+        responseData.put("dangerList", dangerList);
+
 
         return responseData;
     }
 
     // 수시점검 전체조회 검색
     public Map<String, Object> searchList(String spePart, String speFacility, LocalDateTime speStartDateTime,
-                                          LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum){
+                                          LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum, String speDanger){
         Map<String, Object> searchSpeList = new HashMap<>();
         QSpecialInspection qSpecialInspection = QSpecialInspection.specialInspection;
         BooleanBuilder builder = new BooleanBuilder();
@@ -284,6 +287,9 @@ public class SpecialInspectionService {
         }
         if (speFacility != null) {
             builder.and(qSpecialInspection.speFacility.eq(speFacility));
+        }
+        if (speFacility != null) {
+            builder.and(qSpecialInspection.speDanger.eq(speDanger));
         }
         if (speStartDateTime != null && speEndDateTime != null) {
             builder.and(qSpecialInspection.speDate.between(speStartDateTime, speEndDateTime));

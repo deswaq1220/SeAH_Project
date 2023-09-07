@@ -97,7 +97,8 @@ public class SpecialController {
                                          @RequestParam (value = "speEndDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speEndDate,
                                          @RequestParam (value = "speComplete",required = false) SpeStatus speComplete,
                                          @RequestParam (value = "spePerson",required = false) String spePerson,
-                                         @RequestParam (value = "speEmpNum",required = false) String speEmpNum
+                                         @RequestParam (value = "speEmpNum",required = false) String speEmpNum,
+                                         @RequestParam (value = "speDanger",required = false) String speDanger
     ) {
         System.out.println("컨트롤러 들어왔다");
         System.out.println("spePart: "+spePart);
@@ -107,6 +108,7 @@ public class SpecialController {
         System.out.println("speComplete: "+speComplete);
         System.out.println("spePerson: "+spePerson);
         System.out.println("speEmpNum: "+speEmpNum);
+        System.out.println("speDanger: "+speDanger);
 
         Map<String, Object> responseData = new HashMap<>();
 
@@ -118,11 +120,13 @@ public class SpecialController {
             speEndDateTime =  LocalDateTime.of(speEndDate, LocalTime.MAX);
         }
 
-        Map<String, Object> searchSpeList = specialInspectionService.searchList(spePart, speFacility, speStartDateTime, speEndDateTime, speComplete, spePerson, speEmpNum);
+        Map<String, Object> searchSpeList = specialInspectionService.searchList(spePart, speFacility, speStartDateTime, speEndDateTime, speComplete, spePerson, speEmpNum, speDanger);
         responseData.put("searchSpeList", searchSpeList);
+        System.out.println("검색리스트확인: "+searchSpeList);
 
-        Map<String, Object> searchPartAndFacList = specialInspectionService.getPartAndFacilityDataList();
+        Map<String, Object> searchPartAndFacList = specialInspectionService.getPartAndFacilityAndDangerList();      // 선택항목: 저장된 영역, 설비, 위험분류 리스트
         responseData.put("searchPartAndFacList", searchPartAndFacList);
+        System.out.println("리스트확인: "+searchPartAndFacList);
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }

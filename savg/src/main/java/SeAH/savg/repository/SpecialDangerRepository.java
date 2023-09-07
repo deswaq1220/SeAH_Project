@@ -10,4 +10,6 @@ public interface SpecialDangerRepository extends JpaRepository<SpecialDanger, St
     // 위험분류 찾기 : dangerNume으로 정렬
     @Query("SELECT sd FROM SpecialDanger sd ORDER BY sd.dangerNum")
     List<SpecialDanger> findAllOrderByDangerNum();
+
+
 }
