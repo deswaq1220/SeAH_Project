@@ -30,7 +30,6 @@ public class RegularDetailDTO {
     private String regularActContent;           //개선대책
     private String regularActPerson;            //조치담당자
     private String regularActEmail;             //조치담당 이메일
-
 //시간은 직접 입력(now)
 //    private LocalDateTime regularActDate;      //점검완료일
 
@@ -39,21 +38,20 @@ public class RegularDetailDTO {
         this.checklist = checklist;
     }
 
+    public RegularDetailDTO(String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail){
+        this.id = id;
+        this.checklist = checklist;
+        this.regularCheck = regularCheck;
+        this.regularActContent= regularActContent;
+        this.regularActEmail = regularActEmail;
+        this.regularActPerson = regularActPerson;
+    }
     public RegularDetailDTO(){}
 
     public static ModelMapper modelMapper = new ModelMapper();
     public RegularInspectionCheck createRegularDetail() {
         RegularInspectionCheck regularInspectionCheck = modelMapper.map(this, RegularInspectionCheck.class);
 
-//        if (this.regularCheck == RegStatus.BAD) {
-//            RegularInspectionBad regularInspectionBad = new RegularInspectionBad();
-//            regularInspectionBad.setRegularActContent(this.regularActContent);
-//            regularInspectionBad.setRegularActPerson(this.regularActPerson);
-//            regularInspectionBad.setRegularActEmail(this.regularActEmail);
-//            regularInspectionBad.setRegularActDate(this.regularActDate);
-//            regularInspectionBad.setRegularComplete(this.regularCheck);
-//            regularInspectionBad.setRegularInspectionCheck(regularInspectionBad.getRegularInspectionCheck());
-//        }
 
         return regularInspectionCheck;
     }

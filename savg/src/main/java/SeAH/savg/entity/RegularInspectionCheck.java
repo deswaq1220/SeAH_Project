@@ -23,6 +23,7 @@ public class RegularInspectionCheck {
     @JoinColumn(name = "regular_id")
     private RegularInspection regularInspection;
 
-
+    @Column
+    private String regularListId;
 
 }

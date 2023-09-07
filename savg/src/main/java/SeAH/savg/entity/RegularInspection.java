@@ -34,4 +34,5 @@ public class RegularInspection extends BaseTimeEntity{
     @Column(nullable = false)
     private String regularPart;                 // 점검구역(영역)
 
+
 }

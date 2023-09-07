@@ -23,6 +23,7 @@ public class RegularDTO {
     private String regularInsName;             //점검항목(중대재해, LOTO 등 )
     private String regularEmail;
 
+
     private LocalDateTime regularDate;
 
     private String regularDetailDTOList;
@@ -35,6 +36,10 @@ public class RegularDTO {
         RegularInspection regularInspection = modelMapper.map(this, RegularInspection.class);
 
         return regularInspection;
+    }
+
+    public static RegularDTO of(RegularInspection regularInspection){
+        return modelMapper.map(regularInspection, RegularDTO.class);
     }
 
 }
