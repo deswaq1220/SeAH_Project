@@ -68,7 +68,7 @@ public class SpeInsFormDTO {
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
 
     // 검색한 결과 리스트 세팅
-    public static List<SpeInsFormDTO> of(List<SpecialInspection> speFindList) {
+    public static List<SpeInsFormDTO> listOf(List<SpecialInspection> speFindList) {
         List<SpeInsFormDTO> speInsFormDTOList = new ArrayList<>();
         for (SpecialInspection specialInspection : speFindList) {
             SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO(
@@ -97,5 +97,8 @@ public class SpeInsFormDTO {
         return speInsFormDTOList;
     }
 
+    public static SpeInsFormDTO of(SpecialInspection specialInspection){
+       return modelMapper.map(specialInspection, SpeInsFormDTO.class);
+    }
 
 }

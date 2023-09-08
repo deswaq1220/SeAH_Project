@@ -165,47 +165,70 @@ public class SpecialInspectionService {
     public Map<String, Object> getSpecialDetail(String speId) {
         Map<String, Object> detailMap = new HashMap<>();
 
-
         // 수시점검 데이터
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
-        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();
-        modelMapper.map(special, speInsFormDTO);
 
-        detailMap.put("specialData", speInsFormDTO);
 
         // 설비코드
         String facilityName = special.getSpeFacility();
         MasterData facilityData = masterDataRepository.findByMasterdataFacility(facilityName);
-        System.out.println("masterData확인: "+ facilityData);
         String facilityCode = facilityData.getMasterdataId();
         System.out.println("masterData 설비코드: "+ facilityCode);
+
         detailMap.put("facilityCode", facilityCode);
 
 
-        // 이미지 데이터
+        // 이미지 데이터(뷰: url로 상세페이지 이미지 보여줌)
         List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+        List<SpecialFileFormDTO> specialFileDTOList = new ArrayList<>();       // 전체파일리스트
+        System.out.println("파일확인디티오: "+speFileDTOList);
+
         if (!speFileDTOList.isEmpty()) {
             List<String> compImageUrls = new ArrayList<>();         // 완료이미지 url
             List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
 
             for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
-                String imagePath = speFileDTO.getSpeFileUrl();
+                // 이미지 전체 데이터얻기
+                specialFileDTOList.add(speFileDTO);
 
+
+                String imagePath = speFileDTO.getSpeFileUrl();
+                // 이미지 url얻기
                 if(speFileDTO.getIsComplete() == OK){            // 완료이미지 세팅
                     compImageUrls.add(imagePath);
                 } else if (speFileDTO.getIsComplete() == NO){    // 미완료이미지 세팅
                     noCompImageUrls.add(imagePath);
                 }
+
+
             }
             detailMap.put("compImageUrls", compImageUrls);      // 완료이미지
             detailMap.put("noCompImageUrls", noCompImageUrls);  // 미완료이미지
         }
 
+        // 이미지데이터(수정페이지 이미지 데이터)
+//        List<SpecialFile> specialFileList = specialFileRepository.findBySpeFileNameOrderBySpeFileNameAsc(speId);
+//        System.out.println("파일확인: "+specialFileList);
+//        List<SpecialFileFormDTO> specialFileDTOList = new ArrayList<>();       // 전체파일리스트
+//        for (SpecialFile speFile : specialFileList) {
+//            SpecialFileFormDTO specialFileDTO = SpecialFileFormDTO.of(speFile);
+//            specialFileDTOList.add(specialFileDTO);
+//        }
+
+//        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();
+//        modelMapper.map(special, speInsFormDTO);
+//        detailMap.put("specialData", speInsFormDTO);
+
+        SpeInsFormDTO speFormDTO = SpeInsFormDTO.of(special);
+        speFormDTO.setSpeFiles(specialFileDTOList);
+
+        detailMap.put("specialData", speFormDTO);
+
         return detailMap;
     }
 
 
-    //    // 완료처리:업데이트
+    // 완료처리:업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         System.out.println("-------------서비스 speDto: " +speInsFormDTO);
@@ -305,8 +328,9 @@ public class SpecialInspectionService {
         }
 
         Sort sort = Sort.by(Sort.Direction.DESC, "speId");
+//        List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
         List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
-        List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.of(searchSpeData);
+        List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.listOf(searchSpeData);
         searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
         System.out.println("서비스 검색 확인:"+searchSpeDataDTOList);
 
