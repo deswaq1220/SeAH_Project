@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,6 +55,18 @@ public class AttendanceController {
     public ResponseEntity<?> showUserEduAttenList(@PathVariable("eduId") String eduId ) {
         List<Attendance> result = attendanceRepository.findAllByEduId(eduId);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //출석자 삭제
+    @DeleteMapping("/admin/attenlist/{attenId}")
+    public ResponseEntity<?> deleteAttendance(@PathVariable Long attenId) {
+        try {
+            attendanceService.deleteAtten(attenId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

@@ -1,25 +1,25 @@
-package SeAH.savg.service;
-
-import SeAH.savg.entity.EduFile;
-import SeAH.savg.repository.EduFileRepository;
-import SeAH.savg.service.EduFileService;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@SpringBootTest
-@DataJpaTest
-public class EduFileServiceTest {
+//package SeAH.savg.service;
+//
+//import SeAH.savg.entity.EduFile;
+//import SeAH.savg.repository.EduFileRepository;
+//import SeAH.savg.service.EduFileService;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.mock.web.MockMultipartFile;
+//
+//import java.io.File;
+//import java.nio.file.Files;
+//import java.nio.file.Path;
+//import java.util.Optional;
+//import java.util.UUID;
+//
+//import static org.junit.jupiter.api.Assertions.*;
+//
+//@SpringBootTest
+//@DataJpaTest
+//public class EduFileServiceTest {
 
    /* @Autowired
     private EduFileService eduFileService;
@@ -105,4 +105,4 @@ public class EduFileServiceTest {
 
 
 
-}
+//}

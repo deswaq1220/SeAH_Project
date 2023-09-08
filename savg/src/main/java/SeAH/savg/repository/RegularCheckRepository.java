@@ -4,6 +4,7 @@ import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.entity.RegularInspectionCheck;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface RegularCheckRepository extends JpaRepository<RegularInspectionC
     @Query("SELECT i, b FROM RegularInspection i " +
             "LEFT JOIN RegularInspectionBad b ON i.regularId = b.regularInspectionCheck.regularInspection.regularId " +
             "WHERE i.regularId = :regularId")
-    List<Object[]> getRegularInspectionDetail(String regularId);
+    List<Object[]> getRegularInspectionDetail(@Param("regularId") String regularId);
 }

@@ -26,13 +26,16 @@ configurations {
 	}
 }
 
+tasks.withType(Jar) {
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.2'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -56,6 +59,7 @@ dependencies {
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-core'
 	implementation 'commons-fileupload:commons-fileupload:1.4'
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.27'
 /*	// Spring Security 추가
 	implementation 'org.springframework.boot:spring-boot-starter-security'*/
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -70,8 +74,6 @@ dependencies {
 
 	// Mockito
 	testImplementation 'org.mockito:mockito-core:3.11.2'
-
-	runtimeOnly 'mysql:mysql-connector-java'
 
 	// 3. querydsl dependencies 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
@@ -124,27 +126,35 @@ task copyReactBuildFiles(type: Copy) {
 	dependsOn "buildReact"
 	from "$frontendDir/build"
 	into "$projectDir/src/main/resources/static"
+}
 
 // querydsl에서 사용할 경로 설정
-	def querydslDir = "$buildDir/generated/querydsl"
+def querydslDir = "$buildDir/generated/querydsl"
 // JPA 사용 여부와 사용할 경로를 설정
-	querydsl {
-		jpa = true
-		querydslSourcesDir = querydslDir
-	}
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
 // build 시 사용할 sourceSet 추가
-	sourceSets {
-		main.java.srcDir querydslDir
-	}
+sourceSets {
+	main.java.srcDir querydslDir
+}
 // querydsl 컴파일시 사용할 옵션 설정
-	compileQuerydsl {
-		options.annotationProcessorPath = configurations.querydsl
-	}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
 // querydsl 이 compileClassPath 를 상속하도록 설정
-	configurations {
-		compileOnly {
-			extendsFrom annotationProcessor
-		}
-		querydsl.extendsFrom compileClasspath
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
 	}
+	querydsl.extendsFrom compileClasspath
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs << "-Xlint:deprecation"
+}
+// Querydsl 추가, 자동 생성된 Q 클래스 gradle clean 으로 제거
+clean {
+	delete file('/src/main/generated')
 }

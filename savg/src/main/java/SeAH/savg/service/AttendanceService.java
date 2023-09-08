@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -50,10 +51,9 @@ public class AttendanceService {
 
 
 
-    //교육자가 들은 교육 리스트
-/*    public List<EduDTO> getEduListByAttenName(String attenName) {
-        return attendanceRepository.getEduListByAttenName(attenName);
-    }*/
-
+    //출석 삭제
+    public void deleteAtten(Long attenId) {
+        attendanceRepository.deleteById(attenId);
+    }
 
 }
