@@ -67,7 +67,7 @@ public class RegularInspectionService {
     private String categoryType = "R";
 
     //정기점검 등록
-    public LocalDateTime createRegular(RegularDTO regularDTO) throws Exception {
+    public Map<String, Object>createRegular(RegularDTO regularDTO) throws Exception {
         //정기점검 ID 부여 -> ex.R2308-00
         regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
@@ -77,9 +77,10 @@ public class RegularInspectionService {
 
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
 
+        Map<String, Object> finalData = new HashMap<>();
+        finalData.put("regularDate", savedRegularInspection.getRegularDate());
+        finalData.put("regularId", savedRegularInspection.getRegularId());
 
-        // DB에 저장 후, 저장된 객체에서 regularDate 값을 가져와서 응답 데이터에 포함
-        LocalDateTime regularDate = regularInspection.getRegularDate();
 
         if(regularDTO.getFile()!=null){
             eduFileService.uploadFile2(regularInspection, regularDTO);
@@ -115,7 +116,7 @@ public class RegularInspectionService {
         }
 
 
-        return regularDate;
+        return finalData;
     }
 
     //정기점검 목록 조회
