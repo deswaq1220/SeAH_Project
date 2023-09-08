@@ -168,6 +168,9 @@ public class SpecialInspectionService {
         // 수시점검 데이터
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
 
+//        List<SpecialFile> specialFileList = specialFileRepository.findBySpecialInspection(special);
+//        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO(special);
+//        speInsFormDTO.setSpeFileList(specialFileList);
 
         // 설비코드
         String facilityName = special.getSpeFacility();
@@ -178,9 +181,11 @@ public class SpecialInspectionService {
         detailMap.put("facilityCode", facilityCode);
 
 
-        // 이미지 데이터(뷰: url로 상세페이지 이미지 보여줌)
+        // 이미지 데이터
         List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+
         List<SpecialFileFormDTO> specialFileDTOList = new ArrayList<>();       // 전체파일리스트
+
         System.out.println("파일확인디티오: "+speFileDTOList);
 
         if (!speFileDTOList.isEmpty()) {
@@ -188,10 +193,10 @@ public class SpecialInspectionService {
             List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
 
             for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
-                // 이미지 전체 데이터얻기
+//                // 이미지 전체 데이터얻기
                 specialFileDTOList.add(speFileDTO);
 
-
+                // 뷰: url로 상세페이지 이미지 보여줌
                 String imagePath = speFileDTO.getSpeFileUrl();
                 // 이미지 url얻기
                 if(speFileDTO.getIsComplete() == OK){            // 완료이미지 세팅
@@ -200,24 +205,12 @@ public class SpecialInspectionService {
                     noCompImageUrls.add(imagePath);
                 }
 
-
             }
             detailMap.put("compImageUrls", compImageUrls);      // 완료이미지
             detailMap.put("noCompImageUrls", noCompImageUrls);  // 미완료이미지
         }
 
-        // 이미지데이터(수정페이지 이미지 데이터)
-//        List<SpecialFile> specialFileList = specialFileRepository.findBySpeFileNameOrderBySpeFileNameAsc(speId);
-//        System.out.println("파일확인: "+specialFileList);
-//        List<SpecialFileFormDTO> specialFileDTOList = new ArrayList<>();       // 전체파일리스트
-//        for (SpecialFile speFile : specialFileList) {
-//            SpecialFileFormDTO specialFileDTO = SpecialFileFormDTO.of(speFile);
-//            specialFileDTOList.add(specialFileDTO);
-//        }
 
-//        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();
-//        modelMapper.map(special, speInsFormDTO);
-//        detailMap.put("specialData", speInsFormDTO);
 
         SpeInsFormDTO speFormDTO = SpeInsFormDTO.of(special);
         speFormDTO.setSpeFiles(specialFileDTOList);
@@ -229,42 +222,124 @@ public class SpecialInspectionService {
 
 
     // 완료처리:업데이트
+
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-        System.out.println("-------------서비스 speDto: " +speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
-        String facilityName = special.getSpeFacility();     // 설비명
-        speInsFormDTO.setSpeDate(special.getSpeDate());
-        speInsFormDTO.setSpePart(special.getSpePart());
+
+        // 엔티티에서 필요한 데이터 추출
+        String facilityName = special.getSpeFacility();
+        LocalDateTime speDate = special.getSpeDate();
+        String spePart = special.getSpePart();
+
+        // DTO 업데이트
+        speInsFormDTO.setSpeDate(speDate);
+        speInsFormDTO.setSpePart(spePart);
         SpeStatus.deadLineCal(speInsFormDTO);
+
+        // 파일 삭제(업데이트)
+//        List<SpecialFile> specialFileList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+//
+        System.out.println("수정파일 id: " + speInsFormDTO.getSpeFileIds());
+
+        if (speInsFormDTO.getSpeFileIds() != null) {
+            for (Long speFileId : speInsFormDTO.getSpeFileIds()) {
+                specialFileRepository.deleteById(speFileId);
+            }
+        }
+
         // 파일이 있으면 저장
-        if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
+        if (!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())) {
             List<SpecialFile> uploadFiles;
 
-            if(speInsFormDTO.getSpeComplete() == OK){           // 완료처리일 경우
+            if (speInsFormDTO.getSpeComplete() == OK) { // 완료처리일 경우
                 uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, OK);
-            } else {                                            // 수정일 경우
+            } else { // 수정일 경우
                 uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
             }
 
-            for(SpecialFile specialFile : uploadFiles)
+            for (SpecialFile specialFile : uploadFiles) {
                 specialFile.setSpecialInspection(special);
+            }
         }
 
         // 완료여부가 OK일 경우만 완료시간 세팅
-        if(speInsFormDTO.getSpeComplete() == OK){
-            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
-        }else {
-            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+        if (speInsFormDTO.getSpeComplete() == OK) {
+            speInsFormDTO.setSpeActDate(LocalDateTime.now()); // 완료시간 세팅
+        } else {
+            speInsFormDTO.setSpeActDate(null); // 완료시간 초기화
         }
 
-        // dto -> entity 업데이트
-        modelMapper.map(speInsFormDTO, special);
+
         // 저장(업데이트)
         specialInspectionRepository.save(special);
 
         return special;
     }
+
+
+
+
+
+
+//    @Transactional
+//    public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+//        System.out.println("-------------서비스 speDto: " +speInsFormDTO);
+//        SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+//
+//        String facilityName = special.getSpeFacility();     // 설비명
+//        speInsFormDTO.setSpeDate(special.getSpeDate());
+//        speInsFormDTO.setSpePart(special.getSpePart());
+//        SpeStatus.deadLineCal(speInsFormDTO);
+//
+//        // 파일 삭제(업데이트)
+////        List<SpecialFile> specialFileList = specialFileRepository.findBySpeId(speId);
+//
+//        List<SpecialFileFormDTO> specialFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+//        List<SpecialFile> specialFileList = specialFileDTOList.of(specialFileDTOList);
+//
+//
+//        System.out.println("파일정보확인; "+specialFileDTOList);
+//        if(speInsFormDTO.getSpeFileIds() != null){
+//            for(Long speFileId : speInsFormDTO.getSpeFileIds()){
+//                for(SpecialFile specialFile : specialFileDTOList) {
+//                    if(specialFile.getSpeFileId() == speFileId){
+//                        specialFileRepository.delete(specialFile);
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//
+//        // 파일이 있으면 저장
+//        if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
+//            List<SpecialFile> uploadFiles;
+//
+//            if(speInsFormDTO.getSpeComplete() == OK){           // 완료처리일 경우
+//                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, OK);
+//            } else {                                            // 수정일 경우
+//                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
+//            }
+//
+//            for(SpecialFile specialFile : uploadFiles)
+//                specialFile.setSpecialInspection(special);
+//        }
+//
+//        // 완료여부가 OK일 경우만 완료시간 세팅
+//        if(speInsFormDTO.getSpeComplete() == OK){
+//            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+//        }else {
+//            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
+//        }
+//
+//        // dto -> entity 업데이트
+//        modelMapper.map(speInsFormDTO, special);
+//        // 저장(업데이트)
+//        specialInspectionRepository.save(special);
+//
+//        return special;
+//    }
 
 
 

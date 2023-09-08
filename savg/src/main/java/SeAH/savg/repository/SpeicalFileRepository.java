@@ -9,9 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SpeicalFileRepository extends JpaRepository <SpecialFile, String> {
+public interface SpeicalFileRepository extends JpaRepository <SpecialFile, Long> {
     // speId로 파일정보 찾기(DTO)
     List<SpecialFileFormDTO> findBySpecialInspection_SpeId(String speId);
+//    List<SpecialFile> findBySpecialInspection_SpeId(String speId);
+
+    // 외래키로 찾기
+//    List<SpecialFile> findBySpecialInspection(SpecialInspection special);
 
     // 오늘 날짜에 해당하는 파일 이름들을 조회
     @Query("SELECT s FROM SpecialFile s WHERE s.speFileName LIKE CONCAT('%', ?1, '%')")
@@ -22,6 +26,9 @@ public interface SpeicalFileRepository extends JpaRepository <SpecialFile, Strin
     int getMaxSeqNumberByToday(String todayDate);
 
     // speId로 파일정보 찾기
-    List<SpecialFile> findBySpeFileNameOrderBySpeFileNameAsc(String speId);
+//    List<SpecialFile> findBySpeFileNameOrderBySpeFileNameAsc(String speId);
+
+    // speId로 파일정보 찾기
+//    List<SpecialFile> findBySpeId(String speId);
 }
 
