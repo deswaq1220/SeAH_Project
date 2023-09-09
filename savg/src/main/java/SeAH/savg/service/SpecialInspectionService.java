@@ -225,14 +225,16 @@ public class SpecialInspectionService {
 
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("----------업데이트 서비스들어옴");
+        System.out.println("----------들고온데이터: "+speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
 
         // 엔티티에서 필요한 데이터 추출
-        String facilityName = special.getSpeFacility();
-        LocalDateTime speDate = special.getSpeDate();
-        String spePart = special.getSpePart();
+        String facilityName = special.getSpeFacility();     // 설비명
+        LocalDateTime speDate = special.getSpeDate();       // 등록일
+        String spePart = special.getSpePart();              // 영역
 
-        // DTO 업데이트
+        // DTO 업데이트   // 확인 없어도되지않나?
         speInsFormDTO.setSpeDate(speDate);
         speInsFormDTO.setSpePart(spePart);
         SpeStatus.deadLineCal(speInsFormDTO);
@@ -240,10 +242,10 @@ public class SpecialInspectionService {
         // 파일 삭제(업데이트)
 //        List<SpecialFile> specialFileList = specialFileRepository.findBySpecialInspection_SpeId(speId);
 //
-        System.out.println("수정파일 id: " + speInsFormDTO.getSpeFileIds());
+        System.out.println("수정파일 id: " + speInsFormDTO.getSpeDeleteFileIds());
 
-        if (speInsFormDTO.getSpeFileIds() != null) {
-            for (Long speFileId : speInsFormDTO.getSpeFileIds()) {
+        if (speInsFormDTO.getSpeDeleteFileIds() != null) {
+            for (Long speFileId : speInsFormDTO.getSpeDeleteFileIds()) {
                 specialFileRepository.deleteById(speFileId);
             }
         }
@@ -271,9 +273,9 @@ public class SpecialInspectionService {
         }
 
 
-        // 저장(업데이트)
-        specialInspectionRepository.save(special);
-
+        // 업데이트
+        special.updateFromDTO(speInsFormDTO);
+        System.out.println("업데이트 확인: "+special);
         return special;
     }
 

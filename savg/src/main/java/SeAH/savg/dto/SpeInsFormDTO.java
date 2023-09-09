@@ -38,7 +38,7 @@ public class SpeInsFormDTO {
     private LocalDateTime speDeadline;      // 완료요청기한
     private SpeStatus speComplete;          // 완료여부
 
-    private List<Long> speFileIds;          // 파일 수정에 필요한 ID
+    private List<Long> speDeleteFileIds;          // 파일 수정에 필요한 ID
 
     private List<MultipartFile> files;      // 파일
 
