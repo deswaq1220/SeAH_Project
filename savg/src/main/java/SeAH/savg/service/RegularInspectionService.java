@@ -319,7 +319,7 @@ public class RegularInspectionService {
                 String regularActEmail = regularInspectionBad.getRegularActEmail();
                 String regularActPerson = regularInspectionBad.getRegularActPerson();
 
-                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActEmail,regularActPerson));
+                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail));
             }else{
                 regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null));
             }
