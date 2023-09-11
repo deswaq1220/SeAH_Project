@@ -104,11 +104,6 @@ public class MasterDataController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//     public ResponseEntity<String> emailDelete(@PathVariable Long emailId){
-//         emailService.deleteEmail(emailId);
-//         // return new ResponseEntity<>(HttpStatus.OK);
-//     }
-
 
 
     //------------------------------------------부서 관리

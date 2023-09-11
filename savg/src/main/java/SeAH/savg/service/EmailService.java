@@ -51,14 +51,14 @@ public class EmailService {
         return email;
     }
     // 이메일 삭제
-    @Transactional
-    public void deleteEmail(Long emailId){
-        // 이메일 정보 가져오기
-        Email email = emailRepository.findById(emailId).orElseThrow();
-
-        // 삭제
-        emailRepository.delete(email);
-    }
+//    @Transactional
+//    public void deleteEmail(Long emailId){
+//        // 이메일 정보 가져오기
+//        Email email = emailRepository.findById(emailId).orElseThrow();
+//
+//        // 삭제
+//        emailRepository.delete(email);
+//    }
 
 
     // 이메일 삭제
