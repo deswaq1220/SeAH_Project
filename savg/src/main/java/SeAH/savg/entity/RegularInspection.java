@@ -17,7 +17,7 @@ public class RegularInspection extends BaseTimeEntity{
     private String regularId;                    // id
 
     @Column(nullable = false)
-    private String regularInsName;          // 관찰 점검종류(또는 이름)   참조테이블: RegularName
+    private String regularInsName;               // 점검항목
 
     @Column(nullable = false)
     private LocalDateTime regularDate;          // 관찰일

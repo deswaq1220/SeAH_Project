@@ -8,8 +8,10 @@ import SeAH.savg.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Entity;
@@ -165,6 +167,42 @@ public class RegularInspectionService {
         return regularDetailDTO;
     }
 
+
+//----------------------------------------------------정기점검 전체조회 검색
+public Map<String, Object> searchList(String regularPart, String regularInsName, LocalDateTime regularStartDateTime,
+                                      LocalDateTime regularEndDateTime, String regularEmpNum, String regularPerson, RegStatus insState){
+
+        Map<String, Object> searchRegularList = new HashMap<>();
+        QRegularInspection qRegularInspection = QRegularInspection.regularInspection;
+        QRegularInspectionCheck qRegularInspectionCheck = QRegularInspectionCheck.regularInspectionCheck;
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if(regularPart != null){
+            builder.and(qRegularInspection.regularPart.eq(regularPart));
+        }
+        if(regularInsName != null){
+            builder.and(qRegularInspection.regularInsName.eq(regularInsName));
+        }
+        if(regularStartDateTime != null && regularEndDateTime != null){
+            builder.and(qRegularInspection.regularDate.between(regularStartDateTime, regularEndDateTime));
+        }
+        if(regularEmpNum != null){
+            builder.and(qRegularInspection.regularEmpNum.eq(regularEmpNum));
+        }
+        if(regularPerson != null){
+            builder.and(qRegularInspection.regularPerson.eq(regularPerson));
+        }
+        if(insState != null){
+            builder.and(qRegularInspectionCheck.regularCheck.eq(insState));
+        }
+
+        List<RegularInspection> searchRegularData = (List<RegularInspection>) regularInspectionRepository.findPresentRegularList();
+
+
+
+    return searchRegularList;
+}
 
 
 
