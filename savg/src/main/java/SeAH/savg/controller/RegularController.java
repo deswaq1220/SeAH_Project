@@ -78,9 +78,7 @@ public class RegularController {
     //정기점검 이메일 리스트(조치 담당자)
     @GetMapping("/user/regularemail")
     public ResponseEntity<Map<String, Object>> regularEmailList(){
-        Map<String, Object> responseData = new HashMap<>();
-        List<Email> emailList = regularInspectionService.selectEmail();
-        responseData.put("emailList", emailList);
+       Map<String, Object> responseData = regularInspectionService.selectEmail();
 
         return ResponseEntity.ok(responseData);
     }

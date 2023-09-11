@@ -17,6 +17,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static SeAH.savg.constant.MasterStatus.Y;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -58,9 +60,19 @@ public class RegularInspectionService {
     }
 
     //정기점검 조치자 이메일 리스트
-    public List<Email> selectEmail(){
+    public Map<String, Object> selectEmail(){
+
+        Map<String, Object> responseData = new HashMap<>();
+
+        //영역별 이메일 전체리스트
         List<Email> regularEmail = emailRepository.regularEmailList();
-        return regularEmail;
+        responseData.put("emailList", regularEmail);
+
+        // 고정수신자 이메일리스트
+        List<Email> staticEmailList = emailRepository.findByMasterStatus(Y);
+        responseData.put("staticEmailList", staticEmailList);
+
+        return responseData;
     }
 
 
