@@ -74,10 +74,17 @@ public class SpecialController {
     }
 
 
-    // 완료처리 / 수정(update)
+    // 수정
     @PutMapping("/user/special/detail/{speId}")
-    public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-        return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
+    public ResponseEntity<?> speChange(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.OK);
+    }
+
+
+    // 완료처리
+    @PutMapping ("/user/special/complete/{speId}")
+    public ResponseEntity<?> speCompleted(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        return new ResponseEntity<>(specialInspectionService.speComplete(speId, speInsFormDTO), HttpStatus.OK);
     }
 
 // -------------------------- 공통

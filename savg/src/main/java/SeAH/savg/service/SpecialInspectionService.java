@@ -221,8 +221,7 @@ public class SpecialInspectionService {
     }
 
 
-    // 완료처리:업데이트
-
+    // 업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
         System.out.println("----------업데이트 서비스들어옴");
@@ -244,6 +243,7 @@ public class SpecialInspectionService {
 //
         System.out.println("수정파일 id: " + speInsFormDTO.getSpeDeleteFileIds());
 
+        // 파일 id찾아서 삭제
         if (speInsFormDTO.getSpeDeleteFileIds() != null) {
             for (Long speFileId : speInsFormDTO.getSpeDeleteFileIds()) {
                 specialFileRepository.deleteById(speFileId);
@@ -254,23 +254,23 @@ public class SpecialInspectionService {
         if (!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())) {
             List<SpecialFile> uploadFiles;
 
-            if (speInsFormDTO.getSpeComplete() == OK) { // 완료처리일 경우
+//            if (speInsFormDTO.getSpeComplete() == OK) { // 완료처리일 경우
                 uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, OK);
-            } else { // 수정일 경우
-                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
-            }
+//            } else { // 수정일 경우
+//                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
+//            }
 
             for (SpecialFile specialFile : uploadFiles) {
                 specialFile.setSpecialInspection(special);
             }
         }
 
-        // 완료여부가 OK일 경우만 완료시간 세팅
-        if (speInsFormDTO.getSpeComplete() == OK) {
-            speInsFormDTO.setSpeActDate(LocalDateTime.now()); // 완료시간 세팅
-        } else {
-            speInsFormDTO.setSpeActDate(null); // 완료시간 초기화
-        }
+//        // 완료여부가 OK일 경우만 완료시간 세팅
+//        if (speInsFormDTO.getSpeComplete() == OK) {
+//            speInsFormDTO.setSpeActDate(LocalDateTime.now()); // 완료시간 세팅
+//        } else {
+//            speInsFormDTO.setSpeActDate(null); // 완료시간 초기화
+//        }
 
 
         // 업데이트
@@ -280,6 +280,63 @@ public class SpecialInspectionService {
     }
 
 
+
+    // 완료처리
+    @Transactional
+    public SpecialInspection speComplete(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("----------업데이트 서비스들어옴");
+        System.out.println("----------들고온데이터: "+speInsFormDTO);
+        SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+
+//        // 엔티티에서 필요한 데이터 추출
+        String facilityName = special.getSpeFacility();     // 설비명
+//        LocalDateTime speDate = special.getSpeDate();       // 등록일
+//        String spePart = special.getSpePart();              // 영역
+//
+//        // DTO 업데이트   // 확인 없어도되지않나?
+//        speInsFormDTO.setSpeDate(speDate);
+//        speInsFormDTO.setSpePart(spePart);
+//        SpeStatus.deadLineCal(speInsFormDTO);
+
+        // 파일 삭제(업데이트)
+//        List<SpecialFile> specialFileList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+//
+//        System.out.println("저장파일 id: " + speInsFormDTO.getSpeDeleteFileIds());
+
+//        if (speInsFormDTO.getSpeDeleteFileIds() != null) {
+//            for (Long speFileId : speInsFormDTO.getSpeDeleteFileIds()) {
+//                specialFileRepository.deleteById(speFileId);
+//            }
+//        }
+
+        // 파일이 있으면 저장
+        if (!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())) {
+            List<SpecialFile> uploadFiles;
+
+//            if (speInsFormDTO.getSpeComplete() == OK) { // 완료처리일 경우
+                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, OK);
+//            } else { // 수정일 경우
+//                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
+//            }
+
+            for (SpecialFile specialFile : uploadFiles) {
+                specialFile.setSpecialInspection(special);
+            }
+        }
+
+        // 완료여부가 OK일 경우만 완료시간 세팅
+//        if (speInsFormDTO.getSpeComplete() == OK) {
+            speInsFormDTO.setSpeActDate(LocalDateTime.now()); // 완료시간 세팅
+//        } else {
+//            speInsFormDTO.setSpeActDate(null); // 완료시간 초기화
+//        }
+
+
+        // 업데이트
+        special.updateFromDTO(speInsFormDTO);
+        System.out.println("업데이트 확인: "+special);
+        return special;
+    }
 
 
 
