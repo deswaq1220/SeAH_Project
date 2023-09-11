@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface AttendanceRepository extends JpaRepository<Attendance, String> {
+public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
    ////관리자
    //1. 출석리스트 조회
