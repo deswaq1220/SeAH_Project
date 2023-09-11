@@ -33,4 +33,6 @@ public interface MasterDataRepository extends JpaRepository<MasterData, Integer>
 
     // id찾아서 삭제
     String deleteByMasterdataId(String masterdataId);
+
+
 }

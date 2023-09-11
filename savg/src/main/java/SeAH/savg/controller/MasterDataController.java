@@ -151,11 +151,15 @@ public class MasterDataController {
 
 
     //부서 수정
-    @PutMapping("/master/department/update/{departId}")
-    public ResponseEntity<?> updateDepart(@PathVariable Long departId,
+    @PutMapping("/master/department/update/{departmentId}")
+    public ResponseEntity<?> updateDepart(@PathVariable Long departmentId,
                                           @RequestBody MasterDataDepartmentDTO departmentDTO){
 
-        masterDataService.updateDepart(departmentDTO, departId);
+        System.out.println("beforeId 1" + departmentId);
+        System.out.println("dto 점검1" + departmentDTO);
+        masterDataService.updateDepart(departmentDTO, departmentId);
+        System.out.println("dto 점검2" + departmentDTO);
+        System.out.println("beforeId 2 " + departmentId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
