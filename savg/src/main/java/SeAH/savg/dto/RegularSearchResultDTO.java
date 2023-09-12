@@ -17,7 +17,9 @@ public class RegularSearchResultDTO {
     private LocalDateTime regularDate;          // 관찰일
     private String regularEmpNum;               // 관찰자 사원번호
     private String regularPerson;               // 관찰자
-    private RegStatus regularCheck;           // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
+    private int regularInsCount;                // 점검 건수
+    private RegStatus regularCheck;             // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
+    private String regularId;             // 정기점검id
 
 
     public RegularSearchResultDTO mapping(RegularInspection entity1, RegularInspectionCheck entity2) {

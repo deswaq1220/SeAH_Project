@@ -233,29 +233,49 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(searchDTO.getRegularCheck());
         predicate.and(checkPredicate);
     }
+    //BAD인 것만 조인
+    BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(RegStatus.BAD);
+    predicate.and(checkPredicate);
 
+    //테이블 생성
     List<Tuple> searchRegularData = queryFactory
             .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regularDate, qRegularInspection.regularEmpNum,
-                    qRegularInspection.regularPerson, qRegularInspectionCheck.regularCheck)
+                    qRegularInspection.regularPerson, qRegularInspectionCheck.regularCheck, qRegularInspection.regularId)
             .from(qRegularInspection)
             .leftJoin(qRegularInspectionCheck).on(qRegularInspection.regularId.eq(qRegularInspectionCheck.regularInspection.regularId))
             .where(predicate)
             .orderBy(qRegularInspection.regularDate.desc())
             .fetch();
 
-
-    List<RegularSearchResultDTO> dtoList = new ArrayList<>();
+    //테이블 중 같은 아이디의 경우 테이블 줄이기
+    List<RegularSearchResultDTO> joinResult = new ArrayList<>();
     for (Tuple tuple : searchRegularData) {
-        RegularSearchResultDTO dto = new RegularSearchResultDTO();
-        dto.setRegularPart(tuple.get(qRegularInspection.regularPart));
-        dto.setRegularInsName(tuple.get(qRegularInspection.regularInsName));
-        dto.setRegularDate(tuple.get(qRegularInspection.regularDate));
-        dto.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));
-        dto.setRegularPerson(tuple.get(qRegularInspection.regularPerson));
-        dto.setRegularCheck(tuple.get(qRegularInspectionCheck.regularCheck));
-        dtoList.add(dto);
+        RegularSearchResultDTO middleResultDTO = new RegularSearchResultDTO();
+        middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart));
+        middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName));
+        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regularDate));
+        middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));
+        middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));
+        middleResultDTO.setRegularInsCount(searchRegularData.size());
+        middleResultDTO.setRegularCheck(tuple.get(qRegularInspectionCheck.regularCheck));
+        middleResultDTO.setRegularId(tuple.get(qRegularInspection.regularId));
+        joinResult.add(middleResultDTO);
     }
-    return dtoList;
+
+    //결과
+    Set<String> uniqueRegularIdList = new HashSet<>();
+    List<RegularSearchResultDTO> finalList = new ArrayList<>();
+
+    for (RegularSearchResultDTO middleResultDTO : joinResult) {
+        String regularId = middleResultDTO.getRegularId();
+
+        if(!uniqueRegularIdList.contains(regularId)){
+            uniqueRegularIdList.add(regularId);
+            finalList.add(middleResultDTO);
+        }
+
+    }
+    return finalList;
 }
 
 //----------------------------------------------------통계 관련
