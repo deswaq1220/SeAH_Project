@@ -165,32 +165,35 @@ public class SpecialInspectionService {
     public Map<String, Object> getSpecialDetail(String speId) {
         Map<String, Object> detailMap = new HashMap<>();
 
-
         // 수시점검 데이터
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
-        SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO();
-        modelMapper.map(special, speInsFormDTO);
-
-        detailMap.put("specialData", speInsFormDTO);
 
         // 설비코드
         String facilityName = special.getSpeFacility();
         MasterData facilityData = masterDataRepository.findByMasterdataFacility(facilityName);
-        System.out.println("masterData확인: "+ facilityData);
         String facilityCode = facilityData.getMasterdataId();
         System.out.println("masterData 설비코드: "+ facilityCode);
-        detailMap.put("facilityCode", facilityCode);
 
+        detailMap.put("facilityCode", facilityCode);
 
         // 이미지 데이터
         List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
+
+        List<SpecialFileFormDTO> specialFileDTOList = new ArrayList<>();       // 전체파일리스트
+
+        System.out.println("파일확인디티오: "+speFileDTOList);
+
         if (!speFileDTOList.isEmpty()) {
             List<String> compImageUrls = new ArrayList<>();         // 완료이미지 url
             List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
 
             for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
-                String imagePath = speFileDTO.getSpeFileUrl();
+//                // 이미지 전체 데이터얻기
+                specialFileDTOList.add(speFileDTO);
 
+                // 뷰: url로 상세페이지 이미지 보여줌
+                String imagePath = speFileDTO.getSpeFileUrl();
+                // 이미지 url얻기
                 if(speFileDTO.getIsComplete() == OK){            // 완료이미지 세팅
                     compImageUrls.add(imagePath);
                 } else if (speFileDTO.getIsComplete() == NO){    // 미완료이미지 세팅
@@ -201,47 +204,91 @@ public class SpecialInspectionService {
             detailMap.put("noCompImageUrls", noCompImageUrls);  // 미완료이미지
         }
 
+
+
+        SpeInsFormDTO speFormDTO = SpeInsFormDTO.of(special);
+        speFormDTO.setSpeFiles(specialFileDTOList);
+
+        detailMap.put("specialData", speFormDTO);
+
         return detailMap;
     }
 
 
-    //    // 완료처리:업데이트
+    // 업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-        System.out.println("-------------서비스 speDto: " +speInsFormDTO);
+        System.out.println("----------업데이트 서비스들어옴");
+        System.out.println("----------들고온데이터: "+speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+
+        // 엔티티에서 필요한 데이터 추출
         String facilityName = special.getSpeFacility();     // 설비명
-        speInsFormDTO.setSpeDate(special.getSpeDate());
-        speInsFormDTO.setSpePart(special.getSpePart());
+        LocalDateTime speDate = special.getSpeDate();       // 등록일
+        String spePart = special.getSpePart();              // 영역
+
+        // DTO 업데이트   // 확인 없어도되지않나?
+        speInsFormDTO.setSpeDate(speDate);
+        speInsFormDTO.setSpePart(spePart);
         SpeStatus.deadLineCal(speInsFormDTO);
-        // 파일이 있으면 저장
-        if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
-            List<SpecialFile> uploadFiles;
 
-            if(speInsFormDTO.getSpeComplete() == OK){           // 완료처리일 경우
-                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, OK);
-            } else {                                            // 수정일 경우
-                uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
+
+        // 파일 id찾아서 삭제
+        if (speInsFormDTO.getSpeDeleteFileIds() != null) {
+            for (Long speFileId : speInsFormDTO.getSpeDeleteFileIds()) {
+                specialFileRepository.deleteById(speFileId);
             }
+        }
 
-            for(SpecialFile specialFile : uploadFiles)
+        // 파일이 있으면 저장
+        if (!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())) {
+            List<SpecialFile> uploadFiles;
+            uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, NO);
+
+            for (SpecialFile specialFile : uploadFiles) {
                 specialFile.setSpecialInspection(special);
+            }
         }
 
-        // 완료여부가 OK일 경우만 완료시간 세팅
-        if(speInsFormDTO.getSpeComplete() == OK){
-            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
-        }else {
-            speInsFormDTO.setSpeActDate(LocalDateTime.now());         // 완료시간 세팅
-        }
-
-        // dto -> entity 업데이트
-        modelMapper.map(speInsFormDTO, special);
-        // 저장(업데이트)
-        specialInspectionRepository.save(special);
-
+        // 업데이트
+        special.updateFromDTO(speInsFormDTO);
+        System.out.println("업데이트 확인: "+special);
         return special;
     }
+
+
+
+    // 완료처리
+    @Transactional
+    public SpecialInspection speComplete(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        System.out.println("----------업데이트 서비스들어옴");
+        System.out.println("----------들고온데이터: "+speInsFormDTO);
+        SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
+
+        // 엔티티에서 필요한 데이터 추출
+        String facilityName = special.getSpeFacility();     // 설비명
+
+        // 파일이 있으면 저장
+        if (!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())) {
+            List<SpecialFile> uploadFiles;
+            uploadFiles = specialFileService.uploadFile(speInsFormDTO, facilityName, OK);
+
+            for (SpecialFile specialFile : uploadFiles) {
+                specialFile.setSpecialInspection(special);
+            }
+        }
+
+        // 완료시간 세팅
+        speInsFormDTO.setSpeActDate(LocalDateTime.now());
+
+
+        // 업데이트
+        special.updateFromDTO(speInsFormDTO);
+        System.out.println("업데이트 확인: "+special);
+        return special;
+    }
+
+
 
 
 
@@ -259,21 +306,24 @@ public class SpecialInspectionService {
 //    }
 
 
-    // 저장된 영역, 설비 리스트
-    public Map<String, Object> getPartAndFacilityDataList(){
+    // 저장된 영역, 설비, 위험분류 리스트
+    public Map<String, Object> getPartAndFacilityAndDangerList(){
         Map<String, Object> responseData = new HashMap<>();
-        List<SpecialPart> specialPartList = specialPartRepository.findAllOrderByPartNum();        // 영역 리스트
+        List<SpecialPart> specialPartList = specialPartRepository.findAllOrderByPartNum();             // 영역 리스트
         List<MasterData> facilityList = masterDataRepository.findAllOrderBymasterdataId();             // 설비 리스트
+        List<SpecialDanger> dangerList = specialDangerRepository.findAllOrderByDangerNum();             // 위험분류 리스트
 
         responseData.put("specialPartList", specialPartList);
         responseData.put("facilityList", facilityList);
+        responseData.put("dangerList", dangerList);
+
 
         return responseData;
     }
 
     // 수시점검 전체조회 검색
     public Map<String, Object> searchList(String spePart, String speFacility, LocalDateTime speStartDateTime,
-                                          LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum){
+                                          LocalDateTime speEndDateTime, SpeStatus speComplete, String spePerson, String speEmpNum, String speDanger){
         Map<String, Object> searchSpeList = new HashMap<>();
         QSpecialInspection qSpecialInspection = QSpecialInspection.specialInspection;
         BooleanBuilder builder = new BooleanBuilder();
@@ -284,6 +334,9 @@ public class SpecialInspectionService {
         }
         if (speFacility != null) {
             builder.and(qSpecialInspection.speFacility.eq(speFacility));
+        }
+        if (speDanger != null) {
+            builder.and(qSpecialInspection.speDanger.eq(speDanger));
         }
         if (speStartDateTime != null && speEndDateTime != null) {
             builder.and(qSpecialInspection.speDate.between(speStartDateTime, speEndDateTime));
@@ -300,7 +353,7 @@ public class SpecialInspectionService {
 
         Sort sort = Sort.by(Sort.Direction.DESC, "speId");
         List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
-        List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.of(searchSpeData);
+        List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.listOf(searchSpeData);
         searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
         System.out.println("서비스 검색 확인:"+searchSpeDataDTOList);
 
