@@ -5,14 +5,12 @@ import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Entity;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -29,7 +27,8 @@ public class RegularInspectionService {
     private final MakeIdService makeIdService;
     private final EmailRepository emailRepository;
     private final RegularListRepository regularListRepository;
-    private final EduFileService eduFileService;
+    private final RegularFileService regularFileService;
+    private final RegularFileRepository regularFileRepository;
 
     // 정기점검 항목 불러오기
     public List<String> selectRegularName(){
@@ -78,7 +77,7 @@ public class RegularInspectionService {
 
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
         if(regularDTO.getFile()!=null){
-            eduFileService.uploadFile2(regularInspection, regularDTO);
+            regularFileService.regularUploadFile(regularInspection, regularDTO);
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -106,12 +105,8 @@ public class RegularInspectionService {
                 regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
 
                 regularInspectionBadRepository.save(regularInspectionBadEntity);
-
-
             }
         }
-
-
     }
 
     //정기점검 목록 조회
@@ -305,7 +300,16 @@ public class RegularInspectionService {
     public List<RegularDetailDTO> getRegularCheckList(String regularId){
         List<RegularDetailDTO> regularDetailDTOList = new ArrayList<>();
         log.info("여기 안됨?" );
-        List<RegularInspectionCheck> regularInspectionCheckList = regularCheckRepository.findByRegularInspection(regularInspectionRepository.findById(regularId).orElseThrow());
+
+        //regularInstpection 가져오기
+        RegularInspection regularInspection = regularInspectionRepository.findById(regularId).orElseThrow();
+
+        //regularInstpection에 등록된 체크리스트 불러오기
+        List<RegularInspectionCheck> regularInspectionCheckList = regularCheckRepository.findByRegularInspection(regularInspection);
+
+        //regularInstpection에 등록된 파일 가져오기
+
+
         for(RegularInspectionCheck regularInspectionCheck : regularInspectionCheckList){
             RegularList regularList = regularListRepository.findById(regularInspectionCheck.getRegularListId()).orElseThrow();
 
@@ -313,16 +317,22 @@ public class RegularInspectionService {
 
             RegStatus regStatus = regularInspectionCheck.getRegularCheck();
 
+
             if(regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck) != null){
                 RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck);
+
+                List<String> regularFileNameList = regularFileRepository.getRegularFileName(regularList.getRegular1Id(),regularInspection);
+
                 String regularActContent = regularInspectionBad.getRegularActContent();
                 String regularActEmail = regularInspectionBad.getRegularActEmail();
                 String regularActPerson = regularInspectionBad.getRegularActPerson();
 
-                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail));
+                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail,regularFileNameList));
             }else{
-                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null));
+                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null,null));
             }
+
+
         }
         return regularDetailDTOList;
     }

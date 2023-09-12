@@ -30,6 +30,7 @@ public class RegularDetailDTO {
     private String regularActContent;           //개선대책
     private String regularActPerson;            //조치담당자
     private String regularActEmail;             //조치담당 이메일
+    private List<String> filePath;
 //시간은 직접 입력(now)
 //    private LocalDateTime regularActDate;      //점검완료일
 
@@ -38,13 +39,14 @@ public class RegularDetailDTO {
         this.checklist = checklist;
     }
 
-    public RegularDetailDTO(String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail){
+    public RegularDetailDTO(String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, List<String> filePath){
         this.id = id;
         this.checklist = checklist;
         this.regularCheck = regularCheck;
         this.regularActContent= regularActContent;
         this.regularActEmail = regularActEmail;
         this.regularActPerson = regularActPerson;
+        this.filePath = filePath;
     }
     public RegularDetailDTO(){}
 
