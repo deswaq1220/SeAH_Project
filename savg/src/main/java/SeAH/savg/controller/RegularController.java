@@ -13,12 +13,14 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 //@CrossOrigin(origins = "http://172.20.10.5:3000")
 //@CrossOrigin(origins = "http://localhost:3000")
 @CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
@@ -75,23 +78,22 @@ public class RegularController {
     //정기점검 이메일 리스트(조치 담당자)
     @GetMapping("/user/regularemail")
     public ResponseEntity<Map<String, Object>> regularEmailList(){
-        Map<String, Object> responseData = new HashMap<>();
-        List<Email> emailList = regularInspectionService.selectEmail();
-        responseData.put("emailList", emailList);
+       Map<String, Object> responseData = regularInspectionService.selectEmail();
 
         return ResponseEntity.ok(responseData);
     }
 
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
-        public ResponseEntity<String> createRegularInspection(@ModelAttribute RegularDTO regularDTO)throws Exception {
+        public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
+        Map<String, Object> regularDate = regularInspectionService.createRegular(regularDTO);
 
+        // 응답 데이터 생성
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("message", "정기점검 등록 성공");
+        responseData.putAll(regularDate);
 
-
-
-
-        regularInspectionService.createRegular(regularDTO);
-        return ResponseEntity.ok("정기점검 등록 성공");
+        return ResponseEntity.ok(responseData);
     }
 
 
@@ -117,7 +119,7 @@ public class RegularController {
 
     //정기점검 상세조회
     @GetMapping("/user/regular/detail/{regularId}")
-    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable String regularId){
+    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable("regularId") String regularId){
         RegularDetailDTO regularDetailDTO = regularInspectionService.getRegularById(regularId);
         if (regularDetailDTO == null){
             return ResponseEntity.notFound().build();
@@ -156,12 +158,12 @@ public class RegularController {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
 
-        List<Map<String, Object>> statisticsList = regularInspectionService.regularCntListByNameAndYearForExcel(year, month);
+        List<Map<String, Map<String,Long>>> statisticsList = regularInspectionService.regularCntListByNameAndYearForExcel(year, month);
 
         return ResponseEntity.ok(statisticsList);
     }
 
-
+    
     //(pieChart) 월간 정기점검 위험성평가분석 데이터 값(전체)
     @GetMapping("/admin/regular/statistics/checkvaluecount")
     public ResponseEntity<?> getRegularCntByCheckAndMonth(@RequestParam("yearmonth") String yearMonth){

@@ -17,6 +17,8 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static SeAH.savg.constant.MasterStatus.Y;
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
@@ -58,16 +60,26 @@ public class RegularInspectionService {
     }
 
     //정기점검 조치자 이메일 리스트
-    public List<Email> selectEmail(){
+    public Map<String, Object> selectEmail(){
+
+        Map<String, Object> responseData = new HashMap<>();
+
+        //영역별 이메일 전체리스트
         List<Email> regularEmail = emailRepository.regularEmailList();
-        return regularEmail;
+        responseData.put("emailList", regularEmail);
+
+        // 고정수신자 이메일리스트
+        List<Email> staticEmailList = emailRepository.findByMasterStatus(Y);
+        responseData.put("staticEmailList", staticEmailList);
+
+        return responseData;
     }
 
 
     private String categoryType = "R";
 
     //정기점검 등록
-    public void createRegular(RegularDTO regularDTO) throws JsonProcessingException {
+    public Map<String, Object>createRegular(RegularDTO regularDTO) throws Exception {
         //정기점검 ID 부여 -> ex.R2308-00
         regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
@@ -76,6 +88,15 @@ public class RegularInspectionService {
 
 
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
+
+        Map<String, Object> finalData = new HashMap<>();
+        finalData.put("regularDate", savedRegularInspection.getRegularDate());
+        finalData.put("regularId", savedRegularInspection.getRegularId());
+
+
+        if(regularDTO.getFile()!=null){
+            eduFileService.uploadFile2(regularInspection, regularDTO);
+        }
 
         ObjectMapper mapper = new ObjectMapper();
 
@@ -98,15 +119,16 @@ public class RegularInspectionService {
                 regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
                 regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
                 regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-//                regularInspectionBadEntity.setRegularActDate(regularDetailDTO.getRegularActDate());
+                regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
 
                 regularInspectionBadRepository.save(regularInspectionBadEntity);
-//                eduFileService.uploadFile2(regularInspection, regularDetailDTO);
+
 
             }
         }
 
 
+        return finalData;
     }
 
     //정기점검 목록 조회
@@ -117,6 +139,7 @@ public class RegularInspectionService {
     //상세조회
     public RegularDetailDTO getRegularById(String regularId) {
         List<Object[]> result = regularCheckRepository.getRegularInspectionDetail(regularId);
+
         if (result.isEmpty()) {
             return null;
         }
@@ -266,53 +289,24 @@ public class RegularInspectionService {
     }
 
     //(엑셀용) 월간 점검종류별 점검건수// 진행중
-/*    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
+    public List<Map<String, Map<String,Long>>> regularCntListByNameAndYearForExcel(int year, int month){
         List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
 
-        List<Map<String, Object>> finalList = new ArrayList<>();
+        Map<String, Map<String, Long>> grouping = new HashMap<>();
+        List<Map<String, Map<String,Long>>> resultList = new ArrayList<>();
 
-        for(Object[] row : regularList){
-
+        for(Object[] row: regularList){
             String name = (String) row[0];
-            Long count = (Long) row[1];
-
-            Map<String, Object> dataPoint = new HashMap<>();
-            dataPoint.put(name,count);
-            finalList.add(dataPoint);
-        }
-
-        finalList.sort(Comparator.comparing(o -> o.keySet().iterator().next())); // sort하기
-
-        return finalList;
-    }*/
-
-    public List<Map<String, Object>> regularCntListByNameAndYearForExcel(int year, int month){
-        List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
-
-        List<Map<String, Object>> finalList = new ArrayList<>();
-        Map<String, Map<String, Object>> middleList = new HashMap<>(); //같은 name으로 묶기위함
-
-        for(Object[] row : regularList){
-
-            String name = (String) row[0];
-            RegStatus value = (RegStatus) row[1];
+            String value = ((RegStatus) row[1]).toString();
             Long count = (Long) row[2];
 
-            Map<String, Object> dataPoint = middleList.get(name);
-
-            //name에 맞는 dataPoint가 없으면 새로 배열 생성
-            if(dataPoint == null){
-                dataPoint = new HashMap<>();
-                middleList.put(name,dataPoint);
-            }
-
-            dataPoint.put(value.toString(),count);
-            middleList.put(name, dataPoint);
+            Map<String, Long> dataPoint = grouping.getOrDefault(name, new HashMap<>());
+            dataPoint.put(value, count);
+            grouping.put(name, dataPoint);
         }
-        finalList.add(new HashMap<>(middleList));
-        finalList.sort(Comparator.comparing(o -> o.keySet().iterator().next())); // sort하기
+        resultList.add(grouping);
 
-        return finalList;
+        return resultList;
     }
 
     //연간

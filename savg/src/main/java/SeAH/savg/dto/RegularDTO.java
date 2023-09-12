@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Getter @Setter
 public class RegularDTO {
@@ -23,8 +24,10 @@ public class RegularDTO {
     private String regularEmail;
 
     private LocalDateTime regularDate;
+
     private String regularDetailDTOList;
-    private List<MultipartFile> file = new ArrayList<>();
+
+    private Map<String, List<MultipartFile>> file;
 
     public static ModelMapper modelMapper = new ModelMapper();
 

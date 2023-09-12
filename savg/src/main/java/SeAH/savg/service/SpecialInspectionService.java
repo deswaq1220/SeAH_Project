@@ -425,6 +425,7 @@ public class SpecialInspectionService {
 
         //기타 수정값 넣기
         for (Object[] value : specialList) {
+
             if ("기타(직접입력)".equals(value[0])) { // 값이 기타(직접입력)이면
                 value[1] = allValue - otherExcluedallValue; // 두 번째 값 수정
                 break; // 수정 후 루프 종료
@@ -521,7 +522,11 @@ public class SpecialInspectionService {
             Map<String, Object> dataPoint = new HashMap<>();
             dataPoint.put("sort", part);
             dataPoint.put("수시점검", count);
-            keyValueList.add(dataPoint);
+
+            if (!part.equals("선택")) { //"선택" 제거
+                keyValueList.add(dataPoint);
+            }
+
         }
         return keyValueList;
     }

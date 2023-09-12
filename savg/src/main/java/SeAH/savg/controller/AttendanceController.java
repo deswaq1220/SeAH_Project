@@ -21,7 +21,7 @@ public class AttendanceController {
     private final AttendanceRepository attendanceRepository;
 
 
-  ////사용자 관련(1~2)
+    ////사용자 관련(1~2)
     //1. (사용자) 출석 등록 페이지보기
     @GetMapping("/user/register/{eduId}")
     public String showUserEduAtten() {
@@ -44,13 +44,25 @@ public class AttendanceController {
 
 
 
-  ////관리자 관련
+    ////관리자 관련
     //해당 교육일지에 따른 학생 출석 리스트 조회
-  @GetMapping("/admin/list/{eduId}")
-  public ResponseEntity<?> showUserEduAttenList(@PathVariable("eduId") String eduId) {
-      List<Attendance> result = attendanceRepository.findAllByEduId(eduId);
-      return new ResponseEntity<>(result, HttpStatus.OK);
-  }
+    @GetMapping("/admin/list/{eduId}")
+    public ResponseEntity<?> showUserEduAttenList(@PathVariable("eduId") String eduId ) {
+        List<Attendance> result = attendanceRepository.findAllByEduId(eduId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    //출석자 삭제
+    @DeleteMapping("/admin/attenlist/{attenId}")
+    public ResponseEntity<?> deleteAttendance(@PathVariable Long attenId) {
+        try {
+            attendanceService.deleteAtten(attenId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
 
