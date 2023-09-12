@@ -3,18 +3,25 @@ package SeAH.savg.service;
 import SeAH.savg.constant.RegStatus;
 import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.dto.RegularSearchDTO;
+import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.querydsl.core.BooleanBuilder;
-import lombok.RequiredArgsConstructor;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Sort;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -22,7 +29,7 @@ import java.util.*;
 import static SeAH.savg.constant.MasterStatus.Y;
 
 @Service
-@RequiredArgsConstructor
+/*@RequiredArgsConstructor*/
 @Log4j2
 public class RegularInspectionService {
 
@@ -34,6 +41,29 @@ public class RegularInspectionService {
     private final EmailRepository emailRepository;
     private final RegularListRepository regularListRepository;
     private final EduFileService eduFileService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    @Autowired
+    public RegularInspectionService(RegularInspectionRepository regularInspectionRepository,
+                                    RegularStatisticsRepository regularStatisticsRepository,
+                                    RegularInspectionBadRepository regularInspectionBadRepository,
+                                    RegularCheckRepository regularCheckRepository,
+                                    MakeIdService makeIdService,
+                                    EmailRepository emailRepository,
+                                    RegularListRepository regularListRepository,
+                                    EduFileService eduFileService) {
+        this.regularInspectionRepository = regularInspectionRepository;
+        this.regularStatisticsRepository = regularStatisticsRepository;
+        this.regularInspectionBadRepository = regularInspectionBadRepository;
+        this.regularCheckRepository = regularCheckRepository;
+        this.makeIdService = makeIdService;
+        this.emailRepository = emailRepository;
+        this.regularListRepository = regularListRepository;
+        this.eduFileService = eduFileService;
+    }
+
 
     // 정기점검 항목 불러오기
     public List<String> selectRegularName(){
@@ -169,43 +199,64 @@ public class RegularInspectionService {
 
 
 //----------------------------------------------------정기점검 전체조회 검색
-public Map<String, Object> searchList(String regularPart, String regularInsName, LocalDateTime regularStartDateTime,
-                                      LocalDateTime regularEndDateTime, String regularEmpNum, String regularPerson, RegStatus insState){
+public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO) {
 
-        Map<String, Object> searchRegularList = new HashMap<>();
-        QRegularInspection qRegularInspection = QRegularInspection.regularInspection;
-        QRegularInspectionCheck qRegularInspectionCheck = QRegularInspectionCheck.regularInspectionCheck;
-
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if(regularPart != null){
-            builder.and(qRegularInspection.regularPart.eq(regularPart));
-        }
-        if(regularInsName != null){
-            builder.and(qRegularInspection.regularInsName.eq(regularInsName));
-        }
-        if(regularStartDateTime != null && regularEndDateTime != null){
-            builder.and(qRegularInspection.regularDate.between(regularStartDateTime, regularEndDateTime));
-        }
-        if(regularEmpNum != null){
-            builder.and(qRegularInspection.regularEmpNum.eq(regularEmpNum));
-        }
-        if(regularPerson != null){
-            builder.and(qRegularInspection.regularPerson.eq(regularPerson));
-        }
-        if(insState != null){
-            builder.and(qRegularInspectionCheck.regularCheck.eq(insState));
-        }
-
-        List<RegularInspection> searchRegularData = (List<RegularInspection>) regularInspectionRepository.findPresentRegularList();
+    JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+    QRegularInspection qRegularInspection = QRegularInspection.regularInspection;
+    QRegularInspectionCheck qRegularInspectionCheck = QRegularInspectionCheck.regularInspectionCheck;
 
 
+    BooleanBuilder predicate = new BooleanBuilder();
 
-    return searchRegularList;
+    if (searchDTO.getRegularPart() != null) {
+        BooleanExpression partPredicate = qRegularInspection.regularPart.eq(searchDTO.getRegularPart());
+        predicate.and(partPredicate);
+    }
+    if (searchDTO.getRegularInsName() != null) {
+        BooleanExpression insNamePredicate = qRegularInspection.regularInsName.eq(searchDTO.getRegularInsName());
+        predicate.and(insNamePredicate);
+    }
+    if (searchDTO.getRegularStartTime() != null && searchDTO.getRegularEndTime() != null) {
+        BooleanExpression datePredicate = qRegularInspection.regularDate.between(
+                searchDTO.getRegularStartTime(), searchDTO.getRegularEndTime());
+       predicate.and(datePredicate);
+    }
+    if (searchDTO.getRegularEmpNum() != null) {
+        BooleanExpression empNumPredicate = qRegularInspection.regularEmpNum.eq(searchDTO.getRegularEmpNum());
+        predicate.and(empNumPredicate);
+    }
+    if (searchDTO.getRegularPerson() != null) {
+        BooleanExpression personPredicate = qRegularInspection.regularPerson.eq(searchDTO.getRegularPerson());
+        predicate.and(personPredicate);
+    }
+    if (searchDTO.getRegularCheck() != null) {
+        BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(searchDTO.getRegularCheck());
+        predicate.and(checkPredicate);
+    }
+
+    List<Tuple> searchRegularData = queryFactory
+            .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regularDate, qRegularInspection.regularEmpNum,
+                    qRegularInspection.regularPerson, qRegularInspectionCheck.regularCheck)
+            .from(qRegularInspection)
+            .leftJoin(qRegularInspectionCheck).on(qRegularInspection.regularId.eq(qRegularInspectionCheck.regularInspection.regularId))
+            .where(predicate)
+            .orderBy(qRegularInspection.regularDate.desc())
+            .fetch();
+
+
+    List<RegularSearchResultDTO> dtoList = new ArrayList<>();
+    for (Tuple tuple : searchRegularData) {
+        RegularSearchResultDTO dto = new RegularSearchResultDTO();
+        dto.setRegularPart(tuple.get(qRegularInspection.regularPart));
+        dto.setRegularInsName(tuple.get(qRegularInspection.regularInsName));
+        dto.setRegularDate(tuple.get(qRegularInspection.regularDate));
+        dto.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));
+        dto.setRegularPerson(tuple.get(qRegularInspection.regularPerson));
+        dto.setRegularCheck(tuple.get(qRegularInspectionCheck.regularCheck));
+        dtoList.add(dto);
+    }
+    return dtoList;
 }
-
-
-
 
 //----------------------------------------------------통계 관련
     //월간

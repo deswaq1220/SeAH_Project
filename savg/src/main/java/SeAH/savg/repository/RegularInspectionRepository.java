@@ -1,12 +1,14 @@
 package SeAH.savg.repository;
 
 import SeAH.savg.entity.*;
+import com.querydsl.core.types.Predicate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
@@ -35,7 +37,8 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
     //정기점검 목록 조회(현황조회 페이지)
     @Query("SELECT r.regularPart, r.regularInsName, r.regularDate, r.regularPerson, c.regularCheck FROM RegularInspection r " +
             "LEFT JOIN RegularInspectionCheck c ON r.regularId = c.regularInspection.regularId " +
+            "WHERE r.regularDate BETWEEN :regularStartDate AND :regularEndDate " +
             "ORDER BY r.regularDate DESC")
-    List<RegularInspection> findPresentRegularList();
+    List<Object[]> findPresentRegularList(Predicate predicate);
 
 }
