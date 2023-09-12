@@ -265,6 +265,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     //결과
     Set<String> uniqueRegularIdList = new HashSet<>();
     List<RegularSearchResultDTO> finalList = new ArrayList<>();
+    RegStatus RegularYN = regularInspectionRepository.findPresentRegularYNList();
 
     for (RegularSearchResultDTO middleResultDTO : joinResult) {
         String regularId = middleResultDTO.getRegularId();
@@ -272,6 +273,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         if(!uniqueRegularIdList.contains(regularId)){
             uniqueRegularIdList.add(regularId);
             finalList.add(middleResultDTO);
+            finalList.add(middleResultDTO.setRegularCheck(RegularYN));
         }
 
     }
