@@ -335,7 +335,7 @@ public class SpecialInspectionService {
         if (speFacility != null) {
             builder.and(qSpecialInspection.speFacility.eq(speFacility));
         }
-        if (speFacility != null) {
+        if (speDanger != null) {
             builder.and(qSpecialInspection.speDanger.eq(speDanger));
         }
         if (speStartDateTime != null && speEndDateTime != null) {
