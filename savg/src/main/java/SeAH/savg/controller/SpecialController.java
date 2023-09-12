@@ -19,11 +19,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
-
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
     private final SpecialInspectionRepository specialInspectionRepository;
@@ -107,16 +102,6 @@ public class SpecialController {
                                          @RequestParam (value = "speEmpNum",required = false) String speEmpNum,
                                          @RequestParam (value = "speDanger",required = false) String speDanger
     ) {
-        System.out.println("컨트롤러 들어왔다");
-        System.out.println("spePart: "+spePart);
-        System.out.println("speFacility: "+speFacility);
-        System.out.println("speStartDate: "+speStartDate);
-        System.out.println("speEndDate: "+speEndDate);
-        System.out.println("speComplete: "+speComplete);
-        System.out.println("spePerson: "+spePerson);
-        System.out.println("speEmpNum: "+speEmpNum);
-        System.out.println("speDanger: "+speDanger);
-
         Map<String, Object> responseData = new HashMap<>();
 
         // 날짜 변환

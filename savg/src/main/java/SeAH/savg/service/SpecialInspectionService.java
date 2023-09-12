@@ -352,7 +352,6 @@ public class SpecialInspectionService {
         }
 
         Sort sort = Sort.by(Sort.Direction.DESC, "speId");
-//        List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
         List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
         List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.listOf(searchSpeData);
         searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
