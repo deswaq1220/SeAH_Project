@@ -138,7 +138,7 @@ public class RegularController {
                                                ,@RequestParam(value= "regularEndDate", required = false) LocalDate regularEndDate
                                                ,@RequestParam(value= "regularEmpNum", required = false) String regularEmpNum
                                                ,@RequestParam(value= "regularPerson", required = false) String regularPerson
-                                               ,@RequestParam(value= "regularCheck", required = false) RegStatus regularCheck){
+                                               ,@RequestParam(value= "regularComplete", required = false) RegStatus regularComplete){
 
         //날짜 변환 localDate -> localDateTime
         LocalDateTime regularStartDateTime = null;
@@ -156,7 +156,7 @@ public class RegularController {
         dto.setRegularEndTime(regularEndDateTime);
         dto.setRegularEmpNum(regularEmpNum);
         dto.setRegularPerson(regularPerson);
-        dto.setRegularCheck(regularCheck);
+        dto.setRegularComplete(regularComplete);
         System.out.println(dto);
 
         List<RegularSearchResultDTO> serviceData = regularInspectionService.searchRegularList(dto);
