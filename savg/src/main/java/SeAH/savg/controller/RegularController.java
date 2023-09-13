@@ -249,6 +249,7 @@ public class RegularController {
         int month = Integer.parseInt(yearMonth.substring(5, 7));
 
         List<Map<String, Object>> statisticsList = regularInspectionService.regularDetailListByPartAndMonth(year, month);
+
         return ResponseEntity.ok(statisticsList);
     }
 
