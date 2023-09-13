@@ -9,6 +9,7 @@ import org.modelmapper.ModelMapper;
 
 @Getter @Setter @ToString
 public class SpecialFileFormDTO {
+    private Long speFileId;           // id
     private String speFileName;       // 파일명
     private String speFileOriName;    // 원본 파일명
     private String speFileUrl;        // 파일 조회 경로

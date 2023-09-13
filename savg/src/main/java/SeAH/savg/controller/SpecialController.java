@@ -19,11 +19,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
-
 public class SpecialController {
     private final SpecialInspectionService specialInspectionService;
     private final SpecialInspectionRepository specialInspectionRepository;
@@ -74,10 +69,17 @@ public class SpecialController {
     }
 
 
-    // 완료처리 / 수정(update)
+    // 수정
     @PutMapping("/user/special/detail/{speId}")
-    public ResponseEntity<?> speComplete(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-        return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.CREATED);
+    public ResponseEntity<?> speChange(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        return new ResponseEntity<>(specialInspectionService.speUpdate(speId, speInsFormDTO), HttpStatus.OK);
+    }
+
+
+    // 완료처리
+    @PutMapping ("/user/special/complete/{speId}")
+    public ResponseEntity<?> speCompleted(@PathVariable String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
+        return new ResponseEntity<>(specialInspectionService.speComplete(speId, speInsFormDTO), HttpStatus.OK);
     }
 
 // -------------------------- 공통
@@ -97,17 +99,9 @@ public class SpecialController {
                                          @RequestParam (value = "speEndDate",required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate speEndDate,
                                          @RequestParam (value = "speComplete",required = false) SpeStatus speComplete,
                                          @RequestParam (value = "spePerson",required = false) String spePerson,
-                                         @RequestParam (value = "speEmpNum",required = false) String speEmpNum
+                                         @RequestParam (value = "speEmpNum",required = false) String speEmpNum,
+                                         @RequestParam (value = "speDanger",required = false) String speDanger
     ) {
-        System.out.println("컨트롤러 들어왔다");
-        System.out.println("spePart: "+spePart);
-        System.out.println("speFacility: "+speFacility);
-        System.out.println("speStartDate: "+speStartDate);
-        System.out.println("speEndDate: "+speEndDate);
-        System.out.println("speComplete: "+speComplete);
-        System.out.println("spePerson: "+spePerson);
-        System.out.println("speEmpNum: "+speEmpNum);
-
         Map<String, Object> responseData = new HashMap<>();
 
         // 날짜 변환
@@ -118,11 +112,13 @@ public class SpecialController {
             speEndDateTime =  LocalDateTime.of(speEndDate, LocalTime.MAX);
         }
 
-        Map<String, Object> searchSpeList = specialInspectionService.searchList(spePart, speFacility, speStartDateTime, speEndDateTime, speComplete, spePerson, speEmpNum);
+        Map<String, Object> searchSpeList = specialInspectionService.searchList(spePart, speFacility, speStartDateTime, speEndDateTime, speComplete, spePerson, speEmpNum, speDanger);
         responseData.put("searchSpeList", searchSpeList);
+        System.out.println("검색리스트확인: "+searchSpeList);
 
-        Map<String, Object> searchPartAndFacList = specialInspectionService.getPartAndFacilityDataList();
+        Map<String, Object> searchPartAndFacList = specialInspectionService.getPartAndFacilityAndDangerList();      // 선택항목: 저장된 영역, 설비, 위험분류 리스트
         responseData.put("searchPartAndFacList", searchPartAndFacList);
+        System.out.println("리스트확인: "+searchPartAndFacList);
 
         return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
