@@ -154,8 +154,11 @@ public class RegularInspectionService {
                 regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
 
                 regularInspectionBadRepository.save(regularInspectionBadEntity);
-
-
+                regularInspection.setRegularComplete(RegStatus.NO);
+                regularInspectionRepository.save(regularInspection);
+            }else{
+                regularInspection.setRegularComplete(RegStatus.OK);
+                regularInspectionRepository.save(regularInspection);
             }
         }
 
