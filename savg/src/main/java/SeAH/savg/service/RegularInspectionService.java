@@ -85,7 +85,7 @@ public class RegularInspectionService {
         List<RegularDetailDTO> regularDetailDTOList = new ArrayList<>();
         List<RegularList> regularListArray = regularListRepository.findByRegularNum(regularNum);
         for(RegularList regularList: regularListArray){
-            regularDetailDTOList.add(new RegularDetailDTO(regularList.getRegular1Id(),regularList.getRegularList()));
+            regularDetailDTOList.add(new RegularDetailDTO(regularList.getRegularId(),regularList.getRegularList()));
         }
 
         return regularDetailDTOList;
@@ -201,6 +201,8 @@ public class RegularInspectionService {
 //----------------------------------------------------정기점검 전체조회 검색
 public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO) {
 
+    List<String> completeYN = regularInspectionRepository.findByRegularCheckAllComplete(); //모두 처리완료여부
+
     JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
     QRegularInspection qRegularInspection = QRegularInspection.regularInspection;
     QRegularInspectionCheck qRegularInspectionCheck = QRegularInspectionCheck.regularInspectionCheck;
@@ -208,6 +210,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
 
     BooleanBuilder predicate = new BooleanBuilder();
 
+    //검색
     if (searchDTO.getRegularPart() != null) {
         BooleanExpression partPredicate = qRegularInspection.regularPart.eq(searchDTO.getRegularPart());
         predicate.and(partPredicate);
@@ -229,10 +232,11 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         BooleanExpression personPredicate = qRegularInspection.regularPerson.eq(searchDTO.getRegularPerson());
         predicate.and(personPredicate);
     }
-    if (searchDTO.getRegularCheck() != null) {
-        BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(searchDTO.getRegularCheck());
+    if (searchDTO.getRegularComplete() != null) {
+        BooleanExpression checkPredicate = qRegularInspection.regularComplete.eq(searchDTO.getRegularComplete());
         predicate.and(checkPredicate);
     }
+
     //BAD인 것만 조인
     BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(RegStatus.BAD);
     predicate.and(checkPredicate);
@@ -240,7 +244,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     //테이블 생성
     List<Tuple> searchRegularData = queryFactory
             .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regularDate, qRegularInspection.regularEmpNum,
-                    qRegularInspection.regularPerson, qRegularInspectionCheck.regularCheck, qRegularInspection.regularId)
+                    qRegularInspection.regularPerson, qRegularInspection.regularComplete, qRegularInspection.regularId)
             .from(qRegularInspection)
             .leftJoin(qRegularInspectionCheck).on(qRegularInspection.regularId.eq(qRegularInspectionCheck.regularInspection.regularId))
             .where(predicate)
@@ -251,21 +255,22 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     List<RegularSearchResultDTO> joinResult = new ArrayList<>();
     for (Tuple tuple : searchRegularData) {
         RegularSearchResultDTO middleResultDTO = new RegularSearchResultDTO();
-        middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart));
-        middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName));
-        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regularDate));
-        middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));
-        middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));
-        middleResultDTO.setRegularInsCount(searchRegularData.size());
-        middleResultDTO.setRegularCheck(tuple.get(qRegularInspectionCheck.regularCheck));
-        middleResultDTO.setRegularId(tuple.get(qRegularInspection.regularId));
+        middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart)); //영역
+        middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName)); //점검항목
+        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regularDate));  //점검일자
+        middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));  //점검자 사원번호
+        middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));  //점검자명
+        middleResultDTO.setRegularInsCount(searchRegularData.size()); //불량갯수
+        middleResultDTO.setRegularComplete(tuple.get(qRegularInspection.regularComplete));   //모두 조치완료여부
+        middleResultDTO.setRegularId(tuple.get(qRegularInspection.regularId));  //점검ID
         joinResult.add(middleResultDTO);
     }
 
-    //결과
+
+    //결과- 중복 제거
     Set<String> uniqueRegularIdList = new HashSet<>();
     List<RegularSearchResultDTO> finalList = new ArrayList<>();
-    RegStatus RegularYN = regularInspectionRepository.findPresentRegularYNList();
+
 
     for (RegularSearchResultDTO middleResultDTO : joinResult) {
         String regularId = middleResultDTO.getRegularId();
@@ -273,10 +278,10 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         if(!uniqueRegularIdList.contains(regularId)){
             uniqueRegularIdList.add(regularId);
             finalList.add(middleResultDTO);
-            finalList.add(middleResultDTO.setRegularCheck(RegularYN));
         }
-
     }
+
+
     return finalList;
 }
 

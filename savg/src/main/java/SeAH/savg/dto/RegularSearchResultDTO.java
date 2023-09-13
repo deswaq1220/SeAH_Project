@@ -18,17 +18,17 @@ public class RegularSearchResultDTO {
     private String regularEmpNum;               // 관찰자 사원번호
     private String regularPerson;               // 관찰자
     private int regularInsCount;                // 점검 건수
-    private RegStatus regularCheck;             // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
+    private RegStatus regularComplete;             // 모두 조치완료여부
     private String regularId;             // 정기점검id
 
 
-    public RegularSearchResultDTO mapping(RegularInspection entity1, RegularInspectionCheck entity2) {
+    public RegularSearchResultDTO mapping(RegularInspection entity1) {
         RegularSearchResultDTO dto = new RegularSearchResultDTO();
         dto.setRegularPart(entity1.getRegularPart());
         dto.setRegularInsName(entity1.getRegularInsName());
         dto.setRegularDate(entity1.getRegularDate());
         dto.setRegularPerson(entity1.getRegularPerson());
-        dto.setRegularCheck(entity2.getRegularCheck());
+        dto.setRegularComplete(entity1.getRegularComplete());
         return dto;
     }
 }

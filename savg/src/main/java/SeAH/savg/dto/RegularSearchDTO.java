@@ -21,16 +21,16 @@ public class RegularSearchDTO {
     private LocalDateTime regularEndTime;          // 검색완료구간
     private String regularEmpNum;               // 관찰자 사원번호
     private String regularPerson;               // 관찰자
-    private RegStatus regularCheck;           // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
+    private RegStatus regularComplete;           // 완료여부
 
 
-    public RegularSearchDTO mapping(RegularInspection entity1, RegularInspectionCheck entity2) {
+    public RegularSearchDTO mapping(RegularInspection entity1) {
         RegularSearchDTO dto = new RegularSearchDTO();
         dto.setRegularPart(entity1.getRegularPart());
         dto.setRegularInsName(entity1.getRegularInsName());
         dto.setRegularDate(entity1.getRegularDate());
         dto.setRegularPerson(entity1.getRegularPerson());
-        dto.setRegularCheck(entity2.getRegularCheck());
+        dto.setRegularComplete(entity1.getRegularComplete());
         return dto;
     }
 
@@ -49,4 +49,7 @@ public class RegularSearchDTO {
     public void setRegularEndTime(LocalDateTime regularEndTime) {
         this.regularEndTime = regularEndTime;
     }
+
+
+
 }
