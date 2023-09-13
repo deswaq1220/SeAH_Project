@@ -15,12 +15,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 
-
-//@CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://127.0.0.1:3000")
-
 public class AttendanceController {
 
     private final AttendanceService attendanceService;
@@ -58,6 +52,17 @@ public class AttendanceController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    //출석자 삭제
+    @DeleteMapping("/admin/attenlist/{attenId}")
+    public ResponseEntity<?> deleteAttendance(@PathVariable Long attenId) {
+        try {
+            attendanceService.deleteAtten(attenId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
 

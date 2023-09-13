@@ -2,7 +2,10 @@ package SeAH.savg.dto;
 
 import SeAH.savg.constant.SpeStatus;
 import SeAH.savg.entity.SpecialInspection;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.lang.Nullable;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,8 +38,11 @@ public class SpeInsFormDTO {
     private LocalDateTime speDeadline;      // 완료요청기한
     private SpeStatus speComplete;          // 완료여부
 
+    private List<Long> speDeleteFileIds;          // 파일 수정에 필요한 ID
 
     private List<MultipartFile> files;      // 파일
+
+//    private List<SpecialFile> speFileList = new ArrayList<>();
 
     private List<SpecialFileFormDTO> speFiles = new ArrayList<>();
 
@@ -64,11 +70,36 @@ public class SpeInsFormDTO {
         this.speDeadline = speDeadline;
         this.speComplete = speComplete;
     }
+
+//    public SpeInsFormDTO(SpecialInspection special) {
+//        if(special != null){
+//            this.speId = special.getSpeId();
+//            this.speDate = special.getSpeDate();
+//            this.spePerson = special.getSpePerson();
+//            this.speEmpNum = special.getSpeEmpNum();
+//            this.speEmail = special.getSpeEmail();
+//            this.spePart = special.getSpePart();
+//            this.speFacility = special.getSpeFacility();
+//            this.speDanger = special.getSpeDanger();
+//            this.speInjure = special.getSpeInjure();
+//            this.speCause = special.getSpeCause();
+//            this.speTrap = special.getSpeTrap();
+//            this.speRiskAssess = special.getSpeRiskAssess();
+//            this.speContent = special.getSpeContent();
+//            this.speActContent = special.getSpeActContent();
+//            this.speActPerson = special.getSpeActPerson();
+//            this.speActEmail = special.getSpeActEmail();
+//            this.speActDate = special.getSpeActDate();
+//            this.speDeadline = special.getSpeDeadline();
+//            this.speComplete = special.getSpeComplete();
+//        }
+//    }
+
     // DTO -> entity 변환
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }
 
     // 검색한 결과 리스트 세팅
-    public static List<SpeInsFormDTO> of(List<SpecialInspection> speFindList) {
+    public static List<SpeInsFormDTO> listOf(List<SpecialInspection> speFindList) {
         List<SpeInsFormDTO> speInsFormDTOList = new ArrayList<>();
         for (SpecialInspection specialInspection : speFindList) {
             SpeInsFormDTO speInsFormDTO = new SpeInsFormDTO(
@@ -97,5 +128,8 @@ public class SpeInsFormDTO {
         return speInsFormDTOList;
     }
 
+    public static SpeInsFormDTO of(SpecialInspection specialInspection){
+       return modelMapper.map(specialInspection, SpeInsFormDTO.class);
+    }
 
 }

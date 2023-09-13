@@ -17,7 +17,6 @@ public class RegularInspectionCheck {
     private Long regularCheckId;
 
     @Enumerated(EnumType.STRING)
-    @Column()
     private RegStatus regularCheck;           // 점검내용: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
 
     @ManyToOne(fetch = FetchType.EAGER)

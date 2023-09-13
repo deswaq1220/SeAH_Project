@@ -85,6 +85,7 @@ public class EduFileService {
         List<RegularFile> uploadedFiles = new ArrayList<>();
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
         List<MultipartFile> files;
+
         for(String str : regularDTO.getFile().keySet()){
             log.info("파일 이름 표시" + str);
             log.info(regularDTO.getFile().get(str).get(0).getOriginalFilename());

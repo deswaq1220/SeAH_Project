@@ -1,6 +1,7 @@
 package SeAH.savg.entity;
 
 import SeAH.savg.constant.SpeStatus;
+import SeAH.savg.dto.SpeInsFormDTO;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -71,6 +72,23 @@ public class SpecialInspection {
     @Enumerated(EnumType.STRING)
     private SpeStatus speComplete;              // 완료여부
 
+    public void updateFromDTO(SpeInsFormDTO speInsFormDTO) {
+        this.setSpeEmpNum(speInsFormDTO.getSpeEmpNum());
+        this.setSpePerson(speInsFormDTO.getSpePerson());
+        this.setSpeEmail(speInsFormDTO.getSpeEmail());
+        this.setSpeInjure(speInsFormDTO.getSpeInjure());
+        this.setSpeCause(speInsFormDTO.getSpeCause());
+        this.setSpeActPerson(speInsFormDTO.getSpeActPerson());
+        this.setSpeActEmail(speInsFormDTO.getSpeActEmail());
+        this.setSpeFacility(speInsFormDTO.getSpeFacility());
+        this.setSpeDanger(speInsFormDTO.getSpeDanger());
+        this.setSpeTrap(speInsFormDTO.getSpeTrap());
+        this.setSpeRiskAssess(speInsFormDTO.getSpeRiskAssess());
+        this.setSpeContent(speInsFormDTO.getSpeContent());
+        this.setSpeActContent(speInsFormDTO.getSpeActContent());
+        this.setSpeComplete(speInsFormDTO.getSpeComplete());
+        this.setSpeActDate(speInsFormDTO.getSpeActDate());
+    }
 
 
 }

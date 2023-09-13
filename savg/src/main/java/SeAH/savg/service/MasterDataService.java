@@ -148,8 +148,6 @@ public class MasterDataService {
 
     //부서 수정하기
 //    @Transactional
-    //부서 수정하기
-//    @Transactional
     public MasterDataDepartmentDTO updateDepart(MasterDataDepartmentDTO departmentDTO, Long departmentId){ //depart2: 수정해야하는 값, departmentDTO: 수정 값
         try{
 

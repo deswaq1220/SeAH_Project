@@ -18,7 +18,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
 
 
     // 안전교육 일지 조회 /edumain
-    @Query("SELECT e FROM Edu e WHERE YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month ORDER BY e.regTime DESC")
+    @Query("SELECT e FROM Edu e WHERE YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month ORDER BY e.eduStartTime DESC")
     List<Edu> findAllByYearAndMonth(@Param("year") int year, @Param("month") int month);
 
 
@@ -121,7 +121,7 @@ public interface EduRepository extends JpaRepository<Edu, String> {
     Page<Object[]> selectRunMonthEduList(@Param("year") int year, @Param("month") int month, Pageable pageable);
 
    //4. 월별 교육실행목록 조회하기(category별)
-   @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime " +
+   @Query("SELECT e.eduCategory, e.eduTitle, e.eduStartTime, e.eduSumTime, e.eduId " +
            "FROM Edu e " +
            "WHERE YEAR(e.eduStartTime) = :year AND MONTH(e.eduStartTime) = :month " +
            "AND e.eduCategory = :eduCategory " +

@@ -193,7 +193,7 @@ public class EduController {
             // Object 배열로 변환해서 반환
             statisticsList = new ArrayList<>();
             for (Edu edu : eduList) {
-                Object[] eduData = {edu.getEduCategory(), edu.getEduTitle(), edu.getEduStartTime(), edu.getEduSumTime()};
+                Object[] eduData = {edu.getEduCategory(), edu.getEduTitle(), edu.getEduStartTime(), edu.getEduSumTime(), edu.getEduId()};
                 statisticsList.add(eduData);
             }
         }

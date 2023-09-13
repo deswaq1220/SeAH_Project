@@ -7,11 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.ModelMap;
 
 import java.util.List;
-
-import static SeAH.savg.dto.SpeInsStatisticsDTO.modelMapper;
 
 @Service
 @RequiredArgsConstructor
@@ -54,13 +51,20 @@ public class EmailService {
         return email;
     }
     // 이메일 삭제
-    @Transactional
-    public void deleteEmail(Long emailId){
-        // 이메일 정보 가져오기
-        Email email = emailRepository.findById(emailId).orElseThrow();
+//    @Transactional
+//    public void deleteEmail(Long emailId){
+//        // 이메일 정보 가져오기
+//        Email email = emailRepository.findById(emailId).orElseThrow();
+//
+//        // 삭제
+//        emailRepository.delete(email);
+//    }
 
-        // 삭제
-        emailRepository.delete(email);
+
+    // 이메일 삭제
+    @Transactional
+    public void deleteEmail(Long EmailId){
+        emailRepository.deleteById(EmailId);
     }
 
 
