@@ -7,16 +7,13 @@ import SeAH.savg.dto.RegularSearchDTO;
 import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +21,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
+import static SeAH.savg.constant.RegStatus.BAD;
+import static SeAH.savg.constant.RegStatus.OK;
 
 @Service
 /*@RequiredArgsConstructor*/
@@ -44,6 +46,33 @@ public class RegularInspectionService {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    // 월별현황 : 점검실시 ()건, 조치완료 ()건, 불량건수 ()건
+    @Transactional
+    public Map<String, Object> findRegMonthly(){
+        Map<String, Object> responseData = new HashMap<>();
+
+        // 이번달 점검실시 건수
+        int countMonthlyAll = regularInspectionRepository.countByRegTime();
+
+        // 이번달 조치완료 건수
+        int countMonthlyComplete = regularInspectionRepository.findRegularInspectionsCompletedToday(OK);
+
+        // 이번달 등록건수 중 불량건수
+        int countMonthlyBadReg = regularCheckRepository.countByRegularCheck(BAD);
+
+        System.out.println("이번달 점검실시 건수: "+countMonthlyAll+"건");
+        System.out.println("이번달 조치완료 건수: "+countMonthlyComplete+"건");
+        System.out.println("이번달 불량건수: "+countMonthlyBadReg+"건");
+
+        responseData.put("monthlyAll", countMonthlyAll);                 // 이번달 점검실시건수
+        responseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 조치완료건수
+        responseData.put("monthlyBad", countMonthlyBadReg);      // 이번달 불량건수
+
+        return responseData ;
+    }
+
+
 
     @Autowired
     public RegularInspectionService(RegularInspectionRepository regularInspectionRepository,
@@ -143,7 +172,7 @@ public class RegularInspectionService {
 
             RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
 
-            if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
+            if (regularDetailDTO.getRegularCheck() == BAD) {
                 RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
                 regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
                 regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
@@ -274,7 +303,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
             if(regularCheck.equals(RegStatus.GOOD)){
                 middleData.put("id", "양호");
                 middleData.put("label", "양호");
-            } else if(regularCheck.equals(RegStatus.BAD)){
+            } else if(regularCheck.equals(BAD)){
                 middleData.put("id", "불량");
                 middleData.put("label", "불량");
             } else if(regularCheck.equals(RegStatus.NA)){
@@ -308,7 +337,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
             if(regularCheck.equals(RegStatus.GOOD)){
                 middleData.put("id", "양호");
                 middleData.put("label", "양호");
-            } else if(regularCheck.equals(RegStatus.BAD)){
+            } else if(regularCheck.equals(BAD)){
                 middleData.put("id", "불량");
                 middleData.put("label", "불량");
             } else if(regularCheck.equals(RegStatus.NA)){

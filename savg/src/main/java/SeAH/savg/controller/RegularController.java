@@ -1,26 +1,20 @@
 package SeAH.savg.controller;
 
 import SeAH.savg.constant.RegStatus;
-import SeAH.savg.dto.*;
-import SeAH.savg.entity.Email;
+import SeAH.savg.dto.RegularDTO;
+import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.dto.RegularSearchDTO;
+import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
-import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.RegularInspectionService;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,14 +26,18 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
 @CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class RegularController {
 
     private final RegularInspectionRepository regularInspectionRepository;
     private final RegularInspectionService regularInspectionService;
     private final RegularStatisticsRepository regularStatisticsRepository;
+
+    // 월별 정기점검현황 : 점검실시, 조치완료, 불량건수
+    @GetMapping("/user/regular/{masterdataPart}/{masterdataId}")
+    public ResponseEntity<?> speMonthly() {
+        return new ResponseEntity<>(regularInspectionService.findRegMonthly(), HttpStatus.OK);
+    }
 
 
     //정기점검 항목 리스트
