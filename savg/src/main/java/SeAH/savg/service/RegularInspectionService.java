@@ -15,17 +15,13 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static SeAH.savg.constant.MasterStatus.Y;
 import static SeAH.savg.constant.RegStatus.BAD;
@@ -43,9 +39,7 @@ public class RegularInspectionService {
     private final MakeIdService makeIdService;
     private final EmailRepository emailRepository;
     private final RegularListRepository regularListRepository;
-
     private final RegularFileService regularFileService;
-
     private final RegularFileRepository regularFileRepository;
 
     @PersistenceContext
@@ -76,28 +70,6 @@ public class RegularInspectionService {
 
         return responseData ;
     }
-
-
-
-    @Autowired
-    public RegularInspectionService(RegularInspectionRepository regularInspectionRepository,
-                                    RegularStatisticsRepository regularStatisticsRepository,
-                                    RegularInspectionBadRepository regularInspectionBadRepository,
-                                    RegularCheckRepository regularCheckRepository,
-                                    MakeIdService makeIdService,
-                                    EmailRepository emailRepository,
-                                    RegularListRepository regularListRepository
-                                    ) {
-        this.regularInspectionRepository = regularInspectionRepository;
-        this.regularStatisticsRepository = regularStatisticsRepository;
-        this.regularInspectionBadRepository = regularInspectionBadRepository;
-        this.regularCheckRepository = regularCheckRepository;
-        this.makeIdService = makeIdService;
-        this.emailRepository = emailRepository;
-        this.regularListRepository = regularListRepository;
-
-    }
-
 
 
     // 정기점검 항목 불러오기

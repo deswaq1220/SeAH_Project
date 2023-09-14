@@ -1,6 +1,7 @@
 package SeAH.savg.repository;
 
 import SeAH.savg.constant.RegStatus;
+import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.entity.RegularInspectionCheck;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

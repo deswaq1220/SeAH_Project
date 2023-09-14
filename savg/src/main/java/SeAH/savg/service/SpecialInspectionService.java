@@ -7,7 +7,6 @@ import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +38,6 @@ public class SpecialInspectionService {
     private final SpecialPartRepository specialPartRepository;
     private final MasterDataRepository masterDataRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
 
     // 수시점검 등록화면 조회
     @Transactional
