@@ -301,20 +301,28 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
 
             Map<String, Object> middleData = new HashMap<>();
 
-            if(regularCheck.equals(RegStatus.GOOD)){
-                middleData.put("id", "양호");
-                middleData.put("label", "양호");
-            } else if(regularCheck.equals(RegStatus.BAD)){
-                middleData.put("id", "불량");
-                middleData.put("label", "불량");
-            } else if(regularCheck.equals(RegStatus.NA)){
-                middleData.put("id", "NA");
-                middleData.put("label", "NA");
-            } else{
-                middleData.put("id", "error");
-                middleData.put("label", "error");
-                log.error("에러발생");
+            try{
+                if(regularCheck != null){
+                    if(regularCheck.equals(RegStatus.GOOD)){
+                        middleData.put("id", "양호");
+                        middleData.put("label", "양호");
+                    } else if(regularCheck.equals(RegStatus.BAD)){
+                        middleData.put("id", "불량");
+                        middleData.put("label", "불량");
+                    } else if(regularCheck.equals(RegStatus.NA)){
+                        middleData.put("id", "NA");
+                        middleData.put("label", "NA");
+                    }
+                }
+                else {
+                    middleData.put("id", "error");
+                    middleData.put("label", "error");
+                    log.error("에러발생");
+                }
+            } catch(Exception e){
+                e.printStackTrace();
             };
+
 
             middleData.put("value", count);
 
@@ -334,21 +342,27 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
             Long count = (Long) row[1];
 
             Map<String, Object> middleData = new HashMap<>();
-
-            if(regularCheck.equals(RegStatus.GOOD)){
-                middleData.put("id", "양호");
-                middleData.put("label", "양호");
-            } else if(regularCheck.equals(RegStatus.BAD)){
-                middleData.put("id", "불량");
-                middleData.put("label", "불량");
-            } else if(regularCheck.equals(RegStatus.NA)){
-                middleData.put("id", "NA");
-                middleData.put("label", "NA");
-            } else{
-                middleData.put("id", "error");
-                middleData.put("label", "error");
-                log.error("에러발생");
+            try{
+                if(regularCheck != null) {
+                    if (regularCheck.equals(RegStatus.GOOD)) {
+                        middleData.put("id", "양호");
+                        middleData.put("label", "양호");
+                    } else if (regularCheck.equals(RegStatus.BAD)) {
+                        middleData.put("id", "불량");
+                        middleData.put("label", "불량");
+                    } else if (regularCheck.equals(RegStatus.NA)) {
+                        middleData.put("id", "NA");
+                        middleData.put("label", "NA");
+                    }
+                } else{
+                    middleData.put("id", "error");
+                    middleData.put("label", "error");
+                    log.error("에러발생");
+                }
+            } catch(Exception e){
+                e.printStackTrace();
             };
+
             middleData.put("value", count);
 
             finalData.add(middleData);
@@ -407,7 +421,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         return filteredList;
     }
 
-    //(엑셀용) 월간 점검종류별 점검건수// 진행중
+    //(엑셀용) 월간 점검종류별 점검건수
     public List<Map<String, Map<String,Long>>> regularCntListByNameAndYearForExcel(int year, int month){
         List<Object[]> regularList = regularStatisticsRepository.regularListByNameAndMonthForExcel(year, month);
 
@@ -415,13 +429,19 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         List<Map<String, Map<String,Long>>> resultList = new ArrayList<>();
 
         for(Object[] row: regularList){
-            String name = (String) row[0];
-            String value = ((RegStatus) row[1]).toString();
-            Long count = (Long) row[2];
+            if(row[0] != null && row[1] != null && row[2] != null) {
+                String name = (String) row[0];
+                String value = ((RegStatus) row[1]).toString();
+                Long count = (Long) row[2];
 
-            Map<String, Long> dataPoint = grouping.getOrDefault(name, new HashMap<>());
-            dataPoint.put(value, count);
-            grouping.put(name, dataPoint);
+                Map<String, Long> dataPoint = grouping.getOrDefault(name, new HashMap<>());
+                dataPoint.put(value, count);
+                grouping.put(name, dataPoint);
+            } else {
+                Map<String, Long> dataPoint = grouping.getOrDefault("error", new HashMap<>());
+                dataPoint.put("error", 0L);
+                grouping.put("error", dataPoint);
+            }
         }
         resultList.add(grouping);
 
