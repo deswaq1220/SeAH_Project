@@ -113,7 +113,7 @@ public class RegularController {
             RegularDTO regularDTO = new RegularDTO();
             regularDTO.setRegularId(regularInspection.getRegularId());
             regularDTO.setRegularInsName(regularInspection.getRegularInsName());
-            regularDTO.setRegularDate(regularInspection.getRegularDate());
+            regularDTO.setRegularDate(regularInspection.getRegTime());
             regularDTO.setRegularPart(regularInspection.getRegularPart());
             regularDTOList.add(regularDTO);
         }
@@ -138,6 +138,17 @@ public class RegularController {
         }
         return ResponseEntity.ok(responseData);
     }
+    @PostMapping("/user/regular/badDetailModify/{regularBadId}")
+    public ResponseEntity<?> handlebadDetailModify(@PathVariable Long regularBadId, RegularDetailDTO regularDetailDTO) {
+        try {
+            regularInspectionService.updateRegularBad(regularBadId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+//
 
     //--------------------------------------전체현황 조회 관련
     @GetMapping("/user/searchregularlist")
@@ -276,5 +287,6 @@ public class RegularController {
         List<Map<String, Object>> statisticsList = regularInspectionService.regularCountListByNameAndYear(year);
         return ResponseEntity.ok(statisticsList);
     }
+
 
 }
