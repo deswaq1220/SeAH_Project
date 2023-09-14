@@ -523,7 +523,7 @@ public class SpecialInspectionService {
             dataPoint.put("sort", part);
             dataPoint.put("수시점검", count);
 
-            if (!part.equals("선택") && !part.equals("EHS") && !part.equals("생산")) { //"선택", "EHS", "생산" 제거
+            if (!part.equals("선택")) { //"선택" 제거
                 keyValueList.add(dataPoint);
             }
 
