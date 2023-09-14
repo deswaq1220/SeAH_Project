@@ -323,7 +323,6 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
                 e.printStackTrace();
             };
 
-
             middleData.put("value", count);
 
             finalData.add(middleData);

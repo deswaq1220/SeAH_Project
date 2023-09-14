@@ -394,6 +394,7 @@ public class SpecialInspectionService {
 
         return resultList;
     }
+
     //월간 위험분류별 점검건수(텍스트로 출력)
     public List<Object[]> specialListByDangerAndMonth(int year, int month){
         List<Object[]> specialList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
@@ -445,6 +446,22 @@ public class SpecialInspectionService {
         return filteredList;
     }
 
+
+    //(엑셀용)월간 수시점검 위험원인 건수
+    public List<Object[]> getListBySpecauseAndMonthForExcel1(int year, int month){
+
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonthForExcel1(year, month);
+
+        // "선택" 값을 제외한 새로운 리스트 생성
+        List<Object[]> filteredList = new ArrayList<>();
+        for (Object[] item : statisticsList) {
+            String value = (String) item[0];
+            if (!value.equals("선택")) { //"선택" 제거
+                filteredList.add(item);
+            }
+        }
+        return filteredList;
+    }
 
 
 

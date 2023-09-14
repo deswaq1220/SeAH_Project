@@ -201,13 +201,21 @@ public class SpecialController {
         return ResponseEntity.ok(statisticsList);
     }
 
-
-    // (엑셀용) 월간 위험원인별 점검리스트(기타- 직접입력한 것까지 모두 출력)
-    @GetMapping("/admin/special/statistics/causeandmonthforexcel")
-    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonthForExcel(@RequestParam("yearmonth") String yearMonth) {
+    // (엑셀용) 월간 위험원인별 점검리스트(전체출력)
+    @GetMapping("/admin/special/statistics/causeandmonthforexcel1")
+    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonthForExcel1(@RequestParam("yearmonth") String yearMonth) {
         int year = Integer.parseInt(yearMonth.substring(0, 4));
         int month = Integer.parseInt(yearMonth.substring(5, 7));
-        List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonthForExcel(year, month);
+        List<Object[]> statisticsList = specialInspectionService.getListBySpecauseAndMonthForExcel1(year, month);
+
+        return ResponseEntity.ok(statisticsList);
+    }
+    // (엑셀용) 월간 위험원인별 점검리스트(기타- 직접입력한 것까지 모두 출력)
+    @GetMapping("/admin/special/statistics/causeandmonthforexcel2")
+    public ResponseEntity<List<Object[]>> getSpecialListBySpecauseAndMonthForExcel2(@RequestParam("yearmonth") String yearMonth) {
+        int year = Integer.parseInt(yearMonth.substring(0, 4));
+        int month = Integer.parseInt(yearMonth.substring(5, 7));
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonthForExcel2(year, month);
         return ResponseEntity.ok(statisticsList);
     }
 
