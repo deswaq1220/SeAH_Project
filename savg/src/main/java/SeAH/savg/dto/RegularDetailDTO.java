@@ -16,6 +16,7 @@ import java.util.List;
 @Getter @Setter @ToString
 public class RegularDetailDTO {
 
+    private String regularInspectionId;
     private Long regularBadId;
     private String id;                          //체크리스트 기준정보 id
     private RegStatus regularCheck;           // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
@@ -25,9 +26,10 @@ public class RegularDetailDTO {
     private String regularActPerson;            //조치담당자
     private String regularActEmail;             //조치담당 이메일
     private RegStatus regularComplete;            //상태
-
+    private MultipartFile[] files;
 
     private List<String> filePath;
+
 
 
     public RegularDetailDTO(String id, String checklist){

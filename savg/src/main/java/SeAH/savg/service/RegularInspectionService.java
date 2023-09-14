@@ -155,7 +155,7 @@ public class RegularInspectionService {
                 regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
                 regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
                 regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-                regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
+
 
                 regularInspectionBadRepository.save(regularInspectionBadEntity);
                 regularInspection.setRegularComplete(RegStatus.NO);
@@ -185,10 +185,14 @@ public class RegularInspectionService {
         return regularDTO;
     }
 
-    public void updateRegularBad(Long regularBadId){
+    public void updateRegularBad(Long regularBadId, RegularDetailDTO regularDetailDTO) throws Exception {
+
         RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findById(regularBadId).orElseThrow();
         regularInspectionBad.setRegularComplete(RegStatus.OK);
         regularInspectionBadRepository.save(regularInspectionBad);
+
+        regularFileService.regularFileUpadte(regularDetailDTO);
+
     }
 
 
