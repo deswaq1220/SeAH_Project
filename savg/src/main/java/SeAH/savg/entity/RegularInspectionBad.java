@@ -31,6 +31,7 @@ public class RegularInspectionBad {
     @Enumerated(EnumType.STRING)
     private RegStatus regularComplete;              // 완료여부
 
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "regular_check_id")                    //정기점검 체크 id
     private RegularInspectionCheck regularInspectionCheck;

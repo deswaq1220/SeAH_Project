@@ -6,6 +6,7 @@ import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.dto.RegularSearchDTO;
 import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.RegularInspection;
+import SeAH.savg.entity.RegularInspectionCheck;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.RegularInspectionService;
@@ -26,7 +27,6 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class RegularController {
 
     private final RegularInspectionRepository regularInspectionRepository;
@@ -66,7 +66,7 @@ public class RegularController {
 
     @GetMapping("/user/regularcheck")
     public ResponseEntity<List<RegularDetailDTO>> regularcheck(@RequestParam int regularNum) {
-        Map<String, List<RegularDetailDTO>> responseData = new HashMap<>();
+
 
         List<RegularDetailDTO> checklist = regularInspectionService.selectRegularListByNum(regularNum);
 
@@ -86,7 +86,7 @@ public class RegularController {
 
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
-        public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
+    public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
         Map<String, Object> regularDate = regularInspectionService.createRegular(regularDTO);
 
         // 응답 데이터 생성
@@ -96,6 +96,7 @@ public class RegularController {
 
         return ResponseEntity.ok(responseData);
     }
+
 
 
     //정기점검 목록 조회
@@ -120,12 +121,19 @@ public class RegularController {
 
     //정기점검 상세조회
     @GetMapping("/user/regular/detail/{regularId}")
-    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable("regularId") String regularId){
-        RegularDetailDTO regularDetailDTO = regularInspectionService.getRegularById(regularId);
-        if (regularDetailDTO == null){
+    public ResponseEntity<Map<String, Object>> viewRegularDetail(@PathVariable("regularId") String regularId){
+        Map<String, Object> responseData = new HashMap<>();
+
+        RegularDTO regularDTO = regularInspectionService.getRegularById(regularId);
+        List<RegularDetailDTO> regularDetailDTOList = regularInspectionService.getRegularCheckList(regularId);
+
+        responseData.put("regularDTO", regularDTO);
+        responseData.put("regularDetailDTOList", regularDetailDTOList);
+
+        if (regularDTO == null){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(regularDetailDTO);
+        return ResponseEntity.ok(responseData);
     }
 
     //--------------------------------------전체현황 조회 관련
@@ -136,7 +144,7 @@ public class RegularController {
                                                ,@RequestParam(value= "regularEndDate", required = false) LocalDate regularEndDate
                                                ,@RequestParam(value= "regularEmpNum", required = false) String regularEmpNum
                                                ,@RequestParam(value= "regularPerson", required = false) String regularPerson
-                                               ,@RequestParam(value= "regularCheck", required = false) RegStatus regularCheck){
+                                               ,@RequestParam(value= "regularComplete", required = false) RegStatus regularComplete){
 
         //날짜 변환 localDate -> localDateTime
         LocalDateTime regularStartDateTime = null;
@@ -154,7 +162,7 @@ public class RegularController {
         dto.setRegularEndTime(regularEndDateTime);
         dto.setRegularEmpNum(regularEmpNum);
         dto.setRegularPerson(regularPerson);
-        dto.setRegularCheck(regularCheck);
+        dto.setRegularComplete(regularComplete);
         System.out.println(dto);
 
         List<RegularSearchResultDTO> serviceData = regularInspectionService.searchRegularList(dto);
@@ -247,6 +255,7 @@ public class RegularController {
         int month = Integer.parseInt(yearMonth.substring(5, 7));
 
         List<Map<String, Object>> statisticsList = regularInspectionService.regularDetailListByPartAndMonth(year, month);
+
         return ResponseEntity.ok(statisticsList);
     }
 

@@ -19,9 +19,13 @@ public interface RegularCheckRepository extends JpaRepository<RegularInspectionC
             "WHERE i.regularId = :regularId")
     List<Object[]> getRegularInspectionDetail(@Param("regularId") String regularId);
 
+
     @Query("SELECT COUNT(ri) FROM RegularInspectionCheck ri " +
             "WHERE DATE_FORMAT(ri.regularInspection.regTime, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m') " +
             "AND ri.regularCheck =? 1")
     int countByRegularCheck(RegStatus regStatus);
+
+
+    List<RegularInspectionCheck> findByRegularInspection(RegularInspection regularInspection);
 
 }
