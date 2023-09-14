@@ -7,7 +7,6 @@ import SeAH.savg.dto.RegularSearchDTO;
 import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -40,7 +39,8 @@ public class RegularInspectionService {
     private final MakeIdService makeIdService;
     private final EmailRepository emailRepository;
     private final RegularListRepository regularListRepository;
-    private final EduFileService eduFileService;
+    private final RegularFileService regularFileService;
+    private final RegularFileRepository regularFileRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -127,7 +127,7 @@ public class RegularInspectionService {
 
 
         if(regularDTO.getFile()!=null){
-            eduFileService.uploadFile2(regularInspection, regularDTO);
+            regularFileService.regularUploadFile(regularInspection, regularDTO);
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -140,6 +140,7 @@ public class RegularInspectionService {
             RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
             regularInspectionCheck.setRegularInspection(savedRegularInspection);
             regularInspectionCheck.setRegularCheck(regularDetailDTO.getRegularCheck());
+            regularInspectionCheck.setRegularListId(regularDetailDTO.getId());
 
             RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
 
@@ -172,32 +173,13 @@ public class RegularInspectionService {
     }
 
     //상세조회
-    public RegularDetailDTO getRegularById(String regularId) {
-        List<Object[]> result = regularCheckRepository.getRegularInspectionDetail(regularId);
+    public RegularDTO getRegularById(String regularId) {
+         RegularInspection regularInspection = regularInspectionRepository.findById(regularId).orElseThrow(()->new IllegalArgumentException("상세보기 할 데이터가 없습니다."));
 
-        if (result.isEmpty()) {
-            return null;
-        }
+        RegularDTO regularDTO = RegularDTO.of(regularInspection);
 
-        RegularDetailDTO regularDetailDTO = new RegularDetailDTO();
-        Object[] data = result.get(0);
 
-        //불량일때
-        RegularInspectionBad bad = (RegularInspectionBad) data[1];
-        regularDetailDTO.setRegularActContent(bad.getRegularActContent());
-        regularDetailDTO.setRegularActPerson(bad.getRegularActPerson());
-        regularDetailDTO.setRegularActEmail(bad.getRegularActEmail());
-
-        //양호, N/A
-        RegularInspection inspection = (RegularInspection) data[0];
-//        regularDetailDTO.setRegularInsName(inspection.getRegularInsName());
-//        regularDetailDTO.setRegularDate(inspection.getRegularDate());
-//        regularDetailDTO.setRegularPerson(inspection.getRegularPerson());
-//        regularDetailDTO.setRegularEmpNum(inspection.getRegularEmpNum());
-//        regularDetailDTO.setRegularEmail(inspection.getRegularEmail());
-//        regularDetailDTO.setRegularPart(inspection.getRegularPart());
-
-        return regularDetailDTO;
+        return regularDTO;
     }
 
 
@@ -456,6 +438,47 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
 
         return finalData;
     }
+    //정기점검 상세 보기
+    public List<RegularDetailDTO> getRegularCheckList(String regularId){
+        List<RegularDetailDTO> regularDetailDTOList = new ArrayList<>();
+        log.info("여기 안됨?" );
+
+        //regularInstpection 가져오기
+        RegularInspection regularInspection = regularInspectionRepository.findById(regularId).orElseThrow();
+
+        //regularInstpection에 등록된 체크리스트 불러오기
+        List<RegularInspectionCheck> regularInspectionCheckList = regularCheckRepository.findByRegularInspection(regularInspection);
+
+        //regularInstpection에 등록된 파일 가져오기
+
+
+        for(RegularInspectionCheck regularInspectionCheck : regularInspectionCheckList){
+            RegularList regularList = regularListRepository.findById(regularInspectionCheck.getRegularListId()).orElseThrow();
+
+            String checklist = regularList.getRegularList();
+
+            RegStatus regStatus = regularInspectionCheck.getRegularCheck();
+
+
+            if(regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck) != null){
+                RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck);
+
+                List<String> regularFileNameList = regularFileRepository.getRegularFileName(regularList.getRegular1Id(),regularInspection);
+
+                String regularActContent = regularInspectionBad.getRegularActContent();
+                String regularActEmail = regularInspectionBad.getRegularActEmail();
+                String regularActPerson = regularInspectionBad.getRegularActPerson();
+
+                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail,regularFileNameList));
+            }else{
+                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null,null));
+            }
+
+
+        }
+        return regularDetailDTOList;
+    }
+
 
 }
 

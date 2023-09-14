@@ -18,4 +18,6 @@ public interface RegularCheckRepository extends JpaRepository<RegularInspectionC
             "LEFT JOIN RegularInspectionBad b ON i.regularId = b.regularInspectionCheck.regularInspection.regularId " +
             "WHERE i.regularId = :regularId")
     List<Object[]> getRegularInspectionDetail(@Param("regularId") String regularId);
+
+    List<RegularInspectionCheck> findByRegularInspection(RegularInspection regularInspection);
 }
