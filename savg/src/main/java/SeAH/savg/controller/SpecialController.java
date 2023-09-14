@@ -82,6 +82,14 @@ public class SpecialController {
         return new ResponseEntity<>(specialInspectionService.speComplete(speId, speInsFormDTO), HttpStatus.OK);
     }
 
+
+    // 삭제
+    @DeleteMapping ("/user/special/detail/{speId}")
+    public ResponseEntity<?> speDelete(@PathVariable String speId) {
+        specialInspectionService.speDelete(speId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 // -------------------------- 공통
 
 

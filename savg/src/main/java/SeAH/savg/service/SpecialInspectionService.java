@@ -188,7 +188,7 @@ public class SpecialInspectionService {
             List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
 
             for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
-//                // 이미지 전체 데이터얻기
+                // 이미지 전체 데이터얻기
                 specialFileDTOList.add(speFileDTO);
 
                 // 뷰: url로 상세페이지 이미지 보여줌
@@ -235,8 +235,11 @@ public class SpecialInspectionService {
 
         // 파일 id찾아서 삭제
         if (speInsFormDTO.getSpeDeleteFileIds() != null) {
+            // 정보삭제
             for (Long speFileId : speInsFormDTO.getSpeDeleteFileIds()) {
+                String fileName = specialFileRepository.findSpeFileNameBySpeFileId(speFileId);
                 specialFileRepository.deleteById(speFileId);
+                specialFileService.deleteFile(fileName);
             }
         }
 
@@ -288,7 +291,23 @@ public class SpecialInspectionService {
         return special;
     }
 
+    // 수시점검내역 삭제
+    @Transactional
+    public void speDelete(String speId) {
+        System.out.println("서비스");
+        // 파일 삭제
+        List<SpecialFile> filesToDelete = specialFileRepository.findBySpecialInspectionSpeId(speId);
 
+        System.out.println("파일삭제 아이디: " + filesToDelete);
+
+        for (SpecialFile file : filesToDelete) {
+            specialFileRepository.deleteById(file.getSpeFileId());
+            specialFileService.deleteFile(file.getSpeFileName());
+        }
+
+        // 특정 speId에 해당하는 SpecialInspection 삭제
+        specialInspectionRepository.deleteById(speId);
+    }
 
 
 
