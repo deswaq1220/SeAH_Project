@@ -28,7 +28,7 @@ import java.util.*;
 import static SeAH.savg.constant.MasterStatus.Y;
 
 @Service
-/*@RequiredArgsConstructor*/
+//@RequiredArgsConstructor
 @Log4j2
 public class RegularInspectionService {
 
@@ -39,8 +39,11 @@ public class RegularInspectionService {
     private final MakeIdService makeIdService;
     private final EmailRepository emailRepository;
     private final RegularListRepository regularListRepository;
-    private final RegularFileService regularFileService;
-    private final RegularFileRepository regularFileRepository;
+
+    @Autowired
+    private  RegularFileService regularFileService;
+    @Autowired
+    private  RegularFileRepository regularFileRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -52,8 +55,8 @@ public class RegularInspectionService {
                                     RegularCheckRepository regularCheckRepository,
                                     MakeIdService makeIdService,
                                     EmailRepository emailRepository,
-                                    RegularListRepository regularListRepository,
-                                    EduFileService eduFileService) {
+                                    RegularListRepository regularListRepository
+                                    ) {
         this.regularInspectionRepository = regularInspectionRepository;
         this.regularStatisticsRepository = regularStatisticsRepository;
         this.regularInspectionBadRepository = regularInspectionBadRepository;
@@ -61,7 +64,7 @@ public class RegularInspectionService {
         this.makeIdService = makeIdService;
         this.emailRepository = emailRepository;
         this.regularListRepository = regularListRepository;
-        this.eduFileService = eduFileService;
+
     }
 
 
@@ -463,7 +466,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
             if(regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck) != null){
                 RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck);
 
-                List<String> regularFileNameList = regularFileRepository.getRegularFileName(regularList.getRegular1Id(),regularInspection);
+                List<String> regularFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection);
 
                 String regularActContent = regularInspectionBad.getRegularActContent();
                 String regularActEmail = regularInspectionBad.getRegularActEmail();

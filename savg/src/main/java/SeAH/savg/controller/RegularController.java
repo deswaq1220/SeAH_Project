@@ -89,12 +89,17 @@ public class RegularController {
 
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
-        public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
+    public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
         Map<String, Object> regularDate = regularInspectionService.createRegular(regularDTO);
 
-        regularInspectionService.createRegular(regularDTO);
-        return ResponseEntity.ok("정기점검 등록 성공");
+        // 응답 데이터 생성
+        Map<String, Object> responseData = new HashMap<>();
+        responseData.put("message", "정기점검 등록 성공");
+        responseData.putAll(regularDate);
+
+        return ResponseEntity.ok(responseData);
     }
+
 
 
     //정기점검 목록 조회
