@@ -26,4 +26,7 @@ public class RegularInspectionCheck {
     @Column
     private String regularListId;
 
+    @Enumerated(EnumType.STRING)
+    private RegStatus regularComplete;              // 완료여부
+
 }
