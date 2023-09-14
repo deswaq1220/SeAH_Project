@@ -13,6 +13,7 @@ import SeAH.savg.service.EduService;
 import SeAH.savg.service.MakeIdService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,31 +33,30 @@ import java.util.Map;
 //@CrossOrigin(origins = "http://172.20.20.252:3000") //세아
 
 @Log4j2
-
+@RequiredArgsConstructor
 public class EduController {
 
     private final EduRepository eduRepository;
     private final EduService eduService;
     private final EduFileService eduFileService;
-    private final EduFileRepository eduFileRepository;
     private final MakeIdService makeIdService;
 
 
 
 
-    public EduController(EduRepository eduRepository, EduService eduService, EduFileService eduFileService,
-                         EduFileRepository eduFileRepository, MakeIdService makeIdService) {
-        this.eduRepository = eduRepository;
-        this.eduService = eduService;
-        this.eduFileService = eduFileService;
-        this.eduFileRepository=eduFileRepository;
-        this.makeIdService = makeIdService;
-
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-
-    }
+//    public EduController(EduRepository eduRepository, EduService eduService, EduFileService eduFileService,
+//                         EduFileRepository eduFileRepository, MakeIdService makeIdService) {
+//        this.eduRepository = eduRepository;
+//        this.eduService = eduService;
+//        this.eduFileService = eduFileService;
+//        this.eduFileRepository=eduFileRepository;
+//        this.makeIdService = makeIdService;
+//
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.registerModule(new JavaTimeModule());
+//
+//    }
 
 
 

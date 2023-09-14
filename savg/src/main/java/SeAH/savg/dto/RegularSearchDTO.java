@@ -28,7 +28,7 @@ public class RegularSearchDTO {
         RegularSearchDTO dto = new RegularSearchDTO();
         dto.setRegularPart(entity1.getRegularPart());
         dto.setRegularInsName(entity1.getRegularInsName());
-        dto.setRegularDate(entity1.getRegularDate());
+        dto.setRegularDate(entity1.getRegTime());
         dto.setRegularPerson(entity1.getRegularPerson());
         dto.setRegularComplete(entity1.getRegularComplete());
         return dto;

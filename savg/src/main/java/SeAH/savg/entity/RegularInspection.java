@@ -21,9 +21,6 @@ public class RegularInspection extends BaseTimeEntity{
     private String regularInsName;              // 점검항목
 
     @Column(nullable = false)
-    private LocalDateTime regularDate;          // 관찰일
-
-    @Column(nullable = false)
     private String regularPerson;               // 관찰자
 
     @Column(nullable = false)

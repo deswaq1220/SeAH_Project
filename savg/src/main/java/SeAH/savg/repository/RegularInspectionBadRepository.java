@@ -11,7 +11,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RegularInspectionBadRepository extends JpaRepository<RegularInspectionBad, String> {
+public interface RegularInspectionBadRepository extends JpaRepository<RegularInspectionBad, Long> {
 
 RegularInspectionBad findByRegularInspectionCheck(RegularInspectionCheck regularInspectionCheck);
+
 }
