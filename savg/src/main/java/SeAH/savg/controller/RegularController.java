@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -129,10 +130,17 @@ public class RegularController {
         }
         return ResponseEntity.ok(responseData);
     }
+
     @PostMapping("/user/regular/badDetailModify/{regularBadId}")
     public ResponseEntity<?> handlebadDetailModify(@PathVariable Long regularBadId, RegularDetailDTO regularDetailDTO) {
         try {
-            regularInspectionService.updateRegularBad(regularBadId);
+            regularInspectionService.updateRegularBad(regularBadId, regularDetailDTO);
+        if(regularDetailDTO.getFiles() != null){
+            for(MultipartFile file : regularDetailDTO.getFiles()){
+                    log.info("파일 이름" + file.getOriginalFilename());
+            }
+        }
+
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
