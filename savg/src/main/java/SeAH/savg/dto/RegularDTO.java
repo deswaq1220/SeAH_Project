@@ -1,20 +1,17 @@
 package SeAH.savg.dto;
 
-import SeAH.savg.constant.RegStatus;
 import SeAH.savg.entity.RegularInspection;
-import SeAH.savg.entity.RegularInspectionBad;
-import SeAH.savg.entity.RegularInspectionCheck;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Getter @Setter
+@Getter @Setter @ToString
 public class RegularDTO {
     private String regularId;
     private String regularPerson;               // 관찰자

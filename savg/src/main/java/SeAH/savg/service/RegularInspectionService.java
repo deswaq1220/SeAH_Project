@@ -20,8 +20,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
 import static SeAH.savg.constant.RegStatus.BAD;
@@ -176,7 +178,7 @@ public class RegularInspectionService {
 
     //정기점검 목록 조회
     public List<RegularInspection> getRegularByDate(int year, int month){
-        return regularInspectionRepository.findAllByRegularDate(year, month);
+        return regularInspectionRepository.findAllByRegularDateOrderByOrderByRegTime(year, month);
     }
 
     //상세조회
