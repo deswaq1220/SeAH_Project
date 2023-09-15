@@ -90,6 +90,11 @@ public class RegularController {
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
     public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
+        if(regularDTO.getFile()!=null){
+            log.info("파일 있음");
+            System.out.println(regularDTO.getFile().size());
+        }
+
         Map<String, Object> regularDate = regularInspectionService.createRegular(regularDTO);
 
         // 응답 데이터 생성

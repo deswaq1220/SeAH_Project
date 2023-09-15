@@ -219,7 +219,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         predicate.and(insNamePredicate);
     }
     if (searchDTO.getRegularStartTime() != null && searchDTO.getRegularEndTime() != null) {
-        BooleanExpression datePredicate = qRegularInspection.regularDate.between(
+        BooleanExpression datePredicate = qRegularInspection.regTime.between(
                 searchDTO.getRegularStartTime(), searchDTO.getRegularEndTime());
        predicate.and(datePredicate);
     }
@@ -242,12 +242,12 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
 
     //테이블 생성
     List<Tuple> searchRegularData = queryFactory
-            .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regularDate, qRegularInspection.regularEmpNum,
+            .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regTime, qRegularInspection.regularEmpNum,
                     qRegularInspection.regularPerson, qRegularInspection.regularComplete, qRegularInspection.regularId)
             .from(qRegularInspection)
             .leftJoin(qRegularInspectionCheck).on(qRegularInspection.regularId.eq(qRegularInspectionCheck.regularInspection.regularId))
             .where(predicate)
-            .orderBy(qRegularInspection.regularDate.desc())
+            .orderBy(qRegularInspection.regTime.desc())
             .fetch();
 
     //테이블 중 같은 아이디의 경우 테이블 줄이기
@@ -256,7 +256,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         RegularSearchResultDTO middleResultDTO = new RegularSearchResultDTO();
         middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart)); //영역
         middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName)); //점검항목
-        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regularDate));  //점검일자
+        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regTime));  //점검일자
         middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));  //점검자 사원번호
         middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));  //점검자명
         middleResultDTO.setRegularInsCount(searchRegularData.size()); //불량갯수
