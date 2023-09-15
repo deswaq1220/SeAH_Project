@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,18 @@ public class SpecialFileService {
 
         return uploadedFiles;
     }
+
+
+
+    //파일삭제
+    public void deleteFile(String fileName) {
+        String filePath = speFileLocation + "/" + fileName;
+        File deleteFile = new File(filePath);
+        if (deleteFile.exists()) {
+            deleteFile.delete();
+        }
+    }
+
 
     // 파일 경로 반환
     private String getFilePath(String fileName) {

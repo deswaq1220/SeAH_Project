@@ -1,5 +1,6 @@
 package SeAH.savg.repository;
 
+import SeAH.savg.constant.RegStatus;
 import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.entity.RegularInspectionCheck;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,5 +20,15 @@ public interface RegularCheckRepository extends JpaRepository<RegularInspectionC
             "WHERE i.regularId = :regularId")
     List<Object[]> getRegularInspectionDetail(@Param("regularId") String regularId);
 
+
+    @Query("SELECT COUNT(ri) FROM RegularInspectionCheck ri " +
+            "WHERE DATE_FORMAT(ri.regularInspection.regTime, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m') " +
+            "AND ri.regularCheck =? 1")
+    int countByRegularCheck(RegStatus regStatus);
+
+
     List<RegularInspectionCheck> findByRegularInspection(RegularInspection regularInspection);
+
+    // regularId 외래키로 찾기
+    List<RegularInspectionCheck> findByRegularInspectionRegularId(String regId);
 }
