@@ -16,13 +16,8 @@ import java.util.List;
 @Getter @Setter @ToString
 public class RegularDetailDTO {
 
-//    private String regularInsName;          // 관찰 점검종류(또는 이름)   참조테이블: RegularName
-//    private LocalDateTime regularDate;          // 관찰일
-//    private String regularPerson;               // 관찰자
-//    private String regularEmpNum;               // 관찰자 사원번호
-//    private String regularEmail;                // 관찰자 이메일(조치완료시 회신)
-//    private String regularPart;                 // 점검구역(영역)
-
+    private String regularInspectionId;
+    private Long regularBadId;
     private String id;                          //체크리스트 기준정보 id
     private RegStatus regularCheck;           // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
     private String checklist;             //checkList
@@ -30,23 +25,31 @@ public class RegularDetailDTO {
     private String regularActContent;           //개선대책
     private String regularActPerson;            //조치담당자
     private String regularActEmail;             //조치담당 이메일
-    private List<String> filePath;
-//시간은 직접 입력(now)
-//    private LocalDateTime regularActDate;      //점검완료일
+    private RegStatus regularComplete;            //상태
+
+    private MultipartFile[] files;
+
+    private List<String> beforeFilePath;
+    private List<String> afterFilePath;
+
+
 
     public RegularDetailDTO(String id, String checklist){
         this.id = id;
         this.checklist = checklist;
     }
 
-    public RegularDetailDTO(String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, List<String> filePath){
+    public RegularDetailDTO(Long regularBadId, String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, RegStatus regularComplete, List<String> beforeFilePath,List<String> afterFilePath){
+        this.regularBadId = regularBadId;
         this.id = id;
         this.checklist = checklist;
         this.regularCheck = regularCheck;
         this.regularActContent= regularActContent;
         this.regularActEmail = regularActEmail;
         this.regularActPerson = regularActPerson;
-        this.filePath = filePath;
+        this.regularComplete = regularComplete;
+        this.beforeFilePath = beforeFilePath;
+        this.afterFilePath = afterFilePath;
     }
     public RegularDetailDTO(){}
 

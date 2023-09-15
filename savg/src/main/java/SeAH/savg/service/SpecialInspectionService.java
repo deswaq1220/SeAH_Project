@@ -7,7 +7,6 @@ import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +38,6 @@ public class SpecialInspectionService {
     private final SpecialPartRepository specialPartRepository;
     private final MasterDataRepository masterDataRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
 
     // 수시점검 등록화면 조회
     @Transactional
@@ -188,7 +186,7 @@ public class SpecialInspectionService {
             List<String> noCompImageUrls = new ArrayList<>();       // 미완료이미지 url
 
             for (SpecialFileFormDTO speFileDTO : speFileDTOList) {
-//                // 이미지 전체 데이터얻기
+                // 이미지 전체 데이터얻기
                 specialFileDTOList.add(speFileDTO);
 
                 // 뷰: url로 상세페이지 이미지 보여줌
@@ -235,8 +233,11 @@ public class SpecialInspectionService {
 
         // 파일 id찾아서 삭제
         if (speInsFormDTO.getSpeDeleteFileIds() != null) {
+            // 정보삭제
             for (Long speFileId : speInsFormDTO.getSpeDeleteFileIds()) {
+                String fileName = specialFileRepository.findSpeFileNameBySpeFileId(speFileId);
                 specialFileRepository.deleteById(speFileId);
+                specialFileService.deleteFile(fileName);
             }
         }
 
@@ -288,7 +289,22 @@ public class SpecialInspectionService {
         return special;
     }
 
+    // 수시점검내역 삭제
+    @Transactional
+    public void speDelete(String speId) {
+        // 파일 삭제
+        List<SpecialFile> filesToDelete = specialFileRepository.findBySpecialInspectionSpeId(speId);
 
+        System.out.println("파일삭제 아이디: " + filesToDelete);
+
+        for (SpecialFile file : filesToDelete) {
+            specialFileRepository.deleteById(file.getSpeFileId());
+            specialFileService.deleteFile(file.getSpeFileName());
+        }
+
+        // 특정 speId에 해당하는 SpecialInspection 삭제
+        specialInspectionRepository.deleteById(speId);
+    }
 
 
 
@@ -394,6 +410,7 @@ public class SpecialInspectionService {
 
         return resultList;
     }
+
     //월간 위험분류별 점검건수(텍스트로 출력)
     public List<Object[]> specialListByDangerAndMonth(int year, int month){
         List<Object[]> specialList = specialInspectionRepository.specialListByDangerAndMonth(year, month);
@@ -445,6 +462,22 @@ public class SpecialInspectionService {
         return filteredList;
     }
 
+
+    //(엑셀용)월간 수시점검 위험원인 건수
+    public List<Object[]> getListBySpecauseAndMonthForExcel1(int year, int month){
+
+        List<Object[]> statisticsList = specialInspectionRepository.specialListByCauseAndMonthForExcel1(year, month);
+
+        // "선택" 값을 제외한 새로운 리스트 생성
+        List<Object[]> filteredList = new ArrayList<>();
+        for (Object[] item : statisticsList) {
+            String value = (String) item[0];
+            if (!value.equals("선택")) { //"선택" 제거
+                filteredList.add(item);
+            }
+        }
+        return filteredList;
+    }
 
 
 

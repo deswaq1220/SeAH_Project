@@ -17,7 +17,7 @@ public class RegularSearchResultDTO {
     private LocalDateTime regularDate;          // 관찰일
     private String regularEmpNum;               // 관찰자 사원번호
     private String regularPerson;               // 관찰자
-    private int regularInsCount;                // 점검 건수
+    private int regularInsCount;                // 불량갯수
     private RegStatus regularComplete;             // 모두 조치완료여부
     private String regularId;             // 정기점검id
 
@@ -26,7 +26,7 @@ public class RegularSearchResultDTO {
         RegularSearchResultDTO dto = new RegularSearchResultDTO();
         dto.setRegularPart(entity1.getRegularPart());
         dto.setRegularInsName(entity1.getRegularInsName());
-        dto.setRegularDate(entity1.getRegularDate());
+        dto.setRegularDate(entity1.getRegTime());
         dto.setRegularPerson(entity1.getRegularPerson());
         dto.setRegularComplete(entity1.getRegularComplete());
         return dto;
