@@ -27,8 +27,8 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
     List<String> regularPartList();
 
     //정기점검 목록 조회
-    @Query("SELECT r FROM RegularInspection r WHERE YEAR(r.regTime)=:year AND MONTH(r.regTime) =:month")
-    List<RegularInspection> findAllByRegularDate(@Param("year") int year, @Param("month") int month);
+    @Query("SELECT r FROM RegularInspection r WHERE YEAR(r.regTime) = :year AND MONTH(r.regTime) = :month ORDER BY r.regTime DESC")
+    List<RegularInspection> findAllByRegularDateOrderByOrderByRegTime(@Param("year") int year, @Param("month") int month);
 
     RegularInspection findByRegularIdOrderByRegTime(String regularId);
 

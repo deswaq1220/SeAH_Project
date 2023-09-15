@@ -20,8 +20,10 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static SeAH.savg.constant.MasterStatus.Y;
 import static SeAH.savg.constant.RegStatus.BAD;
@@ -176,7 +178,7 @@ public class RegularInspectionService {
 
     //정기점검 목록 조회
     public List<RegularInspection> getRegularByDate(int year, int month){
-        return regularInspectionRepository.findAllByRegularDate(year, month);
+        return regularInspectionRepository.findAllByRegularDateOrderByOrderByRegTime(year, month);
     }
 
     //상세조회
@@ -261,7 +263,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         predicate.and(insNamePredicate);
     }
     if (searchDTO.getRegularStartTime() != null && searchDTO.getRegularEndTime() != null) {
-        BooleanExpression datePredicate = qRegularInspection.regularDate.between(
+        BooleanExpression datePredicate = qRegularInspection.regTime.between(
                 searchDTO.getRegularStartTime(), searchDTO.getRegularEndTime());
         predicate.and(datePredicate);
     }
@@ -284,12 +286,12 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
 
     //테이블 생성
     List<Tuple> searchRegularData = queryFactory
-            .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regularDate, qRegularInspection.regularEmpNum,
+            .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regTime, qRegularInspection.regularEmpNum,
                     qRegularInspection.regularPerson, qRegularInspection.regularComplete, qRegularInspection.regularId, qRegularInspectionCheck.regularCheck)
             .from(qRegularInspection)
             .leftJoin(qRegularInspectionCheck).on(qRegularInspection.regularId.eq(qRegularInspectionCheck.regularInspection.regularId))
             .where(predicate)
-            .orderBy(qRegularInspection.regularDate.desc())
+            .orderBy(qRegularInspection.regTime.desc())
             .fetch();
 
 
@@ -299,7 +301,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         RegularSearchResultDTO middleResultDTO = new RegularSearchResultDTO();
         middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart)); //영역
         middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName)); //점검항목
-        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regularDate));  //점검일자
+        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regTime));  //점검일자
         middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));  //점검자 사원번호
         middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));  //점검자명
         middleResultDTO.setRegularInsCount(1); //불량갯수
