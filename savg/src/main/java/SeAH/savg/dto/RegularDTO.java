@@ -1,5 +1,6 @@
 package SeAH.savg.dto;
 
+import SeAH.savg.constant.RegStatus;
 import SeAH.savg.entity.RegularInspection;
 import lombok.Getter;
 import lombok.Setter;
