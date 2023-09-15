@@ -225,7 +225,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     if (searchDTO.getRegularStartTime() != null && searchDTO.getRegularEndTime() != null) {
         BooleanExpression datePredicate = qRegularInspection.regularDate.between(
                 searchDTO.getRegularStartTime(), searchDTO.getRegularEndTime());
-       predicate.and(datePredicate);
+        predicate.and(datePredicate);
     }
     if (searchDTO.getRegularEmpNum() != null) {
         BooleanExpression empNumPredicate = qRegularInspection.regularEmpNum.eq(searchDTO.getRegularEmpNum());
@@ -247,12 +247,33 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     //테이블 생성
     List<Tuple> searchRegularData = queryFactory
             .select(qRegularInspection.regularPart, qRegularInspection.regularInsName, qRegularInspection.regularDate, qRegularInspection.regularEmpNum,
-                    qRegularInspection.regularPerson, qRegularInspection.regularComplete, qRegularInspection.regularId)
+                    qRegularInspection.regularPerson, qRegularInspection.regularComplete, qRegularInspection.regularId, qRegularInspectionCheck.regularCheck)
             .from(qRegularInspection)
             .leftJoin(qRegularInspectionCheck).on(qRegularInspection.regularId.eq(qRegularInspectionCheck.regularInspection.regularId))
             .where(predicate)
             .orderBy(qRegularInspection.regularDate.desc())
             .fetch();
+
+
+
+/*    //결과- 중복 제거
+    Map<String, Integer> uniqueRegularIdList = new HashMap<>();
+    List<RegularSearchResultDTO> finalList = new ArrayList<>();
+
+    for (Tuple tuple : searchRegularData) {
+        String regularId = tuple.get(qRegularInspection.regularId);
+
+        if(!uniqueRegularIdList.containsKey(regularId)){
+            uniqueRegularIdList.put(regularId, );
+            finalList.add(middleResultDTO);
+        }else{
+            int currentCnt = uniqueRegularIdList.get(regularId);
+            uniqueRegularIdList.put(regularId, currentCnt += middleResultDTO.getRegularInsCount());
+            finalList.add(middleResultDTO);
+        }
+    }
+
+
 
     //테이블 중 같은 아이디의 경우 테이블 줄이기
     List<RegularSearchResultDTO> joinResult = new ArrayList<>();
@@ -270,23 +291,67 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     }
 
 
+
+
+
+    for (RegularSearchResultDTO middleResultDTO : joinResult) {
+        String regularId = middleResultDTO.getRegularId();
+
+
+    }
+
+
+    return finalList;*/
+
+
+    //테이블 중 같은 아이디의 경우 테이블 줄이기
+    List<RegularSearchResultDTO> joinResult = new ArrayList<>();
+    for (Tuple tuple : searchRegularData) {
+        RegularSearchResultDTO middleResultDTO = new RegularSearchResultDTO();
+        middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart)); //영역
+        middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName)); //점검항목
+        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regularDate));  //점검일자
+        middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));  //점검자 사원번호
+        middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));  //점검자명
+        middleResultDTO.setRegularInsCount(1); //불량갯수
+        middleResultDTO.setRegularComplete(tuple.get(qRegularInspection.regularComplete));   //모두 조치완료여부
+        middleResultDTO.setRegularId(tuple.get(qRegularInspection.regularId));  //점검ID
+        joinResult.add(middleResultDTO);
+    }
+
+
     //결과- 중복 제거
-    Set<String> uniqueRegularIdList = new HashSet<>();
+    Map<String, Integer> uniqueRegularIdList = new HashMap<>();
     List<RegularSearchResultDTO> finalList = new ArrayList<>();
 
 
     for (RegularSearchResultDTO middleResultDTO : joinResult) {
         String regularId = middleResultDTO.getRegularId();
 
-        if(!uniqueRegularIdList.contains(regularId)){
-            uniqueRegularIdList.add(regularId);
+        if (!uniqueRegularIdList.containsKey(regularId)) {
+            uniqueRegularIdList.put(regularId, middleResultDTO.getRegularInsCount());
             finalList.add(middleResultDTO);
+        } else {
+            int currentCount = uniqueRegularIdList.get(regularId);
+            uniqueRegularIdList.put(regularId, currentCount + middleResultDTO.getRegularInsCount());
+
+            // 같은 regularId가 있는 경우, 해당 항목의 RegularInsCount를 더해줍니다.
+            for (RegularSearchResultDTO finalDTO : finalList) {
+                if (finalDTO.getRegularId().equals(regularId)) {
+                    finalDTO.setRegularInsCount(currentCount + middleResultDTO.getRegularInsCount());
+                    break;
+                }
+            }
         }
     }
 
 
     return finalList;
+
 }
+
+
+
 
 //----------------------------------------------------통계 관련
     //월간

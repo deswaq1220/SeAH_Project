@@ -83,6 +83,7 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     //part있는 것
     @Query("SELECT c.causeMenu, Count(s) " +
             "FROM SpecialCause c " +
+
             "LEFT JOIN SpecialInspection s ON s.speCause = c.causeMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
             "GROUP BY c.causeMenu " +
             "ORDER BY c.causeNum")
