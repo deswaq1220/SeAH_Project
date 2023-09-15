@@ -22,6 +22,7 @@ public class RegularDTO {
     private String regularPart;                 // 점검구역(주조, 압출 등)
     private String regularInsName;             //점검항목(중대재해, LOTO 등 )
     private String regularEmail;
+    private RegStatus regularComplete;
 
 
     private LocalDateTime regularDate;
