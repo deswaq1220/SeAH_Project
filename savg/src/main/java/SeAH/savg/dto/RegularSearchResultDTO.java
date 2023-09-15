@@ -31,4 +31,5 @@ public class RegularSearchResultDTO {
         dto.setRegularComplete(entity1.getRegularComplete());
         return dto;
     }
+
 }
