@@ -12,17 +12,13 @@ import java.time.LocalDateTime;
 
 @Entity @Table(name = "regular_inspection")
 @Getter @Setter @ToString
-
 public class RegularInspection extends BaseTimeEntity{
 
     @Id
-    private String regularId;                    // id
+    private String regularId;                   // id
 
     @Column(nullable = false)
-    private String regularInsName;               // 점검항목
-
-    @Column(nullable = false)
-    private LocalDateTime regularDate;          // 관찰일
+    private String regularInsName;              // 점검항목
 
     @Column(nullable = false)
     private String regularPerson;               // 관찰자
@@ -37,6 +33,6 @@ public class RegularInspection extends BaseTimeEntity{
     private String regularPart;                 // 점검구역(영역)
 
     @Enumerated(EnumType.STRING)
-    private RegStatus regularComplete;                 // 모든 값 조치완료여부
+    private RegStatus regularComplete;          // 모든 값 조치완료여부
 
 }

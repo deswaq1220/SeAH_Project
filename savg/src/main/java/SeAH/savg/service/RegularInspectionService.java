@@ -9,14 +9,12 @@ import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -26,9 +24,11 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static SeAH.savg.constant.MasterStatus.Y;
+import static SeAH.savg.constant.RegStatus.BAD;
+import static SeAH.savg.constant.RegStatus.OK;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Log4j2
 public class RegularInspectionService {
 
@@ -39,32 +39,36 @@ public class RegularInspectionService {
     private final MakeIdService makeIdService;
     private final EmailRepository emailRepository;
     private final RegularListRepository regularListRepository;
-
-    @Autowired
-    private  RegularFileService regularFileService;
-    @Autowired
-    private  RegularFileRepository regularFileRepository;
+    private final RegularFileService regularFileService;
+    private final RegularFileRepository regularFileRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    public RegularInspectionService(RegularInspectionRepository regularInspectionRepository,
-                                    RegularStatisticsRepository regularStatisticsRepository,
-                                    RegularInspectionBadRepository regularInspectionBadRepository,
-                                    RegularCheckRepository regularCheckRepository,
-                                    MakeIdService makeIdService,
-                                    EmailRepository emailRepository,
-                                    RegularListRepository regularListRepository
-                                    ) {
-        this.regularInspectionRepository = regularInspectionRepository;
-        this.regularStatisticsRepository = regularStatisticsRepository;
-        this.regularInspectionBadRepository = regularInspectionBadRepository;
-        this.regularCheckRepository = regularCheckRepository;
-        this.makeIdService = makeIdService;
-        this.emailRepository = emailRepository;
-        this.regularListRepository = regularListRepository;
 
+    // 월별현황 : 점검실시 ()건, 조치완료 ()건, 불량건수 ()건
+    @Transactional
+    public Map<String, Object> findRegMonthly(){
+        Map<String, Object> responseData = new HashMap<>();
+
+        // 이번달 점검실시 건수
+        int countMonthlyAll = regularInspectionRepository.countByRegTime();
+
+        // 이번달 조치완료 건수
+        int countMonthlyComplete = regularInspectionRepository.findRegularInspectionsCompletedToday(OK);
+
+        // 이번달 등록건수 중 불량건수
+        int countMonthlyBadReg = regularCheckRepository.countByRegularCheck(BAD);
+
+        System.out.println("이번달 점검실시 건수: "+countMonthlyAll+"건");
+        System.out.println("이번달 조치완료 건수: "+countMonthlyComplete+"건");
+        System.out.println("이번달 불량건수: "+countMonthlyBadReg+"건");
+
+        responseData.put("monthlyAll", countMonthlyAll);                 // 이번달 점검실시건수
+        responseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 조치완료건수
+        responseData.put("monthlyBad", countMonthlyBadReg);      // 이번달 불량건수
+
+        return responseData ;
     }
 
 
@@ -118,14 +122,14 @@ public class RegularInspectionService {
         //정기점검 ID 부여 -> ex.R2308-00
         regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
-        regularInspection.setRegularDate(LocalDateTime.now());
+//        regularInspection.setRegularDate(LocalDateTime.now());
         regularInspection.setRegularEmail(regularDTO.getRegularEmail());
 
 
         RegularInspection savedRegularInspection = regularInspectionRepository.save(regularInspection);
 
         Map<String, Object> finalData = new HashMap<>();
-        finalData.put("regularDate", savedRegularInspection.getRegularDate());
+        finalData.put("regularDate", savedRegularInspection.getRegTime());
         finalData.put("regularId", savedRegularInspection.getRegularId());
 
 
@@ -147,7 +151,7 @@ public class RegularInspectionService {
 
             RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
 
-            if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
+            if (regularDetailDTO.getRegularCheck() == BAD) {
                 RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
                 regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
                 regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
@@ -161,7 +165,7 @@ public class RegularInspectionService {
                 regularInspection.setRegularComplete(RegStatus.NO);
                 regularInspectionRepository.save(regularInspection);
             }else{
-                regularInspection.setRegularComplete(RegStatus.OK);
+                regularInspection.setRegularComplete(RegStatus.NO);
                 regularInspectionRepository.save(regularInspection);
             }
         }
@@ -183,6 +187,49 @@ public class RegularInspectionService {
 
 
         return regularDTO;
+    }
+
+    public void updateRegularBad(Long regularBadId){
+        RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findById(regularBadId).orElseThrow();
+        regularInspectionBad.setRegularComplete(RegStatus.OK);
+        regularInspectionBadRepository.save(regularInspectionBad);
+    }
+
+    // 정기점검내역 삭제
+    @Transactional
+    public void regDelete(String regId) {
+
+        // 파일 삭제
+        List<RegularFile> filesToDelete = regularFileRepository.findByRegularInspectionRegularId(regId);
+
+        for (RegularFile file : filesToDelete) {
+            regularFileRepository.deleteById(file.getRegularFileId());
+            regularFileService.deleteFile(file.getRegularFileName());
+        }
+
+        // bad 및 check 삭제
+        List<RegularInspectionCheck> checkToDeleteList = regularCheckRepository.findByRegularInspectionRegularId(regId);
+        System.out.println("regId로 check 엔티티찾기: " + checkToDeleteList);
+
+        for (RegularInspectionCheck checkToDelete : checkToDeleteList) {
+            Long checkToDeleteId = checkToDelete.getRegularCheckId();
+            System.out.println("삭제할 체크id: " + checkToDeleteId);
+
+            // RegularInspectionBad 삭제
+            RegularInspectionBad badToDelete = regularInspectionBadRepository.findByRegularInspectionCheck(checkToDelete);
+            if (badToDelete != null) {
+                regularInspectionBadRepository.delete(badToDelete);
+            }
+
+            // RegularInspectionCheck 삭제
+            regularCheckRepository.delete(checkToDelete);
+        }
+
+        // RegularInspection 삭제
+        RegularInspection regInspectionToDelete = regularInspectionRepository.findByRegularId(regId);
+        if (regInspectionToDelete != null) {
+            regularInspectionRepository.delete(regInspectionToDelete);
+        }
     }
 
 
@@ -499,16 +546,18 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
 
             if(regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck) != null){
                 RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck);
+                RegStatus regularComplete = regularInspectionBad.getRegularComplete();
 
                 List<String> regularFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection);
 
                 String regularActContent = regularInspectionBad.getRegularActContent();
                 String regularActEmail = regularInspectionBad.getRegularActEmail();
                 String regularActPerson = regularInspectionBad.getRegularActPerson();
+                Long regularBadId = regularInspectionBad.getRegularBadId();
 
-                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail,regularFileNameList));
+                regularDetailDTOList.add(new RegularDetailDTO(regularBadId,regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail,regularComplete,regularFileNameList));
             }else{
-                regularDetailDTOList.add(new RegularDetailDTO(regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null,null));
+                regularDetailDTOList.add(new RegularDetailDTO(null,regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null,null,null));
             }
 
 
