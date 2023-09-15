@@ -25,7 +25,7 @@ public class RegularDTO {
     private RegStatus regularComplete;
 
 
-    private LocalDateTime regularDate;
+    private LocalDateTime regTime;
 
     private String regularDetailDTOList;
 

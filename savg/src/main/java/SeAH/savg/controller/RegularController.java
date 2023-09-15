@@ -105,8 +105,9 @@ public class RegularController {
             RegularDTO regularDTO = new RegularDTO();
             regularDTO.setRegularId(regularInspection.getRegularId());
             regularDTO.setRegularInsName(regularInspection.getRegularInsName());
-            regularDTO.setRegularDate(regularInspection.getRegTime());
+            regularDTO.setRegTime(regularInspection.getRegTime());
             regularDTO.setRegularPart(regularInspection.getRegularPart());
+            regularDTO.setRegularPerson(regularInspection.getRegularPerson());
             regularDTO.setRegularComplete(regularInspection.getRegularComplete());
             regularDTOList.add(regularDTO);
         }
