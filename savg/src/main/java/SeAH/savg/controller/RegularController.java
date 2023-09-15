@@ -143,8 +143,8 @@ public class RegularController {
     @GetMapping("/user/searchregularlist")
     public ResponseEntity<?> searchRegularList( @RequestParam(value= "regularPart", required = false) String regularPart
                                                ,@RequestParam(value= "regularInsName", required = false) String regularInsName
-                                               ,@RequestParam(value= "regularStartDate", required = false) LocalDate regularStartDate
-                                               ,@RequestParam(value= "regularEndDate", required = false) LocalDate regularEndDate
+                                               ,@RequestParam(value= "regularStartDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate regularStartDate
+                                               ,@RequestParam(value= "regularEndDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate regularEndDate
                                                ,@RequestParam(value= "regularEmpNum", required = false) String regularEmpNum
                                                ,@RequestParam(value= "regularPerson", required = false) String regularPerson
                                                ,@RequestParam(value= "regularComplete", required = false) RegStatus regularComplete){
