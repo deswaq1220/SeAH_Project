@@ -165,7 +165,7 @@ public class RegularInspectionService {
                 regularInspection.setRegularComplete(RegStatus.NO);
                 regularInspectionRepository.save(regularInspection);
             }else{
-                regularInspection.setRegularComplete(RegStatus.OK);
+                regularInspection.setRegularComplete(RegStatus.NO);
                 regularInspectionRepository.save(regularInspection);
             }
         }
@@ -193,6 +193,43 @@ public class RegularInspectionService {
         RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findById(regularBadId).orElseThrow();
         regularInspectionBad.setRegularComplete(RegStatus.OK);
         regularInspectionBadRepository.save(regularInspectionBad);
+    }
+
+    // 정기점검내역 삭제
+    @Transactional
+    public void regDelete(String regId) {
+
+        // 파일 삭제
+        List<RegularFile> filesToDelete = regularFileRepository.findByRegularInspectionRegularId(regId);
+
+        for (RegularFile file : filesToDelete) {
+            regularFileRepository.deleteById(file.getRegularFileId());
+            regularFileService.deleteFile(file.getRegularFileName());
+        }
+
+        // bad 및 check 삭제
+        List<RegularInspectionCheck> checkToDeleteList = regularCheckRepository.findByRegularInspectionRegularId(regId);
+        System.out.println("regId로 check 엔티티찾기: " + checkToDeleteList);
+
+        for (RegularInspectionCheck checkToDelete : checkToDeleteList) {
+            Long checkToDeleteId = checkToDelete.getRegularCheckId();
+            System.out.println("삭제할 체크id: " + checkToDeleteId);
+
+            // RegularInspectionBad 삭제
+            RegularInspectionBad badToDelete = regularInspectionBadRepository.findByRegularInspectionCheck(checkToDelete);
+            if (badToDelete != null) {
+                regularInspectionBadRepository.delete(badToDelete);
+            }
+
+            // RegularInspectionCheck 삭제
+            regularCheckRepository.delete(checkToDelete);
+        }
+
+        // RegularInspection 삭제
+        RegularInspection regInspectionToDelete = regularInspectionRepository.findByRegularId(regId);
+        if (regInspectionToDelete != null) {
+            regularInspectionRepository.delete(regInspectionToDelete);
+        }
     }
 
 

@@ -1,12 +1,12 @@
 package SeAH.savg.repository;
 
-import SeAH.savg.entity.*;
+import SeAH.savg.entity.RegularFile;
+import SeAH.savg.entity.RegularInspection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RegularFileRepository extends JpaRepository<RegularFile, Long> {
     List<RegularFile> findByRegularInspection(RegularInspection regularInspection);
@@ -17,5 +17,8 @@ public interface RegularFileRepository extends JpaRepository<RegularFile, Long> 
             @Param("regularCheckId") String regularCheckId,
             @Param("regularInspection") RegularInspection regularInspection
     );
+
+    // 외래키로 찾기
+    List<RegularFile> findByRegularInspectionRegularId(String regId);
 
 }

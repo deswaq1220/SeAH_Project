@@ -66,4 +66,15 @@ public class RegularFileService {
         }
     }
 
+
+    //파일삭제
+    public void deleteFile(String fileName) {
+        String filePath = regularFileLocation + "/" + fileName;
+        File deleteFile = new File(filePath);
+        if (deleteFile.exists()) {
+            deleteFile.delete();
+        }
+    }
+
+
 }

@@ -6,7 +6,6 @@ import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.dto.RegularSearchDTO;
 import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.RegularInspection;
-import SeAH.savg.entity.RegularInspectionCheck;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.RegularInspectionService;
@@ -66,12 +65,7 @@ public class RegularController {
 
     @GetMapping("/user/regularcheck")
     public ResponseEntity<List<RegularDetailDTO>> regularcheck(@RequestParam int regularNum) {
-
-
         List<RegularDetailDTO> checklist = regularInspectionService.selectRegularListByNum(regularNum);
-
-
-
         return ResponseEntity.ok(checklist);
     }
 
@@ -145,6 +139,19 @@ public class RegularController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+
+    // 삭제
+    @DeleteMapping ("/user/regular/detail/{regularId}")
+    public ResponseEntity<?> regDelete(@PathVariable String regularId) {
+        System.out.println("regularId: "+regularId);
+        regularInspectionService.regDelete(regularId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 //
 
     //--------------------------------------전체현황 조회 관련

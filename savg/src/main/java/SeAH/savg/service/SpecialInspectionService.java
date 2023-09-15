@@ -292,7 +292,6 @@ public class SpecialInspectionService {
     // 수시점검내역 삭제
     @Transactional
     public void speDelete(String speId) {
-        System.out.println("서비스");
         // 파일 삭제
         List<SpecialFile> filesToDelete = specialFileRepository.findBySpecialInspectionSpeId(speId);
 

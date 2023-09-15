@@ -39,9 +39,7 @@ public class MasterDataService {
 
         //기준정보 카테고리(영역) 선택 조회
         public List<String[]> sortByPart(String part){
-
             List<String[]> facilityListbyPart = masterDataRepository.sortByPart(part);
-
             return facilityListbyPart;
         }
 
@@ -82,10 +80,10 @@ public class MasterDataService {
 
 
     // 기준정보 삭제
-        @Transactional
-        public void deleteMaster(String masterdataId){
-            masterDataRepository.deleteByMasterdataId(masterdataId);
-        }
+    @Transactional
+    public void deleteMaster(String masterdataId){
+        masterDataRepository.deleteByMasterdataId(masterdataId);
+    }
 
 
     //------------------------------------------부서 관리

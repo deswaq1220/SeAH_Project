@@ -1,12 +1,7 @@
 package SeAH.savg.repository;
 
 import SeAH.savg.constant.RegStatus;
-
 import SeAH.savg.entity.RegularInspection;
-import com.querydsl.core.types.Predicate;
-
-import SeAH.savg.entity.*;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -64,6 +59,7 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
             "AND DATE_FORMAT(ri.updateTime, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')")
     int findRegularInspectionsCompletedToday(RegStatus regStatus);
 
-    // monthly: 이번달 불량건수
+    // 삭제
+    RegularInspection findByRegularId(String regId);
 
 }

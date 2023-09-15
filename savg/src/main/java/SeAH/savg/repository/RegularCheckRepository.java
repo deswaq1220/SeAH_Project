@@ -29,4 +29,6 @@ public interface RegularCheckRepository extends JpaRepository<RegularInspectionC
 
     List<RegularInspectionCheck> findByRegularInspection(RegularInspection regularInspection);
 
+    // regularId 외래키로 찾기
+    List<RegularInspectionCheck> findByRegularInspectionRegularId(String regId);
 }
