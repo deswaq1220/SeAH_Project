@@ -142,7 +142,7 @@ public class RegularController {
     public ResponseEntity<?> handlebadDetailModify(@PathVariable Long regularBadId, RegularDetailDTO regularDetailDTO) {
         try {
             regularInspectionService.updateRegularBad(regularBadId, regularDetailDTO);
-        if(regularDetailDTO != null){
+        if(regularDetailDTO.getFiles() != null){
             for(MultipartFile file : regularDetailDTO.getFiles()){
                     log.info("파일 이름" + file.getOriginalFilename());
             }

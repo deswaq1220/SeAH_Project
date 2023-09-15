@@ -26,9 +26,11 @@ public class RegularDetailDTO {
     private String regularActPerson;            //조치담당자
     private String regularActEmail;             //조치담당 이메일
     private RegStatus regularComplete;            //상태
+
     private MultipartFile[] files;
 
-    private List<String> filePath;
+    private List<String> beforeFilePath;
+    private List<String> afterFilePath;
 
 
 
@@ -37,7 +39,7 @@ public class RegularDetailDTO {
         this.checklist = checklist;
     }
 
-    public RegularDetailDTO(Long regularBadId, String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, RegStatus regularComplete, List<String> filePath){
+    public RegularDetailDTO(Long regularBadId, String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, RegStatus regularComplete, List<String> beforeFilePath,List<String> afterFilePath){
         this.regularBadId = regularBadId;
         this.id = id;
         this.checklist = checklist;
@@ -46,7 +48,8 @@ public class RegularDetailDTO {
         this.regularActEmail = regularActEmail;
         this.regularActPerson = regularActPerson;
         this.regularComplete = regularComplete;
-        this.filePath = filePath;
+        this.beforeFilePath = beforeFilePath;
+        this.afterFilePath = afterFilePath;
     }
     public RegularDetailDTO(){}
 
