@@ -1,10 +1,7 @@
 package SeAH.savg.service;
 
 import SeAH.savg.constant.RegStatus;
-import SeAH.savg.dto.RegularDTO;
-import SeAH.savg.dto.RegularDetailDTO;
-import SeAH.savg.dto.RegularSearchDTO;
-import SeAH.savg.dto.RegularSearchResultDTO;
+import SeAH.savg.dto.*;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -131,30 +128,32 @@ public class RegularInspectionService {
 
         if(regularDTO.getFile()!=null){
             regularFileService.regularUploadFile(regularInspection, regularDTO);
+        }else {
+            log.info("파일 안넘어옴");
         }
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<RegularDetailDTO> list = mapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
+        List<RegularDetailRegDTO> list = mapper.readValue(regularDTO.getRegularDetailRegDTOList(), new TypeReference<List<RegularDetailRegDTO>>(){});
 
 
-        for(RegularDetailDTO regularDetailDTO:  list){
+        for(RegularDetailRegDTO regularDetailRegDTO:  list){
             //상세정보 등록
-            RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
+            RegularInspectionCheck regularInspectionCheck = regularDetailRegDTO.createRegularDetail();
             regularInspectionCheck.setRegularInspection(savedRegularInspection);
-            regularInspectionCheck.setRegularCheck(regularDetailDTO.getRegularCheck());
-            regularInspectionCheck.setRegularListId(regularDetailDTO.getId());
+            regularInspectionCheck.setRegularCheck(regularDetailRegDTO.getRegularCheck());
+            regularInspectionCheck.setRegularListId(regularDetailRegDTO.getId());
 
             RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
 
-            if (regularDetailDTO.getRegularCheck() == RegStatus.BAD) {
-                RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
+            if (regularDetailRegDTO.getRegularCheck() == RegStatus.BAD) {
+                RegularInspectionBad regularInspectionBadEntity = regularDetailRegDTO.createRegularBad();
                 regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
                 regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
 
-                regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
-                regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
-                regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
+                regularInspectionBadEntity.setRegularActContent(regularDetailRegDTO.getRegularActContent());
+                regularInspectionBadEntity.setRegularActPerson(regularDetailRegDTO.getRegularActPerson());
+                regularInspectionBadEntity.setRegularActEmail(regularDetailRegDTO.getRegularActEmail());
 
 
                 regularInspectionBadRepository.save(regularInspectionBadEntity);

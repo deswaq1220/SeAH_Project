@@ -26,7 +26,7 @@ public class RegularDTO {
 
     private LocalDateTime regularDate;
 
-    private String regularDetailDTOList;
+    private String regularDetailRegDTOList;
 
     private Map<String, List<MultipartFile>> file;
 

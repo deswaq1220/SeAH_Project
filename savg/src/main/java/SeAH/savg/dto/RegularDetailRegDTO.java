@@ -1,7 +1,6 @@
 package SeAH.savg.dto;
 
 import SeAH.savg.constant.RegStatus;
-import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.entity.RegularInspectionBad;
 import SeAH.savg.entity.RegularInspectionCheck;
 import lombok.Getter;
@@ -10,11 +9,10 @@ import lombok.ToString;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter @Setter @ToString
-public class RegularDetailDTO {
+public class RegularDetailRegDTO {
 
     private String regularInspectionId;
     private Long regularBadId;
@@ -27,19 +25,18 @@ public class RegularDetailDTO {
     private String regularActEmail;             //조치담당 이메일
     private RegStatus regularComplete;            //상태
 
-    private MultipartFile[] files;
 
     private List<String> beforeFilePath;
     private List<String> afterFilePath;
 
 
 
-    public RegularDetailDTO(String id, String checklist){
+    public RegularDetailRegDTO(String id, String checklist){
         this.id = id;
         this.checklist = checklist;
     }
 
-    public RegularDetailDTO(Long regularBadId, String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, RegStatus regularComplete, List<String> beforeFilePath,List<String> afterFilePath){
+    public RegularDetailRegDTO(Long regularBadId, String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, RegStatus regularComplete, List<String> beforeFilePath, List<String> afterFilePath){
         this.regularBadId = regularBadId;
         this.id = id;
         this.checklist = checklist;
@@ -51,7 +48,7 @@ public class RegularDetailDTO {
         this.beforeFilePath = beforeFilePath;
         this.afterFilePath = afterFilePath;
     }
-    public RegularDetailDTO(){}
+    public RegularDetailRegDTO(){}
 
     public static ModelMapper modelMapper = new ModelMapper();
     public RegularInspectionCheck createRegularDetail() {
