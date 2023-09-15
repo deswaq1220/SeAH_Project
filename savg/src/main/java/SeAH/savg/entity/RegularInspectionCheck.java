@@ -23,6 +23,10 @@ public class RegularInspectionCheck {
     @JoinColumn(name = "regular_id")
     private RegularInspection regularInspection;
 
+    @Column
+    private String regularListId;
 
+    @Enumerated(EnumType.STRING)
+    private RegStatus regularComplete;              // 완료여부
 
 }

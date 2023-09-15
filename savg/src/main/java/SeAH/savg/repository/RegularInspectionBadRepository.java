@@ -1,6 +1,7 @@
 package SeAH.savg.repository;
 
 import SeAH.savg.entity.RegularInspectionBad;
+import SeAH.savg.entity.RegularInspectionCheck;
 import SeAH.savg.entity.RegularName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,5 +13,5 @@ import java.util.List;
 @Repository
 public interface RegularInspectionBadRepository extends JpaRepository<RegularInspectionBad, String> {
 
-
+RegularInspectionBad findByRegularInspectionCheck(RegularInspectionCheck regularInspectionCheck);
 }

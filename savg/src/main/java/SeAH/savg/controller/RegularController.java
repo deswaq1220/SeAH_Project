@@ -4,6 +4,7 @@ import SeAH.savg.constant.RegStatus;
 import SeAH.savg.dto.*;
 import SeAH.savg.entity.Email;
 import SeAH.savg.entity.RegularInspection;
+import SeAH.savg.entity.RegularInspectionCheck;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
@@ -68,7 +69,7 @@ public class RegularController {
 
     @GetMapping("/user/regularcheck")
     public ResponseEntity<List<RegularDetailDTO>> regularcheck(@RequestParam int regularNum) {
-        Map<String, List<RegularDetailDTO>> responseData = new HashMap<>();
+
 
         List<RegularDetailDTO> checklist = regularInspectionService.selectRegularListByNum(regularNum);
 
@@ -88,7 +89,7 @@ public class RegularController {
 
     //정기점검 등록
     @PostMapping(value = "/user/regular/new")
-        public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
+    public ResponseEntity<Map<String, Object>> createRegularInspection(RegularDTO regularDTO)throws Exception {
         Map<String, Object> regularDate = regularInspectionService.createRegular(regularDTO);
 
         // 응답 데이터 생성
@@ -98,6 +99,7 @@ public class RegularController {
 
         return ResponseEntity.ok(responseData);
     }
+
 
 
     //정기점검 목록 조회
@@ -122,12 +124,19 @@ public class RegularController {
 
     //정기점검 상세조회
     @GetMapping("/user/regular/detail/{regularId}")
-    public ResponseEntity<RegularDetailDTO> viewRegularDetail(@PathVariable("regularId") String regularId){
-        RegularDetailDTO regularDetailDTO = regularInspectionService.getRegularById(regularId);
-        if (regularDetailDTO == null){
+    public ResponseEntity<Map<String, Object>> viewRegularDetail(@PathVariable("regularId") String regularId){
+        Map<String, Object> responseData = new HashMap<>();
+
+        RegularDTO regularDTO = regularInspectionService.getRegularById(regularId);
+        List<RegularDetailDTO> regularDetailDTOList = regularInspectionService.getRegularCheckList(regularId);
+
+        responseData.put("regularDTO", regularDTO);
+        responseData.put("regularDetailDTOList", regularDetailDTOList);
+
+        if (regularDTO == null){
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(regularDetailDTO);
+        return ResponseEntity.ok(responseData);
     }
 
     //--------------------------------------전체현황 조회 관련
