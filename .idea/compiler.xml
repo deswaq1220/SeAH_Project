@@ -14,7 +14,7 @@
     <bytecodeTargetLevel>
       <module name="savg.savg.main" target="11" />
       <module name="savg.savg.test" target="11" />
-      <module name="SeAH.savg.main~1" target="11" />
+      <module name="SeAH.savg.main~2" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>

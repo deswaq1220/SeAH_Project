@@ -21,7 +21,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://172.20.10.13:3000")
 public class MasterDataController {
 
 

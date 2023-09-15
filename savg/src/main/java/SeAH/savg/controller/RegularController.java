@@ -1,27 +1,21 @@
 package SeAH.savg.controller;
 
 import SeAH.savg.constant.RegStatus;
-import SeAH.savg.dto.*;
-import SeAH.savg.entity.Email;
+import SeAH.savg.dto.RegularDTO;
+import SeAH.savg.dto.RegularDetailDTO;
+import SeAH.savg.dto.RegularSearchDTO;
+import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.RegularInspection;
-import SeAH.savg.entity.RegularInspectionCheck;
 import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
-import SeAH.savg.repository.SpeicalFileRepository;
 import SeAH.savg.service.RegularInspectionService;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,14 +27,17 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-//@CrossOrigin(origins = "http://172.20.10.5:3000")
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000")  // 세아
 public class RegularController {
 
     private final RegularInspectionRepository regularInspectionRepository;
     private final RegularInspectionService regularInspectionService;
     private final RegularStatisticsRepository regularStatisticsRepository;
+
+    // 월별 정기점검현황 : 점검실시, 조치완료, 불량건수
+    @GetMapping("/user/regular/{masterdataPart}/{masterdataId}")
+    public ResponseEntity<?> speMonthly() {
+        return new ResponseEntity<>(regularInspectionService.findRegMonthly(), HttpStatus.OK);
+    }
 
 
     //정기점검 항목 리스트
@@ -69,12 +66,7 @@ public class RegularController {
 
     @GetMapping("/user/regularcheck")
     public ResponseEntity<List<RegularDetailDTO>> regularcheck(@RequestParam int regularNum) {
-
-
         List<RegularDetailDTO> checklist = regularInspectionService.selectRegularListByNum(regularNum);
-
-
-
         return ResponseEntity.ok(checklist);
     }
 
@@ -113,7 +105,7 @@ public class RegularController {
             RegularDTO regularDTO = new RegularDTO();
             regularDTO.setRegularId(regularInspection.getRegularId());
             regularDTO.setRegularInsName(regularInspection.getRegularInsName());
-            regularDTO.setRegularDate(regularInspection.getRegularDate());
+            regularDTO.setRegularDate(regularInspection.getRegTime());
             regularDTO.setRegularPart(regularInspection.getRegularPart());
             regularDTO.setRegularComplete(regularInspection.getRegularComplete());
             regularDTOList.add(regularDTO);
@@ -139,6 +131,37 @@ public class RegularController {
         }
         return ResponseEntity.ok(responseData);
     }
+
+    @PostMapping("/user/regular/badDetailModify/{regularBadId}")
+    public ResponseEntity<?> handlebadDetailModify(@PathVariable Long regularBadId, RegularDetailDTO regularDetailDTO) {
+        try {
+            regularInspectionService.updateRegularBad(regularBadId, regularDetailDTO);
+        if(regularDetailDTO.getFiles() != null){
+            for(MultipartFile file : regularDetailDTO.getFiles()){
+                    log.info("파일 이름" + file.getOriginalFilename());
+            }
+        }
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+
+    // 삭제
+    @DeleteMapping ("/user/regular/detail/{regularId}")
+    public ResponseEntity<?> regDelete(@PathVariable String regularId) {
+        System.out.println("regularId: "+regularId);
+        regularInspectionService.regDelete(regularId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+//
 
     //--------------------------------------전체현황 조회 관련
     @GetMapping("/user/searchregularlist")
@@ -277,5 +300,6 @@ public class RegularController {
         List<Map<String, Object>> statisticsList = regularInspectionService.regularCountListByNameAndYear(year);
         return ResponseEntity.ok(statisticsList);
     }
+
 
 }
