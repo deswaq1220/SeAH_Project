@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter @ToString @Setter
-public class RegularFile {
+public class RegularFile extends BaseTimeEntity{
 
     @Id()
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,7 +18,7 @@ public class RegularFile {
     private String regularFileName; //파일명
     private String regularOriName; //원본 파일 명
     private String regularFileUrl; //파일 저장 경로
-    private RegStatus isComplete; //완료여부
+    private String isComplete; //완료여부
 
 
     private String regularCheckId;

@@ -159,7 +159,7 @@ public class RegularInspectionService {
                 regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
                 regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
                 regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-                regularInspectionBadEntity.setRegularActDate(LocalDateTime.now());
+
 
                 regularInspectionBadRepository.save(regularInspectionBadEntity);
                 regularInspection.setRegularComplete(RegStatus.NO);
@@ -189,10 +189,16 @@ public class RegularInspectionService {
         return regularDTO;
     }
 
-    public void updateRegularBad(Long regularBadId){
+    public void updateRegularBad(Long regularBadId, RegularDetailDTO regularDetailDTO) throws Exception {
+
         RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findById(regularBadId).orElseThrow();
         regularInspectionBad.setRegularComplete(RegStatus.OK);
         regularInspectionBadRepository.save(regularInspectionBad);
+        if(regularDetailDTO.getFiles()!=null){
+            regularFileService.regularFileUpadte(regularDetailDTO);
+        }
+
+
     }
 
     // 정기점검내역 삭제
@@ -525,7 +531,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     //정기점검 상세 보기
     public List<RegularDetailDTO> getRegularCheckList(String regularId){
         List<RegularDetailDTO> regularDetailDTOList = new ArrayList<>();
-        log.info("여기 안됨?" );
+
 
         //regularInstpection 가져오기
         RegularInspection regularInspection = regularInspectionRepository.findById(regularId).orElseThrow();
@@ -548,16 +554,17 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
                 RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck);
                 RegStatus regularComplete = regularInspectionBad.getRegularComplete();
 
-                List<String> regularFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection);
+                List<String> beforeFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection,"처리 전");
+                List<String> afterFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection,"처리 후");
 
                 String regularActContent = regularInspectionBad.getRegularActContent();
                 String regularActEmail = regularInspectionBad.getRegularActEmail();
                 String regularActPerson = regularInspectionBad.getRegularActPerson();
                 Long regularBadId = regularInspectionBad.getRegularBadId();
 
-                regularDetailDTOList.add(new RegularDetailDTO(regularBadId,regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail,regularComplete,regularFileNameList));
+                regularDetailDTOList.add(new RegularDetailDTO(regularBadId,regularInspectionCheck.getRegularListId(),regStatus ,checklist,regularActContent,regularActPerson,regularActEmail,regularComplete,beforeFileNameList,afterFileNameList));
             }else{
-                regularDetailDTOList.add(new RegularDetailDTO(null,regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null,null,null));
+                regularDetailDTOList.add(new RegularDetailDTO(null,regularInspectionCheck.getRegularListId(),regStatus ,checklist,null,null,null,null,null,null));
             }
 
 

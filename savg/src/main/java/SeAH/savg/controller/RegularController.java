@@ -132,7 +132,13 @@ public class RegularController {
     @PostMapping("/user/regular/badDetailModify/{regularBadId}")
     public ResponseEntity<?> handlebadDetailModify(@PathVariable Long regularBadId, RegularDetailDTO regularDetailDTO) {
         try {
-            regularInspectionService.updateRegularBad(regularBadId);
+            regularInspectionService.updateRegularBad(regularBadId, regularDetailDTO);
+        if(regularDetailDTO.getFiles() != null){
+            for(MultipartFile file : regularDetailDTO.getFiles()){
+                    log.info("파일 이름" + file.getOriginalFilename());
+            }
+        }
+
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();

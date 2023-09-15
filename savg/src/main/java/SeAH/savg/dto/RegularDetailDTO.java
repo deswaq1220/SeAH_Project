@@ -16,6 +16,7 @@ import java.util.List;
 @Getter @Setter @ToString
 public class RegularDetailDTO {
 
+    private String regularInspectionId;
     private Long regularBadId;
     private String id;                          //체크리스트 기준정보 id
     private RegStatus regularCheck;           // 점검상태: 위험성 확인결과 양호=GOOD, 불량=BAD, NA=NA
@@ -26,8 +27,11 @@ public class RegularDetailDTO {
     private String regularActEmail;             //조치담당 이메일
     private RegStatus regularComplete;            //상태
 
+    private MultipartFile[] files;
 
-    private List<String> filePath;
+    private List<String> beforeFilePath;
+    private List<String> afterFilePath;
+
 
 
     public RegularDetailDTO(String id, String checklist){
@@ -35,7 +39,7 @@ public class RegularDetailDTO {
         this.checklist = checklist;
     }
 
-    public RegularDetailDTO(Long regularBadId, String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, RegStatus regularComplete, List<String> filePath){
+    public RegularDetailDTO(Long regularBadId, String id, RegStatus regularCheck, String checklist, String regularActContent, String regularActPerson, String regularActEmail, RegStatus regularComplete, List<String> beforeFilePath,List<String> afterFilePath){
         this.regularBadId = regularBadId;
         this.id = id;
         this.checklist = checklist;
@@ -44,7 +48,8 @@ public class RegularDetailDTO {
         this.regularActEmail = regularActEmail;
         this.regularActPerson = regularActPerson;
         this.regularComplete = regularComplete;
-        this.filePath = filePath;
+        this.beforeFilePath = beforeFilePath;
+        this.afterFilePath = afterFilePath;
     }
     public RegularDetailDTO(){}
 
