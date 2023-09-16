@@ -3,6 +3,7 @@ package SeAH.savg.repository;
 import SeAH.savg.constant.RegStatus;
 import SeAH.savg.entity.RegularInspection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
@@ -44,6 +45,18 @@ public interface RegularInspectionRepository extends JpaRepository<RegularInspec
                 "AND b.regularComplete = 'NO' ")
         List<String> findByRegularCheckAllComplete();
 
+
+    //정기점검 모두 조치완료 확인
+    @Query("SELECT COUNT(b) " +
+            "FROM RegularInspectionBad b " +
+            "WHERE b.regularInspectionCheck.regularInspection.regularId = :regularId " +
+            "AND b.regularComplete = 'OK'")
+    int completeToOK(@Param("regularId") String regularId);
+
+    @Query("SELECT COUNT(b) " +
+            "FROM RegularInspectionBad b " +
+            "WHERE b.regularInspectionCheck.regularInspection.regularId = :regularId")
+    int regularInsRow(@Param("regularId") String regularId);
 
 
 

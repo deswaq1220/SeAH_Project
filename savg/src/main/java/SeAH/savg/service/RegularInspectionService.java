@@ -18,10 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static SeAH.savg.constant.MasterStatus.Y;
 import static SeAH.savg.constant.RegStatus.BAD;
@@ -143,6 +140,7 @@ public class RegularInspectionService {
 
         List<RegularDetailRegDTO> list = mapper.readValue(regularDTO.getRegularDetailRegDTOList(), new TypeReference<List<RegularDetailRegDTO>>(){});
 
+        boolean allGood = true;
 
         for(RegularDetailRegDTO regularDetailRegDTO:  list){
             //상세정보 등록
@@ -162,14 +160,16 @@ public class RegularInspectionService {
                 regularInspectionBadEntity.setRegularActPerson(regularDetailRegDTO.getRegularActPerson());
                 regularInspectionBadEntity.setRegularActEmail(regularDetailRegDTO.getRegularActEmail());
 
-
                 regularInspectionBadRepository.save(regularInspectionBadEntity);
                 regularInspection.setRegularComplete(RegStatus.NO);
                 regularInspectionRepository.save(regularInspection);
-            }else{
-                regularInspection.setRegularComplete(RegStatus.NO);
-                regularInspectionRepository.save(regularInspection);
+                allGood = false;
             }
+        }
+
+        if(allGood){
+            regularInspection.setRegularComplete(RegStatus.OK);
+            regularInspectionRepository.save(regularInspection);
         }
 
 
@@ -191,6 +191,11 @@ public class RegularInspectionService {
         return regularDTO;
     }
 
+
+
+
+
+    //정기점검 조치완료
     public LocalDateTime updateRegularBad(Long regularBadId, RegularDetailDTO regularDetailDTO) throws Exception {
 
         RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findById(regularBadId).orElseThrow();
@@ -203,6 +208,18 @@ public class RegularInspectionService {
             regularFileService.regularFileUpadte(regularDetailDTO);
         }
 
+        //모두 조치완료되었는지 확인 -> 모두 조치완료면 점검완료로 변경
+        int InsRow = regularInspectionRepository.regularInsRow(regularDetailDTO.getRegularInspectionId()); //점검한 bad 갯수
+        int completeRow = regularInspectionRepository.completeToOK(regularDetailDTO.getRegularInspectionId()); //complete: NO->OK 완료 갯수
+
+        if(InsRow == completeRow){
+            RegularInspection regularInspectionComplete = regularInspectionRepository.findById(regularDetailDTO.getRegularInspectionId()).orElseThrow();
+            regularInspectionComplete.setRegularComplete(RegStatus.OK);
+            regularInspectionRepository.save(regularInspectionComplete);
+            System.out.println("InsRow" + InsRow);
+            System.out.println("completeRow" + completeRow);
+            System.out.println("모두 조치완료");
+        }
 
         return actionCompleteTime;
     }

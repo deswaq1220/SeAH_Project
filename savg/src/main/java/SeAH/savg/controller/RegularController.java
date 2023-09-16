@@ -139,6 +139,7 @@ public class RegularController {
         return ResponseEntity.ok(responseData);
     }
 
+    //정기점검 조치완료
     @PostMapping("/user/regular/badDetailModify/{regularBadId}")
     public ResponseEntity<?> handlebadDetailModify(@PathVariable Long regularBadId, RegularDetailDTO regularDetailDTO) {
         try {
