@@ -302,8 +302,8 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     }
 
     //BAD인 것만 조인
-    BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(RegStatus.BAD);
-    predicate.and(checkPredicate);
+/*    BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(RegStatus.BAD);
+    predicate.and(checkPredicate);*/
 
     //테이블 생성
     List<Tuple> searchRegularData = queryFactory
@@ -325,7 +325,13 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regTime));  //점검일자
         middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));  //점검자 사원번호
         middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));  //점검자명
-        middleResultDTO.setRegularInsCount(1); //불량갯수
+
+        if(tuple.get(qRegularInspectionCheck.regularCheck) == BAD){
+            middleResultDTO.setRegularInsCount(1); //불량갯수
+        }else{
+            middleResultDTO.setRegularInsCount(0); //불량 없음
+        }
+
         middleResultDTO.setRegularComplete(tuple.get(qRegularInspection.regularComplete));   //모두 조치완료여부
         middleResultDTO.setRegularId(tuple.get(qRegularInspection.regularId));  //점검ID
         joinResult.add(middleResultDTO);
