@@ -142,14 +142,14 @@ public class RegularController {
     @PostMapping("/user/regular/badDetailModify/{regularBadId}")
     public ResponseEntity<?> handlebadDetailModify(@PathVariable Long regularBadId, RegularDetailDTO regularDetailDTO) {
         try {
-            regularInspectionService.updateRegularBad(regularBadId, regularDetailDTO);
+            LocalDateTime actionCompleteTime = regularInspectionService.updateRegularBad(regularBadId, regularDetailDTO);
         if(regularDetailDTO.getFiles() != null){
             for(MultipartFile file : regularDetailDTO.getFiles()){
                     log.info("파일 이름" + file.getOriginalFilename());
             }
         }
-
-            return ResponseEntity.ok().build();
+            /*return ResponseEntity.ok().build();*/
+            return ResponseEntity.ok(actionCompleteTime);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -164,6 +164,7 @@ public class RegularController {
         System.out.println("regularId: "+regularId);
         regularInspectionService.regDelete(regularId);
         return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
 

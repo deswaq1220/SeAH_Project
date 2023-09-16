@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -190,16 +191,20 @@ public class RegularInspectionService {
         return regularDTO;
     }
 
-    public void updateRegularBad(Long regularBadId, RegularDetailDTO regularDetailDTO) throws Exception {
+    public LocalDateTime updateRegularBad(Long regularBadId, RegularDetailDTO regularDetailDTO) throws Exception {
 
         RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findById(regularBadId).orElseThrow();
         regularInspectionBad.setRegularComplete(RegStatus.OK);
+        regularInspectionBad.setRegularActDate(LocalDateTime.now());
+        LocalDateTime actionCompleteTime = regularInspectionBad.getRegularActDate();
+        System.out.println(actionCompleteTime);
         regularInspectionBadRepository.save(regularInspectionBad);
         if(regularDetailDTO.getFiles()!=null){
             regularFileService.regularFileUpadte(regularDetailDTO);
         }
 
 
+        return actionCompleteTime;
     }
 
     // 정기점검내역 삭제
