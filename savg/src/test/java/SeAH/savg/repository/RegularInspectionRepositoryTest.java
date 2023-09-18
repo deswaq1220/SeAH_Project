@@ -28,6 +28,14 @@ public class RegularInspectionRepositoryTest {
     }*/
 
 
+    @Test
+    public void testAllRowAndCompleteRow(){
+        int InsRow = regularInspectionRepository.regularInsRow("R2309-00");
+        int completeRow = regularInspectionRepository.completeToOK("R2309-00");
+
+        System.out.println("InsRow"+ InsRow+"completeRow"+ completeRow);
+    }
+
 
 
 }

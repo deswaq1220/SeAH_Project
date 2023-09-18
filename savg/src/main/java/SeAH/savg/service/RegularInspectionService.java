@@ -1,10 +1,7 @@
 package SeAH.savg.service;
 
 import SeAH.savg.constant.RegStatus;
-import SeAH.savg.dto.RegularDTO;
-import SeAH.savg.dto.RegularDetailDTO;
-import SeAH.savg.dto.RegularSearchDTO;
-import SeAH.savg.dto.RegularSearchResultDTO;
+import SeAH.savg.dto.*;
 import SeAH.savg.entity.*;
 import SeAH.savg.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -21,10 +18,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static SeAH.savg.constant.MasterStatus.Y;
 import static SeAH.savg.constant.RegStatus.BAD;
@@ -138,39 +133,44 @@ public class RegularInspectionService {
 
         if(regularDTO.getFile()!=null){
             regularFileService.regularUploadFile(regularInspection, regularDTO);
+        }else {
+            log.info("파일 안넘어옴");
         }
 
         ObjectMapper mapper = new ObjectMapper();
 
-        List<RegularDetailDTO> list = mapper.readValue(regularDTO.getRegularDetailDTOList(), new TypeReference<List<RegularDetailDTO>>(){});
+        List<RegularDetailRegDTO> list = mapper.readValue(regularDTO.getRegularDetailRegDTOList(), new TypeReference<List<RegularDetailRegDTO>>(){});
 
+        boolean allGood = true;
 
-        for(RegularDetailDTO regularDetailDTO:  list){
+        for(RegularDetailRegDTO regularDetailRegDTO:  list){
             //상세정보 등록
-            RegularInspectionCheck regularInspectionCheck = regularDetailDTO.createRegularDetail();
+            RegularInspectionCheck regularInspectionCheck = regularDetailRegDTO.createRegularDetail();
             regularInspectionCheck.setRegularInspection(savedRegularInspection);
-            regularInspectionCheck.setRegularCheck(regularDetailDTO.getRegularCheck());
-            regularInspectionCheck.setRegularListId(regularDetailDTO.getId());
+            regularInspectionCheck.setRegularCheck(regularDetailRegDTO.getRegularCheck());
+            regularInspectionCheck.setRegularListId(regularDetailRegDTO.getId());
 
             RegularInspectionCheck saveCheck = regularCheckRepository.save(regularInspectionCheck);
 
-            if (regularDetailDTO.getRegularCheck() == BAD) {
-                RegularInspectionBad regularInspectionBadEntity = regularDetailDTO.createRegularBad();
+            if (regularDetailRegDTO.getRegularCheck() == RegStatus.BAD) {
+                RegularInspectionBad regularInspectionBadEntity = regularDetailRegDTO.createRegularBad();
                 regularInspectionBadEntity.setRegularComplete(RegStatus.NO);
                 regularInspectionBadEntity.setRegularInspectionCheck(saveCheck);
 
-                regularInspectionBadEntity.setRegularActContent(regularDetailDTO.getRegularActContent());
-                regularInspectionBadEntity.setRegularActPerson(regularDetailDTO.getRegularActPerson());
-                regularInspectionBadEntity.setRegularActEmail(regularDetailDTO.getRegularActEmail());
-
+                regularInspectionBadEntity.setRegularActContent(regularDetailRegDTO.getRegularActContent());
+                regularInspectionBadEntity.setRegularActPerson(regularDetailRegDTO.getRegularActPerson());
+                regularInspectionBadEntity.setRegularActEmail(regularDetailRegDTO.getRegularActEmail());
 
                 regularInspectionBadRepository.save(regularInspectionBadEntity);
                 regularInspection.setRegularComplete(RegStatus.NO);
                 regularInspectionRepository.save(regularInspection);
-            }else{
-                regularInspection.setRegularComplete(RegStatus.NO);
-                regularInspectionRepository.save(regularInspection);
+                allGood = false;
             }
+        }
+
+        if(allGood){
+            regularInspection.setRegularComplete(RegStatus.OK);
+            regularInspectionRepository.save(regularInspection);
         }
 
 
@@ -192,16 +192,37 @@ public class RegularInspectionService {
         return regularDTO;
     }
 
-    public void updateRegularBad(Long regularBadId, RegularDetailDTO regularDetailDTO) throws Exception {
+
+
+
+
+    //정기점검 조치완료
+    public LocalDateTime updateRegularBad(Long regularBadId, RegularDetailDTO regularDetailDTO) throws Exception {
 
         RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findById(regularBadId).orElseThrow();
         regularInspectionBad.setRegularComplete(RegStatus.OK);
+        regularInspectionBad.setRegularActDate(LocalDateTime.now());
+        LocalDateTime actionCompleteTime = regularInspectionBad.getRegularActDate();
+        System.out.println(actionCompleteTime);
         regularInspectionBadRepository.save(regularInspectionBad);
         if(regularDetailDTO.getFiles()!=null){
             regularFileService.regularFileUpadte(regularDetailDTO);
         }
 
+        //모두 조치완료되었는지 확인 -> 모두 조치완료면 점검완료로 변경
+        int InsRow = regularInspectionRepository.regularInsRow(regularDetailDTO.getRegularInspectionId()); //점검한 bad 갯수
+        int completeRow = regularInspectionRepository.completeToOK(regularDetailDTO.getRegularInspectionId()); //complete: NO->OK 완료 갯수
 
+        if(InsRow == completeRow){
+            RegularInspection regularInspectionComplete = regularInspectionRepository.findById(regularDetailDTO.getRegularInspectionId()).orElseThrow();
+            regularInspectionComplete.setRegularComplete(RegStatus.OK);
+            regularInspectionRepository.save(regularInspectionComplete);
+            System.out.println("InsRow" + InsRow);
+            System.out.println("completeRow" + completeRow);
+            System.out.println("모두 조치완료");
+        }
+
+        return actionCompleteTime;
     }
 
     // 정기점검내역 삭제
@@ -281,6 +302,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     }
 
     // BAD인 것만 조인
+
 /*    BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(RegStatus.BAD);
     predicate.and(checkPredicate);*/
 
@@ -300,14 +322,20 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
     List<RegularSearchResultDTO> joinResult = new ArrayList<>();
     for (Tuple tuple : searchRegularData) {
         RegularSearchResultDTO middleResultDTO = new RegularSearchResultDTO();
-        middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart)); // 영역
-        middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName)); // 점검항목
-        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regTime));  // 점검일자
-        middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));  // 점검자 사원번호
-        middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));  // 점검자명
-        middleResultDTO.setRegularInsCount(1); // 불량갯수
-        middleResultDTO.setRegularComplete(tuple.get(qRegularInspection.regularComplete));   // 모두 조치완료여부
-        middleResultDTO.setRegularId(tuple.get(qRegularInspection.regularId));  // 점검ID
+        middleResultDTO.setRegularPart(tuple.get(qRegularInspection.regularPart)); //영역
+        middleResultDTO.setRegularInsName(tuple.get(qRegularInspection.regularInsName)); //점검항목
+        middleResultDTO.setRegularDate(tuple.get(qRegularInspection.regTime));  //점검일자
+        middleResultDTO.setRegularEmpNum(tuple.get(qRegularInspection.regularEmpNum));  //점검자 사원번호
+        middleResultDTO.setRegularPerson(tuple.get(qRegularInspection.regularPerson));  //점검자명
+
+        if(tuple.get(qRegularInspectionCheck.regularCheck) == BAD){
+            middleResultDTO.setRegularInsCount(1); //불량갯수
+        }else{
+            middleResultDTO.setRegularInsCount(0); //불량 없음
+        }
+
+        middleResultDTO.setRegularComplete(tuple.get(qRegularInspection.regularComplete));   //모두 조치완료여부
+        middleResultDTO.setRegularId(tuple.get(qRegularInspection.regularId));  //점검ID
         joinResult.add(middleResultDTO);
     }
 
