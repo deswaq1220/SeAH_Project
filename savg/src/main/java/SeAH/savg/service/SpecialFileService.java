@@ -37,10 +37,6 @@ public class SpecialFileService {
             String makeSpeFileName = fileService.makeFileName(speFileLocation, originalFilename, facilityName, resizedImageData); // 파일명
             String fileUploadFullUrl = "/images/specialInspection/" + makeSpeFileName;  // 업로드 url
 
-
-            System.out.println("파일경로: " + fileUploadFullUrl);
-
-
             // 파일 정보 생성 및 저장
             SpecialFile specialFile = new SpecialFile();
 

@@ -28,6 +28,7 @@ public class RegularDTO {
     private String regularDetailRegDTOList;
 
     private Map<String, List<MultipartFile>> file;
+//    private List<MultipartFile> file;
 
     public static ModelMapper modelMapper = new ModelMapper();
 

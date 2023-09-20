@@ -101,7 +101,6 @@ public class SpecialInspectionService {
         // 파일 저장
         if(!(speInsFormDTO.getFiles() == null || speInsFormDTO.getFiles().isEmpty())){
             // 파일 업로드 및 파일 정보 저장
-//            List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, idToFacility, NO);
             List<SpecialFile> uploadedFiles = specialFileService.uploadFile(speInsFormDTO, speInsFormDTO.getSpeFacility(), NO);
             for(SpecialFile specialFile : uploadedFiles)
                 specialFile.setSpecialInspection(special);
@@ -306,20 +305,6 @@ public class SpecialInspectionService {
         specialInspectionRepository.deleteById(speId);
     }
 
-
-
-    // 수시점검 전체 조회
-//    @Transactional(readOnly = true)
-//    public Map<String, Object> findSpeAll(){
-//        Map<String, Object> responseData = new HashMap<>();
-//
-//        List<SpecialInspection> specialInspectionList = specialInspectionRepository.findAll(Sort.by(Sort.Direction.DESC, "speId"));
-//        List<SpecialFile> specialFileList = specialFileRepository.findAll();
-//
-//        responseData.put("specialData", specialInspectionList);
-//        responseData.put("specialFileData", specialFileList);
-//        return responseData;
-//    }
 
 
     // 저장된 영역, 설비, 위험분류 리스트
