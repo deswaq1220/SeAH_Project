@@ -51,9 +51,9 @@ public class FileService {
 
 
  // 정기점검 파일 이름
- public String makeRegFileName(String uploadPath, String originalFileName, byte[] fileData) throws Exception{
+ public String makeRegFileName(String uploadPath, String originalFileName, String regPart, String regName, byte[] fileData) throws Exception{
   // 저장될 파일이름
-  String savedFileName = newRegFileName(originalFileName);
+  String savedFileName = newRegFileName(originalFileName, regPart, regName);
   String fileUploadFullUrl = uploadPath + "/" + savedFileName;
   // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
   FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
@@ -112,7 +112,7 @@ public class FileService {
 
  // 정기점검
  private List<RegularFile> regPreDateList = null; // 이전날짜 저장하는 변수
- private String newRegFileName(String originalFilename) {
+ private String newRegFileName(String originalFilename, String regPart, String regName) {
   String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
   regPreDateList = regularFileRepository.findFilesByToday(todayDate);
 
@@ -126,12 +126,13 @@ public class FileService {
    sequenceNumber++;
   }
 
-  String newName = todayDate + "_" +  sequenceNumber +  "_" + originalFilename;
+  String newName = todayDate + "_" +  sequenceNumber + "_" + regPart + "_" + regName+  "_" + originalFilename ;
 
   return newName;
  }
 
 
+ // 파일사이즈변경
  public byte[] resizeImageToByteArray(MultipartFile file) throws IOException {
   BufferedImage originalImg = ImageIO.read(file.getInputStream());
   // 새 사이즈

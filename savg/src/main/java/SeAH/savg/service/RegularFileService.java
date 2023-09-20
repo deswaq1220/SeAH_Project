@@ -43,6 +43,8 @@ public class RegularFileService {
         List<RegularFile> uploadedFiles = new ArrayList<>();
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
         List<MultipartFile> files ;
+        String regPart = regularDTO.getRegularPart();       // 영역
+        String regName = regularDTO.getRegularInsName();    // 점검항목
 
         for (String str : regularDTO.getFile().keySet()) {
             log.info("파일 이름 표시" + str);
@@ -51,7 +53,7 @@ public class RegularFileService {
 
 
             for (MultipartFile file : files) {
-                String originalFilename = file.getOriginalFilename();
+                String originalFilename = file.getOriginalFilename();       // 원래 파일명
 
                 // 원본 이미지를 바이트 배열로 읽어들임
                 byte[] originalImageData = file.getBytes();
@@ -59,19 +61,16 @@ public class RegularFileService {
                 // 이미지 리사이징
                 byte[] resizedImageData = resizeImageToByteArray(originalImageData);
 
-                String fileUploadFullUrl = fileService.makeRegFileName(regularFileLocation, originalFilename, resizedImageData);
-                String dbSaveFileName = "/images/regular/" + fileUploadFullUrl;
+                String dbSaveFileName = fileService.makeRegFileName(regularFileLocation, originalFilename, regPart, regName, resizedImageData);    // 새로만든 파일명
+                String fileUploadFullUrl = "/images/regular/" + dbSaveFileName;     // url
 
-                FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-                fos.write(resizedImageData);
-                fos.close();
 
                 // 파일 정보 생성 및 저장
                 RegularFile regularFile = new RegularFile();
 
-                regularFile.setRegularFileName(todayDate + "_" + originalFilename);     // 파일이름
+                regularFile.setRegularFileName(dbSaveFileName);     // 파일이름
                 regularFile.setRegularOriName(originalFilename);       // 원래 파일명
-                regularFile.setRegularFileUrl(dbSaveFileName);          // url
+                regularFile.setRegularFileUrl(fileUploadFullUrl);          // url
                 regularFile.setRegularInspection(regularInspection);
                 regularFile.setRegularCheckId(str);
                 regularFile.setIsComplete("처리 전");
@@ -132,12 +131,14 @@ public class RegularFileService {
 
         List<RegularFile> uploadedFiles = new ArrayList<>();
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String regularInsId = regularDetailDTO.getRegularInspectionId();
+        RegularInspection regData = regularInspectionRepository.findByRegularId(regularInsId);
 
+        String regPart = regData.getRegularPart();       // 영역
+        String regName = regData.getRegularInsName();    // 점검항목
 
         for (MultipartFile file : regularDetailDTO.getFiles()) {
-            String originalFilename = file.getOriginalFilename();
-            String fileUploadFullUrl = regularFileLocation + File.separator + todayDate + "_" + originalFilename;
-            String dbSaveFileName = "/images/regular/" + todayDate + "_" + originalFilename;
+            String originalFilename = file.getOriginalFilename();       // 원래 파일명
 
             // 원본 이미지를 바이트 배열로 읽어들임
             byte[] originalImageData = file.getBytes();
@@ -145,16 +146,16 @@ public class RegularFileService {
             // 이미지 리사이징
             byte[] resizedImageData = resizeImageToByteArray(originalImageData);
 
-            FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
-            fos.write(resizedImageData);
-            fos.close();
+            String dbSaveFileName = fileService.makeRegFileName(regularFileLocation, originalFilename, regPart, regName, resizedImageData);    // 새로만든 파일명
+            String fileUploadFullUrl = "/images/regular/" + dbSaveFileName;     // url
 
 
             // 파일 정보 생성 및 저장
             RegularFile regularFile = new RegularFile();
-            regularFile.setRegularFileName(todayDate + "_" + originalFilename);
-            regularFile.setRegularOriName(originalFilename);
-            regularFile.setRegularFileUrl(dbSaveFileName);
+
+            regularFile.setRegularFileName(dbSaveFileName);     // 파일이름
+            regularFile.setRegularOriName(originalFilename);       // 원래 파일명
+            regularFile.setRegularFileUrl(fileUploadFullUrl);
             regularFile.setRegularInspection(regularInspection);
             regularFile.setRegularCheckId(regularDetailDTO.getId());
             regularFile.setIsComplete("처리 후");
