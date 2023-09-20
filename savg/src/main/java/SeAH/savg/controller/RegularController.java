@@ -52,7 +52,6 @@ public class RegularController {
     }
 
     //정기점검 영역 리스트(주조, 영역 등)
-
     @GetMapping("/user/regularpart")
     public ResponseEntity<Map<String, Object>> regularPartListSelect(){
         Map<String, Object> responseData = new HashMap<>();
@@ -64,7 +63,6 @@ public class RegularController {
 
 
     //정기점검 항목에 따른 체크리스트 세팅
-
     @GetMapping("/user/regularcheck")
     public ResponseEntity<List<RegularDetailDTO>> regularcheck(@RequestParam int regularNum) {
         List<RegularDetailDTO> checklist = regularInspectionService.selectRegularListByNum(regularNum);
