@@ -1,8 +1,10 @@
 package SeAH.savg.service;
 
 import SeAH.savg.entity.EduFile;
+import SeAH.savg.entity.RegularFile;
 import SeAH.savg.entity.SpecialFile;
 import SeAH.savg.repository.EduFileRepository;
+import SeAH.savg.repository.RegularFileRepository;
 import SeAH.savg.repository.SpeicalFileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,8 +25,9 @@ import java.util.List;
 public class FileService {
  private final SpeicalFileRepository speicalFileRepository;
  private final EduFileRepository eduFileRepository;
+ private final RegularFileRepository regularFileRepository;
 
- // 파일 이름 세팅
+ // 수시점검 파일 이름
  public String makeFileName(String uploadPath, String originalFileName, String facilityName, byte[] fileData) throws Exception{
   // 저장될 파일이름
   String savedFileName = generateUniqueFileName(originalFileName, facilityName);
@@ -45,6 +48,21 @@ public class FileService {
   fos.close();
   return  savedFileName;
  }
+
+
+ // 정기점검 파일 이름
+ public String makeRegFileName(String uploadPath, String originalFileName, byte[] fileData) throws Exception{
+  // 저장될 파일이름
+  String savedFileName = newRegFileName(originalFileName);
+  String fileUploadFullUrl = uploadPath + "/" + savedFileName;
+  // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
+  FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
+  fos.write(fileData);
+  fos.close();
+  return  savedFileName;
+ }
+
+
 
  //파일명설정 : 오늘날짜_seqenceNumber_설비명_원본파일명 조합
  private List<SpecialFile> previousDatelist = null; // 이전날짜 저장하는 변수
@@ -88,6 +106,31 @@ public class FileService {
 
   return newName;
  }
+
+
+
+
+ // 정기점검
+ private List<RegularFile> regPreDateList = null; // 이전날짜 저장하는 변수
+ private String newRegFileName(String originalFilename) {
+  String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+  regPreDateList = regularFileRepository.findFilesByToday(todayDate);
+
+  // DB에 저장된 오늘 날짜 구하기
+  if(regPreDateList.isEmpty() || regPreDateList.size() == 0){
+   // 오늘날짜 저장된게 없으면(다음날이면) : sequenceNumber 초기화
+   sequenceNumber = 0;
+  } else{
+   // 오늘날짜중 가장 높은 seq찾아서 sequenceNumber++ 세팅하기
+   sequenceNumber = regularFileRepository.getMaxSeqNumberByToday(todayDate);
+   sequenceNumber++;
+  }
+
+  String newName = todayDate + "_" +  sequenceNumber +  "_" + originalFilename;
+
+  return newName;
+ }
+
 
  public byte[] resizeImageToByteArray(MultipartFile file) throws IOException {
   BufferedImage originalImg = ImageIO.read(file.getInputStream());

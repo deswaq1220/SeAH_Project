@@ -52,8 +52,6 @@ public class RegularFileService {
 
             for (MultipartFile file : files) {
                 String originalFilename = file.getOriginalFilename();
-                String fileUploadFullUrl = regularFileLocation + File.separator + todayDate + "_" + originalFilename;
-                String dbSaveFileName = "/images/regular/" + todayDate + "_" + originalFilename;
 
                 // 원본 이미지를 바이트 배열로 읽어들임
                 byte[] originalImageData = file.getBytes();
@@ -61,15 +59,19 @@ public class RegularFileService {
                 // 이미지 리사이징
                 byte[] resizedImageData = resizeImageToByteArray(originalImageData);
 
+                String fileUploadFullUrl = fileService.makeRegFileName(regularFileLocation, originalFilename, resizedImageData);
+                String dbSaveFileName = "/images/regular/" + fileUploadFullUrl;
+
                 FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
                 fos.write(resizedImageData);
                 fos.close();
 
                 // 파일 정보 생성 및 저장
                 RegularFile regularFile = new RegularFile();
-                regularFile.setRegularFileName(todayDate + "_" + originalFilename);
-                regularFile.setRegularOriName(originalFilename);
-                regularFile.setRegularFileUrl(dbSaveFileName);
+
+                regularFile.setRegularFileName(todayDate + "_" + originalFilename);     // 파일이름
+                regularFile.setRegularOriName(originalFilename);       // 원래 파일명
+                regularFile.setRegularFileUrl(dbSaveFileName);          // url
                 regularFile.setRegularInspection(regularInspection);
                 regularFile.setRegularCheckId(str);
                 regularFile.setIsComplete("처리 전");
