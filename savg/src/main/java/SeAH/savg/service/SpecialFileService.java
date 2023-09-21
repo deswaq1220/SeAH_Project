@@ -15,6 +15,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static SeAH.savg.constant.SpeStatus.NO;
+import static SeAH.savg.constant.SpeStatus.OK;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -28,13 +31,16 @@ public class SpecialFileService {
     //  수시점검 파일 등록
     public List<SpecialFile> uploadFile(SpeInsFormDTO speInsFormDTO, String facilityName, SpeStatus isComplete) throws Exception {
         List<SpecialFile> uploadedFiles = new ArrayList<>();
+        String isCompleteToStr = "";
+        if(isComplete == OK){ isCompleteToStr = "조치후"; }
+        else if(isComplete == NO){ isCompleteToStr = "조치전"; }
 
         List<MultipartFile> files = speInsFormDTO.getFiles();
         for (MultipartFile file : files) {
             byte[] resizedImageData = fileService.resizeImageToByteArray(file);
 
             String originalFilename = file.getOriginalFilename();  // 원래파일명
-            String makeSpeFileName = fileService.makeFileName(speFileLocation, originalFilename, facilityName, resizedImageData); // 파일명
+            String makeSpeFileName = fileService.makeFileName(speFileLocation, originalFilename, facilityName, isCompleteToStr,resizedImageData); // 파일명
             String fileUploadFullUrl = "/images/specialInspection/" + makeSpeFileName;  // 업로드 url
 
             // 파일 정보 생성 및 저장

@@ -39,18 +39,18 @@ public class RegularFileService {
 
     // 정기점검 파일 등록
     public void regularUploadFile(RegularInspection regularInspection, RegularDTO regularDTO) throws Exception {
-
         List<RegularFile> uploadedFiles = new ArrayList<>();
         String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
+
         List<MultipartFile> files ;
         String regPart = regularDTO.getRegularPart();       // 영역
         String regName = regularDTO.getRegularInsName();    // 점검항목
+        String isComplete = "조치전";
 
         for (String str : regularDTO.getFile().keySet()) {
             log.info("파일 이름 표시" + str);
             log.info(regularDTO.getFile().get(str).get(0).getOriginalFilename());
             files = regularDTO.getFile().get(str);
-
 
             for (MultipartFile file : files) {
                 String originalFilename = file.getOriginalFilename();       // 원래 파일명
@@ -61,9 +61,8 @@ public class RegularFileService {
                 // 이미지 리사이징
                 byte[] resizedImageData = resizeImageToByteArray(originalImageData);
 
-                String dbSaveFileName = fileService.makeRegFileName(regularFileLocation, originalFilename, regPart, regName, resizedImageData);    // 새로만든 파일명
+                String dbSaveFileName = fileService.makeRegFileName(regularFileLocation, originalFilename, regPart, regName, isComplete, resizedImageData);    // 새로만든 파일명
                 String fileUploadFullUrl = "/images/regular/" + dbSaveFileName;     // url
-
 
                 // 파일 정보 생성 및 저장
                 RegularFile regularFile = new RegularFile();
@@ -73,7 +72,7 @@ public class RegularFileService {
                 regularFile.setRegularFileUrl(fileUploadFullUrl);          // url
                 regularFile.setRegularInspection(regularInspection);
                 regularFile.setRegularCheckId(str);
-                regularFile.setIsComplete("처리 전");
+                regularFile.setIsComplete(isComplete);
                 regularFileRepository.save(regularFile); // 데이터베이스에 저장
 
                 uploadedFiles.add(regularFile);
@@ -136,6 +135,7 @@ public class RegularFileService {
 
         String regPart = regData.getRegularPart();       // 영역
         String regName = regData.getRegularInsName();    // 점검항목
+        String isComplete = "조치후";
 
         for (MultipartFile file : regularDetailDTO.getFiles()) {
             String originalFilename = file.getOriginalFilename();       // 원래 파일명
@@ -146,7 +146,7 @@ public class RegularFileService {
             // 이미지 리사이징
             byte[] resizedImageData = resizeImageToByteArray(originalImageData);
 
-            String dbSaveFileName = fileService.makeRegFileName(regularFileLocation, originalFilename, regPart, regName, resizedImageData);    // 새로만든 파일명
+            String dbSaveFileName = fileService.makeRegFileName(regularFileLocation, originalFilename, regPart, regName, isComplete, resizedImageData);    // 새로만든 파일명
             String fileUploadFullUrl = "/images/regular/" + dbSaveFileName;     // url
 
 
@@ -158,7 +158,7 @@ public class RegularFileService {
             regularFile.setRegularFileUrl(fileUploadFullUrl);
             regularFile.setRegularInspection(regularInspection);
             regularFile.setRegularCheckId(regularDetailDTO.getId());
-            regularFile.setIsComplete("처리 후");
+            regularFile.setIsComplete(isComplete);
             regularFileRepository.save(regularFile); // 데이터베이스에 저장
 
             uploadedFiles.add(regularFile);

@@ -583,8 +583,8 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
                 RegularInspectionBad regularInspectionBad = regularInspectionBadRepository.findByRegularInspectionCheck(regularInspectionCheck);
                 RegStatus regularComplete = regularInspectionBad.getRegularComplete();
 
-                List<String> beforeFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection,"처리 전");
-                List<String> afterFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection,"처리 후");
+                List<String> beforeFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection,"조치전");
+                List<String> afterFileNameList = regularFileRepository.getRegularFileName(regularList.getRegularId(),regularInspection,"조치후");
 
                 String regularActContent = regularInspectionBad.getRegularActContent();
                 String regularActEmail = regularInspectionBad.getRegularActEmail();

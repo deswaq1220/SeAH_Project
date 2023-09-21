@@ -27,10 +27,12 @@ public class FileService {
  private final EduFileRepository eduFileRepository;
  private final RegularFileRepository regularFileRepository;
 
- // 수시점검 파일 이름
- public String makeFileName(String uploadPath, String originalFileName, String facilityName, byte[] fileData) throws Exception{
+ // 수시점검 파일 이름 : 날짜_seq_설비명_조치여부.확장자
+ public String makeFileName(String uploadPath, String originalFileName, String facilityName, String isComplete,byte[] fileData) throws Exception{
+  // 파일 확장자
+  String ext = fileExtension(originalFileName);
   // 저장될 파일이름
-  String savedFileName = generateUniqueFileName(originalFileName, facilityName);
+  String savedFileName = generateUniqueFileName(ext, facilityName, isComplete);
   String fileUploadFullUrl = uploadPath + "/" + savedFileName;
   // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
   FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
@@ -39,10 +41,12 @@ public class FileService {
   return  savedFileName;
  }
 
- // 교육  파일 이름 설정
+ // 교육 파일 이름 설정
  public String makeEduFileName(String uploadPath,  String originalFileName, String eduCategory, byte[] fileData) throws Exception{
+  // 저장될 파일이름
   String savedFileName = newEduFileName(originalFileName, eduCategory);
   String fileUploadFullUrl = uploadPath + "/" + savedFileName;
+  // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
   FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
   fos.write(fileData);
   fos.close();
@@ -50,10 +54,10 @@ public class FileService {
  }
 
 
- // 정기점검 파일 이름
- public String makeRegFileName(String uploadPath, String originalFileName, String regPart, String regName, byte[] fileData) throws Exception{
+ // 정기점검 파일 이름 : 날짜_seq_영역_항목_조치여부.확장자
+ public String makeRegFileName(String uploadPath, String originalFileName, String regPart, String regName, String isComplete, byte[] fileData) throws Exception{
   // 저장될 파일이름
-  String savedFileName = newRegFileName(originalFileName, regPart, regName);
+  String savedFileName = newRegFileName(originalFileName, regPart, regName, isComplete);
   String fileUploadFullUrl = uploadPath + "/" + savedFileName;
   // 파일이 저장될 위치, 파일의 이름 받아 파일에 쓸 파일 출력 스트림 생성
   FileOutputStream fos = new FileOutputStream(fileUploadFullUrl);
@@ -68,7 +72,7 @@ public class FileService {
  private List<SpecialFile> previousDatelist = null; // 이전날짜 저장하는 변수
  private int sequenceNumber = 0;
 
- private String generateUniqueFileName(String originalFilename, String facilityName) {
+ private String generateUniqueFileName(String ext, String facilityName, String isComplete) {
   String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
   previousDatelist = speicalFileRepository.findFilesByToday(todayDate);
   // DB에 저장된 오늘 날짜 구하기
@@ -81,7 +85,7 @@ public class FileService {
    sequenceNumber++;
   }
 
-  String newName = todayDate + "_" +  sequenceNumber + "_" + facilityName + "_" + originalFilename;
+  String newName = todayDate + "_" +  sequenceNumber + "_" + facilityName + "_" + isComplete + ext;
 
   return newName;
  }
@@ -112,9 +116,12 @@ public class FileService {
 
  // 정기점검
  private List<RegularFile> regPreDateList = null; // 이전날짜 저장하는 변수
- private String newRegFileName(String originalFilename, String regPart, String regName) {
+ private String newRegFileName(String originalFilename, String regPart, String regName, String isComplete) {
   String todayDate = new SimpleDateFormat("yyyyMMdd").format(new Date());
   regPreDateList = regularFileRepository.findFilesByToday(todayDate);
+
+  // 파일 확장자
+  String ext = fileExtension(originalFilename);
 
   // DB에 저장된 오늘 날짜 구하기
   if(regPreDateList.isEmpty() || regPreDateList.size() == 0){
@@ -126,7 +133,7 @@ public class FileService {
    sequenceNumber++;
   }
 
-  String newName = todayDate + "_" +  sequenceNumber + "_" + regPart + "_" + regName+  "_" + originalFilename ;
+  String newName = todayDate + "_" +  sequenceNumber + "_" + regPart + "_" + regName+  "_" + isComplete + ext ;
 
   return newName;
  }
@@ -163,5 +170,15 @@ public class FileService {
  }
 
 
+ // 파일 확장자명 얻기
+ private String fileExtension(String originalFileName){
+  String ext = originalFileName.substring(originalFileName.lastIndexOf(".") + 1);
+  String dotExt = "." + ext;
+
+  System.out.println("file name : " + originalFileName);
+  System.out.println("extension : " + dotExt);
+
+  return dotExt;
+ }
 
 }
