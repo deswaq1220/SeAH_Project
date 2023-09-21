@@ -6,7 +6,6 @@ import SeAH.savg.dto.RegularDetailDTO;
 import SeAH.savg.dto.RegularSearchDTO;
 import SeAH.savg.dto.RegularSearchResultDTO;
 import SeAH.savg.entity.RegularInspection;
-import SeAH.savg.repository.RegularInspectionRepository;
 import SeAH.savg.repository.RegularStatisticsRepository;
 import SeAH.savg.service.RegularInspectionService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +29,12 @@ import java.util.Map;
 @Slf4j
 public class RegularController {
 
-    private final RegularInspectionRepository regularInspectionRepository;
     private final RegularInspectionService regularInspectionService;
     private final RegularStatisticsRepository regularStatisticsRepository;
 
     // 월별 정기점검현황 : 점검실시, 조치완료, 불량건수
     @GetMapping("/user/regular/{masterdataPart}/{masterdataId}")
-    public ResponseEntity<?> speMonthly() {
+    public ResponseEntity<?> regMonthly() {
         return new ResponseEntity<>(regularInspectionService.findRegMonthly(), HttpStatus.OK);
     }
 

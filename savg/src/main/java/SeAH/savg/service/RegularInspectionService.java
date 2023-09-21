@@ -50,16 +50,10 @@ public class RegularInspectionService {
 
         // 이번달 점검실시 건수
         int countMonthlyAll = regularInspectionRepository.countByRegTime();
-
         // 이번달 조치완료 건수
         int countMonthlyComplete = regularInspectionRepository.findRegularInspectionsCompletedToday(OK);
-
         // 이번달 등록건수 중 불량건수
         int countMonthlyBadReg = regularCheckRepository.countByRegularCheck(BAD);
-
-        System.out.println("이번달 점검실시 건수: "+countMonthlyAll+"건");
-        System.out.println("이번달 조치완료 건수: "+countMonthlyComplete+"건");
-        System.out.println("이번달 불량건수: "+countMonthlyBadReg+"건");
 
         responseData.put("monthlyAll", countMonthlyAll);                 // 이번달 점검실시건수
         responseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 조치완료건수

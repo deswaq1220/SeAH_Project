@@ -26,7 +26,7 @@ public class SpecialController {
     // ------------ 사용자 ------------------------------------------
 
 
-    // 월별 수시점검현황: 수시점검 qr찍고 첫번째 페이지
+    // 월별 수시점검현황: 점검실시, 조치완료, 조치필요건수
     @GetMapping("/user/special/{masterdataPart}/{masterdataId}")
     public ResponseEntity<?> speMonthly() {
         return new ResponseEntity<>(specialInspectionService.findSpeMonthly(), HttpStatus.OK);
@@ -34,7 +34,6 @@ public class SpecialController {
 
 
     // 설비별 현황 조회: 수시점검 qr찍고 두번째 페이지
-
     @GetMapping("/user/special/list/{masterdataPart}/{masterdataId}")
     public ResponseEntity<?> speListOfFac(@PathVariable String masterdataId) {
         return new ResponseEntity<>(specialInspectionService.findListOfFac(masterdataId), HttpStatus.OK);
