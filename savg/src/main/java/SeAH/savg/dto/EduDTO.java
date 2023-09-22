@@ -17,7 +17,6 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Getter @Setter @ToString
 @EntityListeners(EduEntityListener.class)
@@ -63,7 +62,6 @@ public class EduDTO {
 
     private List<EduFile> eduFileList = new ArrayList<>();
 
-    //    private MultipartFile[] files;
     private static ModelMapper modelMapper = new ModelMapper();
 
     public EduDTO(Edu edu) {
@@ -83,9 +81,6 @@ public class EduDTO {
         }
     }
 
-//    public Edu createEdu(){
-//        return modelMapper.map(this, Edu.class);
-//    }
 
     public Edu toEntity() {
         Edu edu = new Edu();

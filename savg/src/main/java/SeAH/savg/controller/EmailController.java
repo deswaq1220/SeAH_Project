@@ -15,7 +15,6 @@ import javax.mail.internet.MimeMessage;
 
 @RestController
 public class EmailController {
-
     private final JavaMailSender mailSender;
 
     @Autowired
@@ -23,15 +22,11 @@ public class EmailController {
         this.mailSender = mailSender;
     }
 
-//    @CrossOrigin(origins = "http://localhost:3000")
-//    @CrossOrigin(origins = "http://172.20.20.252:3000")   // 세아
-
     @PostMapping("/api/send-email")
     public ResponseEntity<Object> sendEmail(@RequestBody EmailData emailData) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-//            helper.setTo(emailData.getRecipient());
             helper.setTo(emailData.getRecipients().toArray(new String[0]));
             helper.setSubject(emailData.getSubject());
             helper.setText(emailData.getContent(),true);
@@ -44,7 +39,6 @@ public class EmailController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending email.");
         }
     }
-
 
 
 }

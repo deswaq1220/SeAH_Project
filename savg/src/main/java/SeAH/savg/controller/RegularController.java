@@ -97,7 +97,6 @@ public class RegularController {
 
 
     //정기점검 목록 조회
-
     @GetMapping("/user/regularlist")
     public ResponseEntity<List<RegularDTO>> viewRegularList(@RequestParam int year, @RequestParam int month) {
         List<RegularInspection> regularInspectionList = regularInspectionService.getRegularByDate(year, month);
@@ -166,7 +165,6 @@ public class RegularController {
 
 
 
-//
 
     //--------------------------------------전체현황 조회 관련
     @GetMapping("/user/searchregularlist")

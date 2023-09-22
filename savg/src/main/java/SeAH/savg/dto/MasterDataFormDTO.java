@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 
 @Getter @Setter @ToString
 public class MasterDataFormDTO {
-    private String masterdataId;                // id
+    private String masterdataId;              // id
     private String masterdataPart;           // 영역
     private String masterdataFacility;       // 설비
     private static ModelMapper modelMapper = new ModelMapper();

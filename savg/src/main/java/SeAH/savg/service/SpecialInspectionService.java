@@ -85,13 +85,11 @@ public class SpecialInspectionService {
     @Transactional
     public SpecialInspection speCreate(String masterdataPart, SpeInsFormDTO speInsFormDTO) throws Exception {
         // speIsFormDTO 나머지 데이터 세팅
-        System.out.println("서비스확인용  : "+speInsFormDTO);
         speInsFormDTO.setSpeId(makeIdService.makeId(categoryType));             // id
         speInsFormDTO.setSpeDate(LocalDateTime.now());                          // 점검일
         speInsFormDTO.setSpePart(masterdataPart);                               // 영역
 
         SpeStatus.deadLineCal(speInsFormDTO);                                               // 위험도에 따른 완료요청기한
-
         speInsFormDTO.createSpeIns();
 
         // 수시점검 저장
@@ -169,16 +167,13 @@ public class SpecialInspectionService {
         String facilityName = special.getSpeFacility();
         MasterData facilityData = masterDataRepository.findByMasterdataFacility(facilityName);
         String facilityCode = facilityData.getMasterdataId();
-        System.out.println("masterData 설비코드: "+ facilityCode);
 
         detailMap.put("facilityCode", facilityCode);
 
         // 이미지 데이터
         List<SpecialFileFormDTO> speFileDTOList = specialFileRepository.findBySpecialInspection_SpeId(speId);
-
         List<SpecialFileFormDTO> specialFileDTOList = new ArrayList<>();       // 전체파일리스트
 
-        System.out.println("파일확인디티오: "+speFileDTOList);
 
         if (!speFileDTOList.isEmpty()) {
             List<String> compImageUrls = new ArrayList<>();         // 완료이미지 url
@@ -201,8 +196,6 @@ public class SpecialInspectionService {
             detailMap.put("noCompImageUrls", noCompImageUrls);  // 미완료이미지
         }
 
-
-
         SpeInsFormDTO speFormDTO = SpeInsFormDTO.of(special);
         speFormDTO.setSpeFiles(specialFileDTOList);
 
@@ -215,8 +208,6 @@ public class SpecialInspectionService {
     // 업데이트
     @Transactional
     public SpecialInspection speUpdate(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-        System.out.println("----------업데이트 서비스들어옴");
-        System.out.println("----------들고온데이터: "+speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
 
         // 엔티티에서 필요한 데이터 추출
@@ -224,7 +215,7 @@ public class SpecialInspectionService {
         LocalDateTime speDate = special.getSpeDate();       // 등록일
         String spePart = special.getSpePart();              // 영역
 
-        // DTO 업데이트   // 확인 없어도되지않나?
+        // DTO 업데이트
         speInsFormDTO.setSpeDate(speDate);
         speInsFormDTO.setSpePart(spePart);
         SpeStatus.deadLineCal(speInsFormDTO);
@@ -252,7 +243,6 @@ public class SpecialInspectionService {
 
         // 업데이트
         special.updateFromDTO(speInsFormDTO);
-        System.out.println("업데이트 확인: "+special);
         return special;
     }
 
@@ -261,8 +251,6 @@ public class SpecialInspectionService {
     // 완료처리
     @Transactional
     public SpecialInspection speComplete(String speId, SpeInsFormDTO speInsFormDTO) throws Exception {
-        System.out.println("----------업데이트 서비스들어옴");
-        System.out.println("----------들고온데이터: "+speInsFormDTO);
         SpecialInspection special = specialInspectionRepository.findAllBySpeId(speId);
 
         // 엔티티에서 필요한 데이터 추출
@@ -284,7 +272,6 @@ public class SpecialInspectionService {
 
         // 업데이트
         special.updateFromDTO(speInsFormDTO);
-        System.out.println("업데이트 확인: "+special);
         return special;
     }
 
@@ -293,8 +280,6 @@ public class SpecialInspectionService {
     public void speDelete(String speId) {
         // 파일 삭제
         List<SpecialFile> filesToDelete = specialFileRepository.findBySpecialInspectionSpeId(speId);
-
-        System.out.println("파일삭제 아이디: " + filesToDelete);
 
         for (SpecialFile file : filesToDelete) {
             specialFileRepository.deleteById(file.getSpeFileId());
@@ -356,7 +341,6 @@ public class SpecialInspectionService {
         List<SpecialInspection> searchSpeData = (List<SpecialInspection>) specialInspectionRepository.findAll(builder, sort);
         List<SpeInsFormDTO> searchSpeDataDTOList = SpeInsFormDTO.listOf(searchSpeData);
         searchSpeList.put("searchSpeDataDTOList", searchSpeDataDTOList);
-        System.out.println("서비스 검색 확인:"+searchSpeDataDTOList);
 
         return searchSpeList;
 

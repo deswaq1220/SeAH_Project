@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -41,10 +39,6 @@ public class Edu extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime eduStartTime;     //교육시작시각
 
-//    @CreatedDate
-//    private LocalDateTime eduRegTime;       //교육등록시각
-
-//    @Column(nullable = false)
     private String eduSumTime;             //교육시간(분)
 
     @Column(nullable = false)

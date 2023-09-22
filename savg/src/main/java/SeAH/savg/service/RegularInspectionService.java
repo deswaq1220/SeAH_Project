@@ -57,7 +57,7 @@ public class RegularInspectionService {
 
         responseData.put("monthlyAll", countMonthlyAll);                 // 이번달 점검실시건수
         responseData.put("monthlyComplete", countMonthlyComplete);       // 이번달 조치완료건수
-        responseData.put("monthlyBad", countMonthlyBadReg);      // 이번달 불량건수
+        responseData.put("monthlyBad", countMonthlyBadReg);              // 이번달 불량건수
 
         return responseData ;
     }
@@ -113,7 +113,6 @@ public class RegularInspectionService {
         //정기점검 ID 부여 -> ex.R2308-00
         regularDTO.setRegularId(makeIdService.makeId(categoryType));
         RegularInspection regularInspection = regularDTO.createRegular();
-//        regularInspection.setRegularDate(LocalDateTime.now());
         regularInspection.setRegularEmail(regularDTO.getRegularEmail());
 
 
@@ -126,8 +125,6 @@ public class RegularInspectionService {
 
         if(regularDTO.getFile()!=null){
             regularFileService.regularUploadFile(regularInspection, regularDTO);
-        }else {
-            log.info("파일 안넘어옴");
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -177,10 +174,8 @@ public class RegularInspectionService {
 
     //상세조회
     public RegularDTO getRegularById(String regularId) {
-         RegularInspection regularInspection = regularInspectionRepository.findById(regularId).orElseThrow(()->new IllegalArgumentException("상세보기 할 데이터가 없습니다."));
-
+        RegularInspection regularInspection = regularInspectionRepository.findById(regularId).orElseThrow(()->new IllegalArgumentException("상세보기 할 데이터가 없습니다."));
         RegularDTO regularDTO = RegularDTO.of(regularInspection);
-
 
         return regularDTO;
     }
@@ -210,9 +205,6 @@ public class RegularInspectionService {
             RegularInspection regularInspectionComplete = regularInspectionRepository.findById(regularDetailDTO.getRegularInspectionId()).orElseThrow();
             regularInspectionComplete.setRegularComplete(RegStatus.OK);
             regularInspectionRepository.save(regularInspectionComplete);
-            System.out.println("InsRow" + InsRow);
-            System.out.println("completeRow" + completeRow);
-            System.out.println("모두 조치완료");
         }
 
         return actionCompleteTime;
@@ -232,11 +224,9 @@ public class RegularInspectionService {
 
         // bad 및 check 삭제
         List<RegularInspectionCheck> checkToDeleteList = regularCheckRepository.findByRegularInspectionRegularId(regId);
-        System.out.println("regId로 check 엔티티찾기: " + checkToDeleteList);
+
 
         for (RegularInspectionCheck checkToDelete : checkToDeleteList) {
-            Long checkToDeleteId = checkToDelete.getRegularCheckId();
-            System.out.println("삭제할 체크id: " + checkToDeleteId);
 
             // RegularInspectionBad 삭제
             RegularInspectionBad badToDelete = regularInspectionBadRepository.findByRegularInspectionCheck(checkToDelete);
@@ -295,9 +285,7 @@ public List<RegularSearchResultDTO> searchRegularList(RegularSearchDTO searchDTO
         predicate.and(checkPredicate);
     }
 
-    //BAD인 것만 조인
-/*    BooleanExpression checkPredicate = qRegularInspectionCheck.regularCheck.eq(RegStatus.BAD);
-    predicate.and(checkPredicate);*/
+
 
     //테이블 생성
     List<Tuple> searchRegularData = queryFactory

@@ -95,16 +95,6 @@ public class MasterDataService {
         return masterDataDepartmentRepository.findAll(sort);
     }
 
-        /*        public List<MasterDataDepartment> DepartList(){
-            List<MasterDataDepartment> resultList = masterDataDepartmentRepository.findAll();
-
-            resultList.sort(Comparator
-                                      .comparing((MasterDataDepartment dept) -> !dept.getFirstDepartment().equals(dept.getSecondDepartment()))
-                                      .thenComparing(MasterDataDepartment::getFirstDepartment)
-                                      .thenComparing(MasterDataDepartment::getSecondDepartment)
-            );
-            return resultList;
-        }*/
 
     //부서별 목록 조회(카테고리용)
     public List<MasterDataDepartmentDTO> sortDepartList(Long departmentId){
@@ -138,20 +128,17 @@ public class MasterDataService {
     public void delDepart(Long departmentId){
         try{
             masterDataDepartmentRepository.deleteById(departmentId);
-            System.out.println("삭제성공");
         } catch (Exception e) {
             log.error("삭제실패");
         }
     }
 
     //부서 수정하기
-//    @Transactional
     public MasterDataDepartmentDTO updateDepart(MasterDataDepartmentDTO departmentDTO, Long departmentId){ //depart2: 수정해야하는 값, departmentDTO: 수정 값
         try{
 
             Long beforeId = departmentId;
             Optional<MasterDataDepartment> target = masterDataDepartmentRepository.findById(beforeId);
-            log.info("departmentDTO.getDepartmentId()" + departmentDTO.getDepartmentId());
 
             //변경값이 존재할 경우
             if(target.isPresent()){
@@ -159,11 +146,7 @@ public class MasterDataService {
                 Long departmentNameId = departmentDTO.getDepartmentId();
                 String departmentName = departmentDTO.getDepartmentName();
 
-                log.info("departmentId" + departmentNameId);
-
                 masterDataDepartmentRepository.updateDepartment(departmentNameId, departmentName, beforeId);
-
-                log.info("수정 성공");
 
                 //변경값이 없을 경우
             } else{

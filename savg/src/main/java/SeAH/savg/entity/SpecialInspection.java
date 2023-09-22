@@ -68,7 +68,6 @@ public class SpecialInspection {
     @Column(nullable = false)
     private LocalDateTime speDeadline;      // 완료요청기한
 
-//    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private SpeStatus speComplete;              // 완료여부
 

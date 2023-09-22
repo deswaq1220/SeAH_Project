@@ -3,35 +3,26 @@ package SeAH.savg.controller;
 
 import SeAH.savg.constant.edustate;
 import SeAH.savg.dto.EduDTO;
-import SeAH.savg.dto.EduStatisticsDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
-import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import SeAH.savg.service.EduFileService;
 import SeAH.savg.service.EduService;
 import SeAH.savg.service.MakeIdService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-//@Controller
 @RestController
 @RequestMapping("/admin")
-//@CrossOrigin(origins = "http://localhost:3000")
-//@CrossOrigin(origins = "http://172.20.20.252:3000") //세아
-
 @Log4j2
 @RequiredArgsConstructor
 public class EduController {

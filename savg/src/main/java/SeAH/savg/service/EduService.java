@@ -12,12 +12,13 @@ import SeAH.savg.repository.MasterDataDepartmentRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
-import java.io.File;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import static SeAH.savg.constant.edustate.*;
 
@@ -64,14 +65,10 @@ public class EduService {
 
     //교육수정
     public void update(EduDTO eduDTO, String eduCategory)throws Exception{
-//        eduDTO.setEduRegTime(eduDTO.getEduRegTime());
         Edu edu = eduDTO.toEntity();
-
-//        edu.setEduRegTime(LocalDateTime.now());
 
         List<EduFile> eduFileList = eduFileRepository.findByEdu(edu);
         if(eduDTO.getEduFileIds()!=null){
-//        if(!eduDTO.getEduFileIds().isEmpty()){
             for(Long eduFileId: eduDTO.getEduFileIds()){
                 for(EduFile eduFile : eduFileList){
                     if(eduFile.getEduFileId() == eduFileId){
@@ -82,7 +79,6 @@ public class EduService {
         }
 
         if(eduDTO.getFiles()==null){
-//        if(eduDTO.getFiles().isEmpty()){
             eduRepository.save(edu);
         }else {
             eduFileService.uploadFile(eduDTO, eduCategory);

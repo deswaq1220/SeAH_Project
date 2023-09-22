@@ -149,7 +149,6 @@ public class RegularFileService {
             String dbSaveFileName = fileService.makeRegFileName(regularFileLocation, originalFilename, regPart, regName, isComplete, resizedImageData);    // 새로만든 파일명
             String fileUploadFullUrl = "/images/regular/" + dbSaveFileName;     // url
 
-
             // 파일 정보 생성 및 저장
             RegularFile regularFile = new RegularFile();
 

@@ -1,6 +1,5 @@
 package SeAH.savg.entity;
 
-import SeAH.savg.constant.RegStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +18,6 @@ public class RegularFile extends BaseTimeEntity{
     private String regularOriName; //원본 파일 명
     private String regularFileUrl; //파일 저장 경로
     private String isComplete; //완료여부
-
 
     private String regularCheckId;
 

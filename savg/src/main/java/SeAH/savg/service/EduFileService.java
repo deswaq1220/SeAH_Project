@@ -2,11 +2,8 @@ package SeAH.savg.service;
 
 
 import SeAH.savg.dto.EduDTO;
-import SeAH.savg.dto.RegularDTO;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
-import SeAH.savg.entity.RegularFile;
-import SeAH.savg.entity.RegularInspection;
 import SeAH.savg.repository.EduFileRepository;
 import SeAH.savg.repository.EduRepository;
 import SeAH.savg.repository.RegularFileRepository;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,8 +57,6 @@ public class EduFileService {
             String originalFilename = file.getOriginalFilename();
             String makeEduFileName = fileService.makeEduFileName(eduFileLocation, originalFilename, eduCatory, resizedImageData);
             String fileUploadFullUrl = "/images/edu/" + makeEduFileName;  // 업로드 url
-
-            System.out.println("파일경로: " + fileUploadFullUrl);
 
 
             // 파일 정보 생성 및 저장

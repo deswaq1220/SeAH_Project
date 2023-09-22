@@ -42,8 +42,6 @@ public class SpeInsFormDTO {
 
     private List<MultipartFile> files;      // 파일
 
-//    private List<SpecialFile> speFileList = new ArrayList<>();
-
     private List<SpecialFileFormDTO> speFiles = new ArrayList<>();
 
     public static ModelMapper modelMapper = new ModelMapper();
@@ -70,30 +68,6 @@ public class SpeInsFormDTO {
         this.speDeadline = speDeadline;
         this.speComplete = speComplete;
     }
-
-//    public SpeInsFormDTO(SpecialInspection special) {
-//        if(special != null){
-//            this.speId = special.getSpeId();
-//            this.speDate = special.getSpeDate();
-//            this.spePerson = special.getSpePerson();
-//            this.speEmpNum = special.getSpeEmpNum();
-//            this.speEmail = special.getSpeEmail();
-//            this.spePart = special.getSpePart();
-//            this.speFacility = special.getSpeFacility();
-//            this.speDanger = special.getSpeDanger();
-//            this.speInjure = special.getSpeInjure();
-//            this.speCause = special.getSpeCause();
-//            this.speTrap = special.getSpeTrap();
-//            this.speRiskAssess = special.getSpeRiskAssess();
-//            this.speContent = special.getSpeContent();
-//            this.speActContent = special.getSpeActContent();
-//            this.speActPerson = special.getSpeActPerson();
-//            this.speActEmail = special.getSpeActEmail();
-//            this.speActDate = special.getSpeActDate();
-//            this.speDeadline = special.getSpeDeadline();
-//            this.speComplete = special.getSpeComplete();
-//        }
-//    }
 
     // DTO -> entity 변환
     public SpecialInspection createSpeIns(){ return modelMapper.map(this, SpecialInspection.class); }

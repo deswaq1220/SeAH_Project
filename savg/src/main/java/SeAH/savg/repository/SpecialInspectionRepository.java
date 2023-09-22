@@ -42,9 +42,7 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
             "AND s.speComplete =? 1")
     int countBySpeDeadlineAndSpeComplete(SpeStatus speComplete);
 
-    // --------------------------- 공통
-    // 등록된 전체 수시점검 조회
-//    List<SpecialInspection> findAllOrderBySpeIdDesc();
+
 
 
 
@@ -119,13 +117,6 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
     List<Object[]> specialListBySpeInjureAndMonth(@Param("month") int month);
 
 
-/*    //월간 수시점검 통계 조회 - 위험성 평가별 발생 건 수
-    @Query("SELECT c.causeMenu, COALESCE(COUNT(s), 0) " +
-            "FROM Special c " +
-            "LEFT JOIN SpecialInspection s ON s.speCause = c.causeMenu AND YEAR(s.speDate) = :year AND MONTH(s.speDate) = :month " +
-            "GROUP BY c.causeMenu")
-    List<Object[]> specialListBySpeRiskAssessAndMonth(@Param("month") int month);*/
-
 
     //연
     //연간(1~12월) 총 수시점검 건수
@@ -148,11 +139,6 @@ public interface SpecialInspectionRepository extends JpaRepository<SpecialInspec
             "GROUP BY s.speDanger, MONTH(s.speDate)")
     List<Object[]> specialDetailListByDanger(@Param("year") int year);
 
-    /*    @Query("SELECT i.dangerKind, MONTH(s.speDate), COALESCE(COUNT(s), 0) " +
-            "FROM SpecialDangerINFO i " +
-            "LEFT JOIN SpecialInspection s ON s.speDanger = i.dangerKind AND YEAR(s.speDate) = :year " +
-            "GROUP BY i.dangerKind, MONTH(s.speDate)")
-    List<Object[]> specialDetailListByDangerAndMonth(@Param("year") int year);*/
 
 
 }

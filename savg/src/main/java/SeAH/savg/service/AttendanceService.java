@@ -1,19 +1,15 @@
 package SeAH.savg.service;
 
 import SeAH.savg.dto.AttendanceDTO;
-import SeAH.savg.dto.EduDTO;
 import SeAH.savg.entity.Attendance;
-import SeAH.savg.entity.Edu;
 import SeAH.savg.repository.AttendanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Optional;
 
 
 @Service
@@ -35,7 +31,6 @@ public class AttendanceService {
                           String eduId){
 
         LocalDateTime attenTime = nowFromZone();
-        System.out.println("nowFromZone:    "+ attenTime);
 
         AttendanceDTO attendanceDTO = new AttendanceDTO();
         attendanceDTO.setAttenDepartment(attendEmployeeDepartment);
@@ -43,9 +38,7 @@ public class AttendanceService {
         attendanceDTO.setAttenEmployeeNumber(attendEmployeeNumber);
         attendanceDTO.setEduId(eduId);
         attendanceDTO.setAttenTime(attenTime);
-
         Attendance attendance = attendanceDTO.toEntity();
-        System.out.println("저장중인 attendance:    "+ attendance);
         attendanceRepository.save(attendance);
     }
 

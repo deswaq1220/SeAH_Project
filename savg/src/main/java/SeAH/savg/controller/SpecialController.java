@@ -92,12 +92,6 @@ public class SpecialController {
 // -------------------------- 공통
 
 
-//    // 수시저검 등록된 전체 현황
-//    @GetMapping("/frequentinspection")
-//    public ResponseEntity<?> speFullList() {
-//        return new ResponseEntity<>(specialInspectionService.getPartAndFacilityDataAndAllList(), HttpStatus.OK);
-//    }
-
     // 수시점검 전체현황 검색
     @GetMapping("/user/frequentinspection")
     public ResponseEntity<?> speFullList(@RequestParam (value = "spePart", required = false) String spePart,
@@ -250,16 +244,6 @@ public class SpecialController {
         return ResponseEntity.ok(statisticsList);
     }
 
-    /* 월별 수시점검 현황 통계 조회 - 위험성 평가별
-     * 형태: 고위험, 중위험, 저위험 + 점검건수 리스트
-     * ex : 고위험 1건, 중위험 2건 ...
-     */
-/*  @GetMapping("/special/statistics/speriskassessdmonth")
-  public ResponseEntity<List<Object[]>> getSpecialListBySpeRiskAssessAndMonth ( @RequestParam("month") int month){
-      List<Object[]> statisticsList = specialInspectionRepository.specialListBySpeRiskAssessAndMonth(month);
-
-      return ResponseEntity.ok(statisticsList);
-  }*/
 
     /* 1~12월 내 발생한 수시점검 건수*/
     @GetMapping("/admin/special/statistics/yearcount")

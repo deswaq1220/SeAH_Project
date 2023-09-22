@@ -73,11 +73,6 @@ public interface RegularStatisticsRepository extends JpaRepository<RegularInspec
             "GROUP BY r.regularInsName, i.regularCheck")
     List<Object[]> regularListByNameAndMonthForExcel(@Param("year") int year, @Param("month") int month);
 
-/*    @Query("SELECT CONCAT(r.regularInsName, ' - ', i.regularCheck) AS combinedNameCheck, COUNT(r) " +
-            "FROM RegularInspection r " +
-            "JOIN RegularInspectionCheck i ON i.regularInspection.regularId = r.regularId AND YEAR(r.regularDate) = :year AND MONTH(r.regularDate) = :month " +
-            "GROUP BY combinedNameCheck")
-    List<Object[]> regularListByNameAndMonthForExcel(@Param("year") int year, @Param("month") int month);*/
 
     //연간
     //(LineChart) 1~12월 총 수시점검 건수

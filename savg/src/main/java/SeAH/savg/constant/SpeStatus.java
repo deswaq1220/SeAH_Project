@@ -12,9 +12,9 @@ public enum SpeStatus {
     PRODUC_TECH,     //생산기술
     MOLD,            //금형
 
-
-    NO,             // 기본값
-    OK,              // 조치완료
+    // 조치여부
+    NO,             // 조치전
+    OK,             // 조치완료
 
     // 위험성평가
     HIGH,           // 고위험

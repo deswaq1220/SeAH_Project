@@ -1,8 +1,6 @@
 package SeAH.savg.entity;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,10 +23,10 @@ public class Attendance {
     private String attenDepartment;            // 부서
 
     @Column(nullable = false)
-    private String eduId; //교육일지 id
+    private String eduId;                       //교육일지 id
 
     @Column(nullable = false)
-    private LocalDateTime attenTime; //출석일자
+    private LocalDateTime attenTime;             //출석일자
 
 
 }

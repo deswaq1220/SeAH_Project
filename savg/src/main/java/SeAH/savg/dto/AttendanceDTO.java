@@ -3,7 +3,6 @@ package SeAH.savg.dto;
 import SeAH.savg.entity.Attendance;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.modelmapper.ModelMapper;
 
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ public class AttendanceDTO {
 
     private Long attenId;                     // id
     private String attenEmployeeNumber;       // 사원번호
-
     private String attenName;                 // 이름
     private String attenDepartment;           // 부서
     private String eduId;                       // 교육일지id
