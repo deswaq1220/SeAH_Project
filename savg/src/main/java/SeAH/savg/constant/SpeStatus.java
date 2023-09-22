@@ -4,14 +4,6 @@ import SeAH.savg.dto.SpeInsFormDTO;
 
 public enum SpeStatus {
 
-    // 수시점검 영역
-    CAST,            //주조
-    EXTRUSION,       //압출
-    MANUFACTURE,     //가공
-    QUALITY,         //품질
-    PRODUC_TECH,     //생산기술
-    MOLD,            //금형
-
     // 조치여부
     NO,             // 조치전
     OK,             // 조치완료
