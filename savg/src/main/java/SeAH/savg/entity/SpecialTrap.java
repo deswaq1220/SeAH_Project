@@ -3,6 +3,7 @@ package SeAH.savg.entity;
 import lombok.Getter;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 public class SpecialTrap {
     @Id
     private String trapMenu;       // 실수함정
+    @Column(nullable = false)
     private int trapNum;           // 순서
 
 }

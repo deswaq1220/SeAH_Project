@@ -14,9 +14,9 @@ public class RegularList {
     @Id @Column(name = "regular_id")
     private String regularId; // 체크리스트 id
 
-    @Column()
+    @Column
     private String regularList; //  체크리스트
 
-    @Column()
+    @Column
     private int regularNum; //  체크리스트
 }

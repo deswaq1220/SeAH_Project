@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class SpecialCause {
     @Id
     private String causeMenu;       // 원인
-
+    @Column(nullable = false)
     private int causeNum;           // 순서
 
 }

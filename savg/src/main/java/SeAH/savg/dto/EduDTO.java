@@ -3,7 +3,6 @@ package SeAH.savg.dto;
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
-import SeAH.savg.listener.EduEntityListener;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,7 +10,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityListeners;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -19,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
-@EntityListeners(EduEntityListener.class)
 public class EduDTO {
     private String eduId;
 
