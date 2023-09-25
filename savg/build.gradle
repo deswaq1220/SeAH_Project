@@ -32,7 +32,6 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.4.2'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -50,19 +49,15 @@ dependencies {
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.4'
 	// 멀티파트 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.springframework:spring-web'
 	implementation 'org.springframework:spring-webmvc'
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	implementation 'org.apache.tomcat.embed:tomcat-embed-core'
 	implementation 'commons-fileupload:commons-fileupload:1.4'
-/*	// Spring Security 추가
-	implementation 'org.springframework.boot:spring-boot-starter-security'*/
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.27'
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-/*	//JWT 사용
-	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'*/
+
 
 	// JUnit5
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0'
@@ -71,25 +66,32 @@ dependencies {
 	// Mockito
 	testImplementation 'org.mockito:mockito-core:3.11.2'
 
-	runtimeOnly 'mysql:mysql-connector-java'
-
 	// 3. querydsl dependencies 추가
 	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
 	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 
-
 	implementation 'org.springframework.boot:spring-boot-devtools:2.7.10'
+
+	// 에러
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
+jar {
+	// zip64 확장을 활성화
+	zip64 = true
+}
+
+
 def frontendDir = "$projectDir/src/main/frontend"
 
 sourceSets {
 	main {
-		resources { srcDirs = ["$projectDir/src/main/resources"]
+		resources { srcDirs = ["$projectDir/src/main/frontend", "$projectDir/src/main/resources"]
 		}
 	}
 }
@@ -124,7 +126,7 @@ task copyReactBuildFiles(type: Copy) {
 	dependsOn "buildReact"
 	from "$frontendDir/build"
 	into "$projectDir/src/main/resources/static"
-
+}
 // querydsl에서 사용할 경로 설정
 	def querydslDir = "$buildDir/generated/querydsl"
 // JPA 사용 여부와 사용할 경로를 설정
@@ -147,4 +149,3 @@ task copyReactBuildFiles(type: Copy) {
 		}
 		querydsl.extendsFrom compileClasspath
 	}
-}

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
@@ -16,4 +17,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/images/**")   //url에 /images로 시작하면 seah폴더에서 파일 가져옴
                 .addResourceLocations(uploadPath);
     }
+
+
 }

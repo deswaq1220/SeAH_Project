@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
+    <option name="USE_RELEASE_OPTION" value="false" />
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
       <profile name="Gradle Imported" enabled="true">
@@ -11,10 +12,6 @@
         <module name="SeAH.savg.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="savg.savg.main" target="11" />
-      <module name="savg.savg.test" target="11" />
-      <module name="SeAH.savg.main~2" target="11" />
-    </bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11" />
   </component>
 </project>
