@@ -3,7 +3,7 @@ package SeAH.savg.dto;
 import SeAH.savg.constant.edustate;
 import SeAH.savg.entity.Edu;
 import SeAH.savg.entity.EduFile;
-import SeAH.savg.listener.EduEntityListener;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @ToString
-@EntityListeners(EduEntityListener.class)
+
 public class EduDTO {
     private String eduId;
 

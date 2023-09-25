@@ -79,6 +79,7 @@ dependencies {
 
 
 	implementation 'org.springframework.boot:spring-boot-devtools:2.7.10'
+
 }
 
 tasks.named('test') {
@@ -147,4 +148,6 @@ task copyReactBuildFiles(type: Copy) {
 		}
 		querydsl.extendsFrom compileClasspath
 	}
+
+	
 }
