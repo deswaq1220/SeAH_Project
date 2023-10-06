@@ -95,7 +95,7 @@ public class RegularInspectionService {
         Map<String, Object> responseData = new HashMap<>();
 
         //영역별 이메일 전체리스트
-        List<Email> regularEmail = emailRepository.regularEmailList();
+        List<Email> regularEmail = emailRepository.emailListAll();
         responseData.put("emailList", regularEmail);
 
         // 고정수신자 이메일리스트
